@@ -16,7 +16,7 @@ const systemStore = useSystemStore()
       <el-container class="items-end gap-2">
         <a
           class="child flex w-fit h-fit p-2.5 rounded-full transition-all duration-500"
-          href="https://gitee.com/yshujia-utopia/utopia"
+          href="https://gitee.com/yshujia-utopia/UTOPIA"
           target="_blank"
         >
           <button class="button border-none bg-transparent transition-all duration-500">
@@ -25,7 +25,7 @@ const systemStore = useSystemStore()
         </a>
         <a
           class="child flex w-fit h-fit p-2.5 rounded-full transition-all duration-500"
-          href="https://github.com/YShuJia/utopia"
+          href="https://github.com/YShuJia/UTOPIA"
           target="_blank"
         >
           <button class="button border-none bg-transparent transition-all duration-500">
