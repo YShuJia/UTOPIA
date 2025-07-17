@@ -1,0 +1,198 @@
+@use 'sass:list';
+@use 'index' as *;
+
+.admin-enter-from {
+	opacity: 0;
+	transform: translateX(-200px);
+}
+
+.admin-enter-active {
+	transition: transform .3s ease, opacity .3s ease;
+}
+
+@mixin use-transition(
+	$color: null,
+	$bg-color: null,
+	$shadow: null,
+	$radius: null,
+	$size: null,
+	$opacity: null,
+	$transform: null,
+) {
+	// 初始化空的transition列表
+	$transitions: ();
+
+	@if $color != null {
+		$transitions: list.append($transitions, color #{$color}, comma);
+	}
+	@if $bg-color != null {
+		$transitions: list.append($transitions, background-color #{$bg-color}, comma);
+		$transitions: list.append($transitions, fill #{$bg-color}, comma);
+	}
+	@if $shadow != null {
+		$transitions: list.append($transitions, box-shadow #{$shadow}, comma);
+		$transitions: list.append($transitions, filter #{$shadow}, comma);
+	}
+	@if $radius != null {
+		$transitions: list.append($transitions, border-radius #{$radius}, comma);
+	}
+	@if $size != null {
+		$transitions: list.append($transitions, scale #{$size}, comma);
+		$transitions: list.append($transitions, height #{$size}, comma);
+		$transitions: list.append($transitions, width #{$size}, comma);
+		$transitions: list.append($transitions, max-height #{$size}, comma);
+		$transitions: list.append($transitions, max-width #{$size}, comma);
+	}
+	@if $opacity != null {
+		$transitions: list.append($transitions, opacity #{$opacity}, comma);
+	}
+	@if $transform != null {
+		$transitions: list.append($transitions, transform #{$transform}, comma);
+	}
+	// 如果$transitions不为空，则应用transition属性
+	@if list.length($transitions) > 0 {
+		transition: $transitions !important;
+	}
+}
+
+.use-transition-size {
+	@include use-transition($size: 1s);
+}
+
+/* 样式混合 */
+.use-theme {
+	color: var(--el-text-color-primary);
+	background-color: var(--el-bg-color);
+	@include use-transition($bg-color: 1s);
+}
+
+.use-box-default {
+	@apply radius-sm shadow;
+	@include use-transition($radius: .3s, $shadow: .3s);
+}
+
+.use-box-large {
+	@apply radius-lg shadow;
+	@include use-transition($radius: .3s, $shadow: .3s, $bg-color: .3s);
+}
+
+.use-box-filter {
+	@apply radius-lg drop-shadow;
+	@include use-transition($radius: .3s, $shadow: .3s);
+}
+
+.use-hover-box-large {
+	@apply radius-lg shadow;
+	@include use-transition($radius: .3s, $shadow: .3s, $bg-color: .3s, $transform: .3s);
+
+	&:hover {
+		transform: scale(0.96);
+	}
+}
+
+
+.use-btn-default {
+	gap: 0.2rem;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	@apply hover-bg radius-sm;
+	@include use-transition($radius: .3s, $bg-color: .3s);
+}
+
+.use-btn-large {
+	gap: 0.2rem;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	@apply hover-bg radius-lg;
+	@include use-transition($radius: .3s, $bg-color: .3s);
+}
+
+.use-link-default {
+	@apply hover-color;
+	@include use-transition($radius: .3s, $color: .3s, $transform: .3s);
+}
+
+
+.use-hover-big {
+	transition: scale 0.5s ease-in-out;
+
+	&:hover {
+		scale: 1.12;
+	}
+}
+
+.use-hover-small {
+	transition: scale 0.5s ease-in-out;
+
+	&:hover {
+		scale: 0.95;
+	}
+}
+
+/* 文本颜色流动效果 */
+.flowing-text {
+	background-image: linear-gradient(
+			to right,
+			rgb(255, 0, 0),
+			rgb(255, 125, 0),
+			rgb(255, 225, 0),
+			rgb(38, 255, 0),
+			rgb(0, 255, 229),
+			rgb(0, 111, 255),
+			rgb(81, 0, 255)
+	);
+	background-size: 200%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	animation: flow 3s infinite linear;
+}
+
+@keyframes flow {
+	0% {
+		background-position: 200%;
+	}
+	100% {
+		background-position: 0;
+	}
+}
+
+/* 喇叭抖动效果 */
+.animate-shock {
+	animation: shock_frame 2s ease-in-out infinite;
+}
+
+@keyframes shock_frame {
+	92%, 96%, 100% {
+		transform: rotateZ(15deg);
+	}
+	0%, 90% {
+		transform: rotateZ(0deg);
+	}
+	94%, 98% {
+		transform: rotateZ(-15deg);
+	}
+}
+
+/* 文字点击特效 */
+.particle {
+	color: red;
+	position: fixed;
+	font-size: 1.12rem;
+	font-weight: bold;
+	letter-spacing: 1px;
+	z-index: 999999999;
+	pointer-events: none;
+	animation: hideParticle 1s ease-in 0.3s forwards;
+}
+
+@keyframes hideParticle {
+	to {
+		transform: translateY(-200px);
+		opacity: 0;
+	}
+}

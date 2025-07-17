@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link href="/favicon.ico" rel="icon">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>UTOPIA</title>
+  <meta
+    content="UTOPIA：字面上的意思是“不存在的地方”，一个象征着理想与美好的个人博客，致力于探索那些只存在于理想状态或愿景中的美好事物。基于 SpringBoot3 + Vue3 构建。"
+    name="description">
+  <meta content="UTOPIA, 乌托邦, 个人博客, YShuJia, SpringBoot3, Vue3, 理想化生活, 技术博客, 编程分享, 开发者社区"
+        name="keywords">
+  <script src="/src/main.ts" type="module"></script>
+  <script>
+    // 百度统计访问量
+    (function() {
+      const hm = document.createElement('script')
+      hm.src = 'https://hm.baidu.com/hm.js?192cd657388e9c679f02f657f85c410d'
+      const s = document.getElementsByTagName('script')[0]
+      s.parentNode.insertBefore(hm, s)
+    })();
+    (function() {
+      const hm = document.createElement('script')
+      hm.src = 'https://hm.baidu.com/hm.js?eb89fe4a58f210342d6ab7bb3b78abfe'
+      const s = document.getElementsByTagName('script')[0]
+      s.parentNode.insertBefore(hm, s)
+    })()
+  </script>
+
+</head>
+
+<style>
+  html {
+    font-size: 16px;
+  }
+  
+  html, body {
+    padding: 0;
+    margin: 0;
+    position: relative;
+  }
+  
+  .load {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999999;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+  }
+  
+  .loader {
+    height: 20px;
+    aspect-ratio: 4;
+    --_g: no-repeat radial-gradient(farthest-side, #FF9700 90%, #0000);
+    background: var(--_g) left,
+    var(--_g) right;
+    background-size: 25% 100%;
+    display: grid;
+  }
+  
+  .loader:before,
+  .loader:after {
+    content: "";
+    height: inherit;
+    aspect-ratio: 1;
+    grid-area: 1/1;
+    margin: auto;
+    border-radius: 50%;
+    transform-origin: -100% 50%;
+    background: #FF9700;
+    animation: l49 1s infinite linear;
+  }
+  
+  .loader:after {
+    transform-origin: 200% 50%;
+    --s: -1;
+    animation-delay: -.5s;
+  }
+  
+  @keyframes l49 {
+    58%,
+    100% {
+      transform: rotate(calc(var(--s, 1) * 1turn))
+    }
+  }
+</style>
+
+<body>
+<!--样式一-->
+<!--<div id="load" class="load">
+  <div class="loader"></div>
+</div>-->
+<div id="app"></div>
+
+<script>
+  /*let load = document.getElementById('load')
+  const loadFun = () => {
+    const time = setTimeout(() => {
+      load.style.display = 'none'
+      document.removeEventListener('DOMContentLoaded', loadFun)
+      clearTimeout(time)
+    }, 1000)
+  }
+  // DOM加载完毕
+  document.addEventListener('DOMContentLoaded', loadFun)*/
+</script>
+</body>
+</html>

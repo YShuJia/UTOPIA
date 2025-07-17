@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yshujia.mapper.RoleMapper">
+	
+	<sql id="UI_Column_List">
+		tr.name, tr.experience, tr.introduction
+	</sql>
+	
+	<select id="list" resultType="cn.yshujia.ui.vo.RoleVO">
+		select
+		<include refid="UI_Column_List"/>
+		from t_role tr
+		<where>
+			<if test="id != null">and tr.id = #{id}</if>
+			<if test="name != null">and tr.name like concat('%',#{name},'%')</if>
+			<if test="permission != null">and tr.permission like concat('%',#{permission},'%')</if>
+			<if test="experience != null">and tr.experience = #{experience}</if>
+			<if test="createTime != null">and tr.create_time &gt;= #{createTime}</if>
+			<if test="admin != null">and tr.is_admin = #{admin}</if>
+			<if test="enabled != null">and tr.is_enabled = #{enabled}</if>
+		</where>
+		order by tr.id
+	</select>
+	
+	<select id="oneGtId" resultType="cn.yshujia.ui.vo.RoleVO">
+		select tr.name,
+		       tr.experience,
+		       tr.introduction
+		from t_role tr
+		where tr.id &gt; #{id}
+		order by tr.id
+		limit 1
+	</select>
+	
+	<!-- 管理端 -->
+	<sql id="Admin_Column_List">
+		tr.id, tr.name, tr.permission, tr.experience, tr.create_time, tr.introduction, tr.is_admin, tr.is_enabled
+	</sql>
+	
+	<resultMap id="AdminRoleVO" type="cn.yshujia.admin.vo.AdminRoleVO">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="permission" property="permission"
+		        typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+		<result column="experience" property="experience"/>
+		<result column="create_time" property="createTime"/>
+		<result column="is_admin" property="admin"/>
+		<result column="introduction" property="introduction"/>
+		<result column="is_enabled" property="enabled"/>
+	</resultMap>
+	
+	<select id="listByAdmin" resultMap="AdminRoleVO">
+		select
+		<include refid="Admin_Column_List"/>
+		from t_role tr
+		<where>
+			<if test="id != null">and tr.id = #{id}</if>
+			<if test="name != null">and tr.name like concat('%',#{name},'%')</if>
+			<if test="permission != null">and tr.permission like concat('%',#{permission},'%')</if>
+			<if test="experience != null">and tr.experience = #{experience}</if>
+			<if test="createTime != null">and tr.create_time &gt;= #{createTime}</if>
+			<if test="admin != null">and tr.is_admin = #{admin}</if>
+			<if test="enabled != null">and tr.is_enabled = #{enabled}</if>
+		</where>
+	</select>
+	
+	
+	<resultMap id="AdminSelectRoleVO" type="cn.yshujia.admin.vo.AdminSelectRoleVO">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="permission" property="permission"
+		        typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+	</resultMap>
+	
+	<select id="listSelectByAdmin" resultMap="AdminSelectRoleVO">
+		select tr.id, tr.name, tr.permission
+		from t_role tr
+		where tr.is_enabled = 1
+	</select>
+
+</mapper>

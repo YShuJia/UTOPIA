@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yshujia.mapper.LabelMapper">
+	
+	<!-- 公共的 WHERE 条件片段 -->
+	<sql id="label_where">
+		<where>
+			<if test="id != null">and tl.id = #{id}</if>
+			<if test="classifyId != null">and tl.classify_id = #{classifyId}</if>
+			<if test="name != null">and tl.name like concat('%',#{name},'%')</if>
+			<if test="introduction != null">and tl.introduction like concat('%',#{introduction},'%')</if>
+			<if test="createTime != null">and tl.create_time &gt;= #{createTime}</if>
+			<if test="updateTime != null">and tl.update_time &gt;= #{updateTime}</if>
+			<if test="createBy != null">and tl.create_by = #{createBy}</if>
+			<if test="updateBy != null">and tl.update_by = #{updateBy}</if>
+			<if test="enabled != null">and tl.is_enabled = #{enabled}</if>
+			<if test="reviewed != null">and tl.is_reviewed = #{reviewed}</if>
+		</where>
+	</sql>
+	
+	<!-- 通用查询结果列 -->
+	<sql id="UI_Column_List">
+		tl.id, tl.name, tl.introduction
+	</sql>
+	
+	<select id="list" resultType="cn.yshujia.ui.vo.LabelVO">
+		select
+		<include refid="UI_Column_List"/>,
+		tc.name as classifyName
+		from t_label tl
+		left join t_classify tc on tl.classify_id = tc.id
+		<include refid="label_where"/>
+	</select>
+	
+	<select id="listByClassify" resultType="cn.yshujia.ui.vo.LabelVO">
+		select
+		<include refid="UI_Column_List"/>
+		from t_label tl
+		left join t_classify tc on tl.classify_id = tc.id
+		<where>
+			<if test="id != null">and tl.classify_id = #{id}</if>
+			<if test="key != null">and tc.key like concat('%',#{key},'%')</if>
+			<if test="enabled != null">and tl.is_enabled = #{enabled}</if>
+			<if test="reviewed != null">and tl.is_reviewed = #{reviewed}</if>
+		</where>
+		order by tl.id
+	</select>
+	
+	
+	<!-- 管理端 -->
+	<sql id="Admin_Column_List">
+		tl.id, tl.cover, tl.classify_id, tl.name, tl.introduction, tl.create_time, tl.update_time,
+        tl.create_by, tl.update_by, tl.is_enabled, tl.is_reviewed
+	</sql>
+	
+	<resultMap id="AdminLabelVO" type="cn.yshujia.admin.vo.AdminLabelVO">
+		<id column="id" property="id"/>
+		<result column="cover" property="cover" typeHandler="cn.yshujia.handler.domain.DomainHandler"/>
+		<result column="classify_id" property="classifyId"/>
+		<result column="name" property="name"/>
+		<result column="introduction" property="introduction"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="create_by" property="createBy"/>
+		<result column="update_by" property="updateBy"/>
+		<result column="is_enabled" property="enabled"/>
+		<result column="is_reviewed" property="reviewed"/>
+		<result column="create_username" property="createUsername"/>
+		<result column="update_username" property="updateUsername"/>
+	</resultMap>
+	
+	<select id="listByAdmin" resultMap="AdminLabelVO">
+		select
+		<include refid="Admin_Column_List"/>,
+		tc.name as classifyName,
+		tu.username as create_username,
+		(select username from t_user where id = tl.update_by) as update_username
+		from t_label tl
+		left join t_classify tc on tl.classify_id = tc.id
+		left join t_user tu on tl.create_by = tu.id
+		<include refid="label_where"/>
+	</select>
+	
+	<resultMap id="TreeVO" type="cn.yshujia.admin.vo.AdminTreeVO">
+		<id column="id" property="value"/>
+		<result column="name" property="label"/>
+	</resultMap>
+	
+	<select id="tree" resultMap="TreeVO">
+		select tl.id, tl.name
+		from t_label tl
+		<include refid="label_where"/>
+		order by tl.id
+	</select>
+</mapper>

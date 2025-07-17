@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yshujia.mapper.ClassifyMapper">
+	
+	
+	<sql id="UI_Column_List">
+		tc.id, tc.name, tc.introduction
+	</sql>
+	
+	<select id="oneById" resultType="cn.yshujia.ui.vo.ClassifyVO">
+		select
+		<include refid="UI_Column_List"/>
+		from t_classify tc
+		where tc.is_enabled = 1 and tc.is_reviewed = 1 and tc.id = #{id}
+	</select>
+	
+	<select id="list" resultType="cn.yshujia.ui.vo.ClassifyVO">
+		select
+		<include refid="UI_Column_List"/>
+		from t_classify tc
+		<where>
+			<if test="id != null">and tc.id = #{id}</if>
+			<if test="name != null">and tc.name like concat('%', #{name}, '%')</if>
+			<if test="key != null">and tc.key like concat('%', #{key}, '%')</if>
+			<if test="introduction != null">and tc.introduction like concat('%', #{introduction}, '%')</if>
+			<if test="enabled != null">and tc.is_enabled = #{enabled}</if>
+			<if test="reviewed != null">and tc.is_reviewed = #{reviewed}</if>
+		</where>
+		order by tc.id
+	</select>
+	
+	
+	<!-- 管理端 -->
+	<sql id="Admin_Column_List">
+		tc.id, tc.name, tc.key, tc.introduction, tc.create_time,
+        tc.update_time, tc.create_by, tc.update_by, tc.is_enabled as enabled, tc.is_reviewed as reviewed
+	</sql>
+	
+	<select id="listByAdmin" resultType="cn.yshujia.admin.vo.AdminClassifyVO">
+		select
+		<include refid="Admin_Column_List"/>,
+		tu.username as create_username,
+		(select username from t_user where id = tc.update_by) as update_username
+		from t_classify tc
+		left join t_user tu on tu.id = tc.create_by
+		<where>
+			<if test="id != null">and tc.id = #{id}</if>
+			<if test="name != null">and tc.name like concat('%', #{name}, '%')</if>
+			<if test="key != null">and tc.key = #{key}</if>
+			<if test="introduction != null">and tc.introduction like concat('%', #{introduction}, '%')</if>
+			<if test="createTime != null">and tc.create_time &gt;= #{createTime}</if>
+			<if test="updateTime != null">and tc.update_time &gt;= #{updateTime}</if>
+			<if test="createBy != null">and tc.create_by = #{createBy}</if>
+			<if test="updateBy != null">and tc.update_by = #{updateBy}</if>
+			<if test="enabled != null">and tc.is_enabled = #{enabled}</if>
+			<if test="reviewed != null">and tc.is_reviewed = #{reviewed}</if>
+		</where>
+		order by tc.id
+	</select>
+	
+	<resultMap id="TreeResultMap" type="cn.yshujia.ui.vo.ClassifyLabelVO">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="key" property="key"/>
+		<result column="introduction" property="introduction"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="create_by" property="createBy"/>
+		<result column="update_by" property="updateBy"/>
+		<result column="is_enabled" property="enabled"/>
+		<result column="is_reviewed" property="reviewed"/>
+		<association property="labels" column="tc.id" select="selectLabels"
+		             javaType="cn.yshujia.ui.vo.LabelVO"/>
+	</resultMap>
+	
+	<resultMap id="TreeVO" type="cn.yshujia.admin.vo.AdminTreeVO">
+		<id column="id" property="value"/>
+		<result column="name" property="label"/>
+	</resultMap>
+	
+	<select id="tree" resultMap="TreeVO">
+		select tc.id, tc.name
+		from t_classify tc
+		<where>
+			tc.is_enabled = 1 and tc.is_reviewed = 1
+			<if test="key != null">and tc.key like concat('%', #{key}, '%')</if>
+		</where>
+		order by tc.id
+	</select>
+	
+	<select id="selectLabels" resultType="cn.yshujia.ui.vo.LabelVO">
+		select tl.id, tl.name
+		from t_label tl
+		where tl.classify_id = #{tc.id}
+	</select>
+
+</mapper>

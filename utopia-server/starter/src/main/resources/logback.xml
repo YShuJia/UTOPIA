@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+off 最高等级，用于关闭所有日志记录。
+fatal 指出每个严重的错误事件将会导致应用程序的退出。
+error 指出虽然发生错误事件，但仍然不影响系统的继续运行。
+warm 表明会出现潜在的错误情形。
+info 一般和在粗粒度级别上，强调应用程序的运行全程。
+debug 一般用于细粒度级别上，对调试应用程序非常有帮助。
+all 最低等级，用于打开所有日志记录。
+-->
+
+<!-- 日志输出规则 根据当前ROOT 级别，日志输出时，级别高于root默认的级别时 会输出 -->
+<!-- 以下 每个配置的 filter 是过滤掉输出文件里面，会出现高级别文件，依然出现低级别的日志信息，通过filter 过滤只记录本级别的日志 -->
+<!-- scan 当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。 -->
+<!-- scanPeriod 设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。 -->
+<!-- debug 当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+	
+	<!-- logback项目名称 -->
+	<property name="appName" value="server"/>
+	<!-- 日志级别 DEBUG INFO WARN ERROR -->
+	<property name="logLevel" value="INFO"/>
+	<!-- 日志路径-->
+	<property name="logPath" value="logs"/>
+	<!-- 单个文件的大小限制 -->
+	<property name="logSize" value="16MB"/>
+	<!-- 保留的滚动文件最大数量-->
+	<property name="logIndex" value="100"/>
+	<!-- 异步缓冲队列的深度,该值会影响性能.默认值为 256 -->
+	<property name="queueSize" value="256"/>
+	
+	<!-- LOGGER  PATTERN 根据个人喜好选择匹配  -->
+	<!-- %d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger - %msg%n -->
+	<!-- %d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} - %msg %n -->
+	<!-- [ %-5level] [%date{yyyy-MM-dd HH:mm:ss.SSS}] %logger{96} [%line] [%thread]- %msg%n  -->
+	<property name="logPattern"
+	          value="[%-5level] [%date{yyyy-MM-dd HH:mm:ss.SSS}] %logger{36} [thread：%thread]:%n%msg%n%n"/>
+	<!-- 动态日志级别 -->
+	<jmxConfigurator/>
+	
+	<!-- 控制台的标准输出 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>${logPattern}</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- DEBUG 日志记录  -->
+	<appender name="FILE_DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 日志文件的当前位置 -->
+		<file>${logPath}/${appName}_debug.log</file>-->
+		<!-- 滚动策略：固定窗口滚动策略 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<!-- 滚动后的文件名模式，%i 是窗口索引 -->
+			<fileNamePattern>${logPath}/debug/${appName}_debug.%i.log.gz</fileNamePattern>
+			<!-- 窗口大小，即保留的滚动文件数量 -->
+			<minIndex>1</minIndex>
+			<maxIndex>${logIndex}</maxIndex>
+		</rollingPolicy>
+		<!-- 触发策略：基于文件大小的触发策略 -->
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<!-- 单个文件的大小限制 -->
+			<maxFileSize>${logSize}</maxFileSize>
+		</triggeringPolicy>
+		<!-- 编码器，定义日志的格式 -->
+		<encoder>
+			<pattern>${logPattern}</pattern>
+			<charset>utf-8</charset>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>DEBUG</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	
+	<!-- INFO 级别的日志记录  -->
+	<appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 日志文件的当前位置 -->
+		<file>${logPath}/${appName}_info.log</file>-->
+		<!-- 滚动策略：固定窗口滚动策略 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<!-- 滚动后的文件名模式，%i 是窗口索引 -->
+			<fileNamePattern>${logPath}/info/${appName}_info.%i.log.gz</fileNamePattern>
+			<!-- 窗口大小，即保留的滚动文件数量 -->
+			<minIndex>1</minIndex>
+			<maxIndex>${logIndex}</maxIndex>
+		</rollingPolicy>
+		<!-- 触发策略：基于文件大小的触发策略 -->
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<!-- 单个文件的大小限制 -->
+			<maxFileSize>${logSize}</maxFileSize>
+		</triggeringPolicy>
+		<!-- 编码器，定义日志的格式 -->
+		<encoder>
+			<pattern>${logPattern}</pattern>
+			<charset>utf-8</charset>
+		</encoder>
+		<!-- 过滤器，仅记录INFO级别的日志 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	
+	<!--  WARN 级别的日志记录 -->
+	<appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 日志文件的当前位置 -->
+		<file>${logPath}/${appName}_warn.log</file>-->
+		<!-- 滚动策略：固定窗口滚动策略 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<!-- 滚动后的文件名模式，%i 是窗口索引 -->
+			<fileNamePattern>${logPath}/warn/${appName}_warn.%i.log.gz</fileNamePattern>
+			<!-- 窗口大小，即保留的滚动文件数量 -->
+			<minIndex>1</minIndex>
+			<maxIndex>${logIndex}</maxIndex>
+		</rollingPolicy>
+		<!-- 触发策略：基于文件大小的触发策略 -->
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<!-- 单个文件的大小限制 -->
+			<maxFileSize>${logSize}</maxFileSize>
+		</triggeringPolicy>
+		<!-- 编码器，定义日志的格式 -->
+		<encoder>
+			<pattern>${logPattern}</pattern>
+			<charset>utf-8</charset>
+		</encoder>
+		<!-- 过滤器，仅记录WARN级别的日志 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>WARN</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	
+	<!-- Error 级别的日志记录 -->
+	<!-- 定义错误日志的appender -->
+	<appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 日志文件的当前位置 -->
+		<file>${logPath}/${appName}_error.log</file>-->
+		<!-- 滚动策略：固定窗口滚动策略 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<!-- 滚动后的文件名模式，%i 是窗口索引 -->
+			<fileNamePattern>${logPath}/error/${appName}_error.%i.log.gz</fileNamePattern>
+			<!-- 窗口大小，即保留的滚动文件数量 -->
+			<minIndex>1</minIndex>
+			<maxIndex>${logIndex}</maxIndex>
+		</rollingPolicy>
+		<!-- 触发策略：基于文件大小的触发策略 -->
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<!-- 单个文件的大小限制 -->
+			<maxFileSize>${logSize}</maxFileSize>
+		</triggeringPolicy>
+		<!-- 编码器，定义日志的格式 -->
+		<encoder>
+			<pattern>${logPattern}</pattern>
+			<charset>utf-8</charset>
+		</encoder>
+		<!-- 过滤器，仅记录ERROR级别的日志 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	
+	<!-- ASYNC_LOG_DEBUG  -->
+	<appender name="ASYNC_LOG_DEBUG" class="ch.qos.logback.classic.AsyncAppender">
+		<!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+		<discardingThreshold>0</discardingThreshold>
+		<!-- 更改默认的队列的深度,该值会影响性能-->
+		<queueSize>${queueSize}</queueSize>
+		<!-- 设置该属性 logback 会使用 ArrayBlockingQueue 的非阻塞方法 offer 代替 put, 防止在队列满时阻塞业务线程 -->
+		<neverBlock>true</neverBlock>
+		<appender-ref ref="FILE_DEBUG"/>
+	</appender>
+	
+	<!-- ASYNC_LOG_INFO -->
+	<appender name="ASYNC_LOG_INFO" class="ch.qos.logback.classic.AsyncAppender">
+		<!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+		<discardingThreshold>0</discardingThreshold>
+		<!-- 更改默认的队列的深度,该值会影响性能 -->
+		<queueSize>${queueSize}</queueSize>
+		<!-- 设置该属性 logback 会使用 ArrayBlockingQueue 的非阻塞方法 offer 代替 put, 防止在队列满时阻塞业务线程 -->
+		<neverBlock>true</neverBlock>
+		<appender-ref ref="FILE_INFO"/>
+	</appender>
+	
+	<!-- ASYNC_LOG_WARN -->
+	<appender name="ASYNC_LOG_WARN" class="ch.qos.logback.classic.AsyncAppender">
+		<!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+		<discardingThreshold>0</discardingThreshold>
+		<!-- 更改默认的队列的深度,该值会影响性能-->
+		<queueSize>${queueSize}</queueSize>
+		<!-- 设置该属性 logback 会使用 ArrayBlockingQueue 的非阻塞方法 offer 代替 put, 防止在队列满时阻塞业务线程 -->
+		<neverBlock>true</neverBlock>
+		<appender-ref ref="FILE_WARN"/>
+	</appender>
+	
+	<!--ASYNC_LOG_ERROR  -->
+	<appender name="ASYNC_LOG_ERROR" class="ch.qos.logback.classic.AsyncAppender">
+		<!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+		<discardingThreshold>0</discardingThreshold>
+		<!-- 更改默认的队列的深度,该值会影响性能.默认值为512 -->
+		<queueSize>${queueSize}</queueSize>
+		<!-- 设置该属性 logback 会使用 ArrayBlockingQueue 的非阻塞方法 offer 代替 put, 防止在队列满时阻塞业务线程 -->
+		<neverBlock>true</neverBlock>
+		<appender-ref ref="FILE_ERROR"/>
+	</appender>
+	
+	<logger name="com.github.demo" levelvalue="INFO" additivity="false">
+		<appender-ref ref="STDOUT"/>
+	</logger>
+	
+	<!-- 在定义后引用APPENDER -->
+	<root level="${logLevel}">
+		<appender-ref ref="STDOUT"/>
+		<appender-ref ref="ASYNC_LOG_DEBUG"/>
+		<appender-ref ref="ASYNC_LOG_INFO"/>
+		<appender-ref ref="ASYNC_LOG_WARN"/>
+		<appender-ref ref="ASYNC_LOG_ERROR"/>
+	</root>
+</configuration>

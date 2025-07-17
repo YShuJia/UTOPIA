@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yshujia.mapper.RouterMapper">
+	
+	<sql id="UI_Column_List">
+		tr.id, tr.parent_id, tr.name, tr.title, tr.path, tr.type, tr.icon,
+		tr.component, tr.is_admin as admin, tr.is_frame as frame
+	</sql>
+	
+	<select id="list" resultType="cn.yshujia.ui.vo.RouterVO">
+		select
+		<include refid="UI_Column_List"/>
+		from t_router tr
+		where tr.role_id &lt;= #{roleId} and tr.is_enabled = 1
+		order by tr.sort
+	</select>
+	
+	<!-- 管理端 -->
+	
+	<sql id="Admin_Column_List">
+		tr.id, tr.role_id, tr.parent_id, tr.name, tr.title, tr.sort, tr.type,
+        tr.path, tr.icon, tr.component, tr.is_admin as admin, tr.is_frame as frame, tr.is_enabled as enabled
+	</sql>
+	
+	
+	<select id="listByAdmin" resultType="cn.yshujia.admin.vo.AdminRouterVO">
+		select
+		<include refid="Admin_Column_List"/>,
+		trl.name as role_name
+		from t_router tr
+		left join t_role trl on tr.role_id = trl.id
+		<where>
+			<if test="id != null">and tr.id = #{id}</if>
+			<if test="roleId != null">and tr.role_id &lt;= #{roleId}</if>
+			<if test="parentId != null">and tr.parent_id = #{parentId}</if>
+			<if test="name != null">and tr.name like concat('%',#{name},'%')</if>
+			<if test="title != null">and tr.title like concat('%',#{title},'%')</if>
+			<if test="sort != null">and tr.sort = #{sort}</if>
+			<if test="type != null">and tr.type = #{type}</if>
+			<if test="path != null">and tr.path like concat('%',#{path},'%')</if>
+			<if test="icon != null">and tr.icon like concat('%',#{icon},'%')</if>
+			<if test="component != null">and tr.component like concat('%',#{component},'%')</if>
+			<if test="admin != null">and tr.is_admin = #{admin}</if>
+			<if test="frame != null">and tr.is_frame = #{frame}</if>
+			<if test="enabled != null">and tr.is_enabled = #{enabled}</if>
+		</where>
+		order by tr.sort
+	</select>
+	
+	<select id="listSelectByAdmin" resultType="cn.yshujia.admin.vo.AdminSelectRouterVO">
+		select tr.id,
+		       tr.title,
+		       tr.is_admin as admin
+		from t_router tr
+		where tr.is_enabled = 1
+		  and tr.type = 'M'
+	</select>
+</mapper>

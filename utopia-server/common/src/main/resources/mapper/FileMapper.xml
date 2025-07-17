@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yshujia.mapper.FileMapper">
+	
+	<!-- 公共的 WHERE 条件片段 -->
+	<sql id="file_where">
+		<where>
+			<if test="id != null">and tf.id = #{id}</if>
+			<if test="labelId != null">and tf.label_id = #{labelId}</if>
+			<if test="name != null">and tf.name like concat('%',#{name},'%')</if>
+			<if test="url != null">and tf.url like concat('%',#{url},'%')</if>
+			<if test="size != null">and tf.size = #{size}</if>
+			<if test="tags != null">and tf.tags like concat('%',#{tags},'%')</if>
+			<if test="createTime != null">and tf.create_time &gt;= #{createTime}</if>
+			<if test="updateTime != null">and tf.update_time &gt;= #{updateTime}</if>
+			<if test="createBy != null">and tf.create_by = #{createBy}</if>
+			<if test="updateBy != null">and tf.update_by = #{updateBy}</if>
+			<if test="enabled != null">and tf.is_enabled = #{enabled}</if>
+			<if test="reviewed != null">and tf.is_reviewed = #{reviewed}</if>
+		</where>
+	</sql>
+	
+	<resultMap id="FileVO" type="cn.yshujia.ui.vo.FileVO">
+		<result column="url" property="url" typeHandler="cn.yshujia.handler.domain.DomainHandler"/>
+	</resultMap>
+	
+	
+	<select id="list" resultMap="FileVO">
+		select tf.url from t_file tf
+		<include refid="file_where"/>
+	</select>
+	
+	
+	<!-- 管理端 -->
+	
+	<!-- 通用查询结果列 -->
+	<sql id="Admin_Column_List">
+		tf.id, tf.label_id, tf.name, tf.url, tf.size, tf.tags, tf.create_time,
+        tf.update_time, tf.create_by, tf.update_by, tf.is_enabled, tf.is_reviewed
+	</sql>
+	
+	<resultMap id="AdminFileVO" type="cn.yshujia.admin.vo.AdminFileVO">
+		<id column="id" property="id"/>
+		<result column="label_id" property="labelId"/>
+		<result column="name" property="name"/>
+		<result column="url" property="url" typeHandler="cn.yshujia.handler.domain.DomainHandler"/>
+		<result column="size" property="size"/>
+		<result column="tags" property="tags"
+		        typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+		<result column="create_by" property="createBy"/>
+		<result column="update_by" property="updateBy"/>
+		<result column="is_enabled" property="enabled"/>
+		<result column="is_reviewed" property="reviewed"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="label_name" property="labelName"/>
+		<result column="create_username" property="createUsername"/>
+		<result column="update_username" property="updateUsername"/>
+	</resultMap>
+	
+	<select id="listByAdmin" resultMap="AdminFileVO">
+		select
+		<include refid="Admin_Column_List"/>,
+		tl.name as label_name,
+		tu.username as create_username,
+		(select username from t_user where id = tf.update_by) as update_username
+		from t_file tf
+		left join t_label tl on tf.label_id = tl.id
+		left join t_user tu on tf.create_by = tu.id
+		<include refid="file_where"/>
+	</select>
+</mapper>

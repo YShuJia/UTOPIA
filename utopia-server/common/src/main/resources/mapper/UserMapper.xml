@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yshujia.mapper.UserMapper">
+	
+	<sql id="user_where">
+		<where>
+			<if test="id != null">and tu.id = #{id}</if>
+			<if test="roleId != null">and tu.role_id = #{roleId}</if>
+			<if test="username != null">and tu.username = #{username}</if>
+			<if test="gender != null">and tu.gender = #{gender}</if>
+			<if test="email != null">and tu.email = #{email}</if>
+			<if test="experience != null">and tu.experience = #{experience}</if>
+			<if test="createTime != null">and tu.create_time &gt;= #{createTime}</if>
+			<if test="updateTime != null">and tu.update_time &gt;= #{updateTime}</if>
+			<if test="createBy != null">and tu.create_by = #{createBy}</if>
+			<if test="updateBy != null">and tu.update_by = #{updateBy}</if>
+			<if test="enabled != null">and tu.is_enabled = #{enabled}</if>
+		</where>
+	</sql>
+	
+	<!-- 通用查询结果列 -->
+	<sql id="UI_Column_List">
+		tu.id, tu.role_id, tu.avatar, tu.username, tu.password, tu.gender,
+		tu.email, tu.experience, tu.create_time
+	</sql>
+	
+	<resultMap id="UserVO" type="cn.yshujia.ui.vo.UserVO">
+		<id column="id" property="id"/>
+		<result column="role_id" property="roleId"/>
+		<result column="avatar" property="avatar" typeHandler="cn.yshujia.handler.domain.DomainHandler"/>
+		<result column="username" property="username"/>
+		<result column="password" property="password"/>
+		<result column="gender" property="gender"/>
+		<result column="email" property="email" typeHandler="cn.yshujia.handler.sensitive.EncryptionHandler"/>
+		<result column="experience" property="experience"/>
+		<result column="create_time" property="createTime"/>
+		<result column="role_name" property="roleName"/>
+		<result column="role_introduction" property="roleIntroduction"/>
+		<result column="role_admin" property="roleAdmin"/>
+		<result column="permission" property="permission"
+		        typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+	</resultMap>
+	
+	<select id="one" resultMap="UserVO">
+		select
+		<include refid="UI_Column_List"/>, tr.name as role_name, tr.introduction as role_introduction,
+		tr.is_admin as `role_admin`, tr.permission
+		from t_user tu
+		left join t_role tr on tu.role_id = tr.id
+		<include refid="user_where"/>
+	</select>
+	
+	<select id="list" resultMap="UserVO">
+		select
+		<include refid="UI_Column_List"/>, tr.name as roleName, tr.permission
+		from t_user tu
+		left join t_role tr on tu.role_id = tr.id
+		<include refid="user_where"/>
+	</select>
+	
+	<select id="listByIds" resultMap="UserVO">
+		select
+		<include refid="UI_Column_List"/>, tr.name as roleName, tr.permission
+		from t_user tu
+		left join t_role tr on tu.role_id = tr.id
+		where tu.id in
+		<foreach collection="ids" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+		and tu.is_enabled = 1
+	</select>
+	
+	
+	<!-- 管理端 -->
+	<sql id="Admin_Column_List">
+		tu.id, tu.role_id, tu.avatar, tu.username, tu.gender,
+		tu.email, tu.experience, tu.create_time, tu.update_time, tu.create_by, tu.update_by, tu.is_enabled
+	</sql>
+	
+	<resultMap id="AdminUserVO" type="cn.yshujia.admin.vo.AdminUserVO" extends="UserVO">
+		<result column="update_time" property="updateTime"/>
+		<result column="create_by" property="createBy"/>
+		<result column="update_by" property="updateBy"/>
+		<result column="is_enabled" property="enabled"/>
+		<result column="create_username" property="createUsername"/>
+		<result column="update_username" property="updateUsername"/>
+	</resultMap>
+	
+	<select id="selectCountGroupByRoleId" resultType="cn.yshujia.ui.vo.UserVO">
+		select tr.name as role_name, count(tu.id) as user_count
+		from t_user tu
+			     right join t_role tr on tu.role_id = tr.id
+		where tr.is_enabled = 1
+		  and tr.is_admin = 0
+		group by tr.id
+		order by tr.id desc
+	</select>
+	
+	<select id="listByAdmin" resultMap="AdminUserVO">
+		select
+		<include refid="Admin_Column_List"/>, tr.name as role_name,
+		(select username from t_user where id = tu.create_by) as create_username,
+		(select username from t_user where id = tu.update_by) as update_username
+		from t_user tu
+		left join t_role tr on tu.role_id = tr.id
+		<include refid="user_where"/>
+	</select>
+
+</mapper>

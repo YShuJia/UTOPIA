@@ -1,0 +1,265 @@
+@use "transition" as *;
+
+/* 自定义日历表的样式 */
+.el-calendar-table__row {
+  .el-calendar-day {
+    height: 40px;
+  }
+}
+
+.el-calendar-table thead th {
+  padding: 0 0 10px 0;
+  text-align: center;
+}
+
+/* 自定义表格样式 */
+.el-table .el-table__cell {
+  // 自定义表格中的内容居中, 避免换行
+  & > div {
+    margin: 0 auto;
+    width: fit-content;
+    white-space: nowrap;
+  }
+}
+
+
+/* 自定义 dialog 弹窗样式 */
+.el-dialog {
+  max-width: 70vw;
+}
+
+.el-overlay .el-overlay-dialog {
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+
+  .el-dialog__header {
+    display: none;
+  }
+}
+
+/* 自定义 单选框组 */
+.el-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 10px;
+
+  .el-checkbox {
+    margin: 0;
+  }
+
+  .el-checkbox__label {
+    padding: 0 0 0 5px;
+  }
+}
+
+
+.el-radio-group {
+  gap: 0 10px;
+
+  .el-radio {
+    margin: 0;
+    //@extend .font-theme !optional;
+  }
+
+  .el-radio__label {
+    padding: 0 0 0 5px;
+  }
+}
+
+/* 自定义 表单 label */
+.el-form-item {
+  margin: 0;
+  align-items: center;
+}
+
+.el-form-item__label {
+  padding: 0 5px 0 0;
+  margin-bottom: 0 !important;
+}
+
+/* 自定义 标签页 */
+.el-tabs {
+  .el-tabs__nav {
+    width: 100% !important;
+    border: none !important;
+    padding: 3px 20px !important;
+    display: flex;
+    justify-content: center;
+  }
+
+  .el-tabs__header,
+  .el-tabs__item {
+    border: none !important;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
+
+/* 自定义下拉框 */
+.el-dropdown, .el-popper {
+  // 清除下拉框边框
+  &:focus-visible {
+    outline: unset;
+  }
+
+  :deep(*) {
+    outline: unset !important;
+    border: none !important;
+  }
+}
+
+// 侧边导航栏收起时的 el-popper
+.el-popper .el-menu--popup-container {
+  overflow: hidden;
+  @extend .radius-lg !optional;
+}
+
+// 所有 el-popper 样式
+.el-popper {
+  border: none !important;
+  min-width: 50px !important;
+  display: flex;
+  justify-content: center;
+  @extend .radius-lg !optional;
+  @extend .drop-shadow !optional;
+
+  .el-scrollbar {
+    @extend .radius-lg !optional;
+    overflow: hidden;
+
+    .el-select-dropdown__list {
+      padding: 5px 0 !important;
+
+      .el-select-dropdown__item {
+        width: 100%;
+        padding: 0 20px;
+        text-align: center;
+      }
+    }
+  }
+
+
+  // 箭头
+  .el-popper__arrow {
+    &:before, &:after {
+      border: none !important;
+      width: 1rem !important;
+      height: 1rem !important;
+      left: calc(50% - .5rem);
+      top: calc(50% - .5rem);
+      bottom: calc(50% - .5rem);
+    }
+  }
+}
+
+/* 自定义文件上传 */
+.el-upload-list {
+  display: flex;
+  gap: 5px;
+
+  .el-upload {
+    width: 100px;
+    height: 100px;
+
+    .el-overlay {
+      position: fixed !important;
+    }
+  }
+  .el-upload-list__item {
+    width: 100px;
+    height: 100px;
+    margin: 0;
+  }
+}
+
+/* 自定义进度条中 文字居中显示 */
+.el-progress, .el-progress__text {
+  display: flex;
+  align-items: center;
+}
+
+.el-progress-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+/* 自定义轮播图 */
+.el-carousel {
+  .el-carousel__arrow {
+    z-index: 30;
+  }
+
+  .el-carousel__indicators {
+    transition: transform .3s ease-in-out, opacity .2s ease-in-out;
+    opacity: 0;
+    transform: translateY(100%) translateX(-50%);
+  }
+
+  .el-carousel__button {
+    width: 1rem;
+    height: 1rem;
+    margin: 2px 0;
+    border-radius: 50%;
+    z-index: 30;
+  }
+
+  &:hover {
+    .el-carousel__indicators {
+      opacity: 1;
+      transform: translateY(0) translateX(-50%);
+    }
+  }
+}
+
+/* 自定义分段控制器 */
+.el-segmented {
+  --el-segmented-item-selected-color: var(--el-text-color-primary);
+  //--el-segmented-item-selected-bg-color: #ffd100;
+  --el-border-radius-base: 16px;
+}
+
+/* 自定义 mdv3 的样式 */
+.md-editor-preview {
+  img, video {
+    border-radius: 5px !important;
+    padding: 0 !important;
+    margin: 10px auto !important;
+    cursor: pointer !important;
+  }
+
+  .md-editor-code pre code {
+    // 隐藏代码的滚动条
+    overflow-y: hidden;
+    height: fit-content;
+
+    // 只显示x轴上的滚动条
+    .md-editor-code-block {
+      height: fit-content;
+      padding-bottom: 5px;
+      overflow-x: auto;
+    }
+
+    .md-editor-code-block:hover {
+      /* 忽略鼠标事件，才能滚动外层滚动条 */
+      pointer-events: none;
+    }
+  }
+
+  // 图文环绕
+  & > p {
+    .img-right {
+      float: right;
+      margin-left: 10px !important;
+    }
+
+    .img-left {
+      float: left;
+      margin-right: 10px !important;
+    }
+
+    span {
+      word-break: auto-phrase;
+    }
+  }
+}

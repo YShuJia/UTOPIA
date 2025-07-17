@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yshujia.mapper.CommentMapper">
+	
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		tc.id, tc.user_id, tc.source_id, tc.floor_id, tc.parent_user_id,
+        tc.like_count, tc.content, tc.replay_content, tc.create_time
+	</sql>
+	
+	<resultMap id="CommentVO" type="cn.yshujia.domain.vo.CommentVO">
+		<id column="id" property="id"/>
+		<result column="user_id" property="userId"/>
+		<result column="source_id" property="sourceId"/>
+		<result column="floor_id" property="floorId"/>
+		<result column="parent_user_id" property="parentUserId"/>
+		<result column="like_count" property="likeCount"/>
+		<result column="content" property="content" typeHandler="cn.yshujia.handler.CommentHandler"/>
+		<result column="replay_content" property="replayContent"
+		        typeHandler="cn.yshujia.handler.CommentHandler"/>
+		<result column="create_time" property="createTime"/>
+	</resultMap>
+	
+	<select id="oneById" resultType="cn.yshujia.domain.vo.CommentVO">
+		select
+		<include refid="Base_Column_List"/>
+		from t_comment tc
+		where tc.id = #{id}
+	</select>
+	
+	<select id="list" resultMap="CommentVO">
+		select
+		<include refid="Base_Column_List"/>
+		from t_comment tc
+		<where>
+			tc.id = tc.floor_id
+			<if test="id != null">and tc.id = #{id}</if>
+			<if test="userId != null">and tc.user_id = #{userId}</if>
+			<if test="sourceId != null">and tc.source_id = #{sourceId}</if>
+			<if test="floorId != null">and tc.floor_id = #{floorId}</if>
+			<if test="parentUserId != null">and tc.parent_user_id = #{parentUserId}</if>
+			<if test="likeCount != null">and tc.like_count = #{likeCount}</if>
+			<if test="content != null">and tc.content like concat('%',#{content},'%')</if>
+			<if test="replayContent != null">and tc.replay_content like concat('%',#{replayContent},'%')</if>
+			<if test="createTime != null">and tc.create_time &gt;= #{createTime}</if>
+		</where>
+		order by tc.create_time desc
+	</select>
+	
+	<select id="listChildren" resultMap="CommentVO">
+		select
+		<include refid="Base_Column_List"/>
+		from t_comment tc
+		where tc.id != tc.floor_id and tc.floor_id = #{floorId}
+		order by tc.create_time desc
+	</select>
+
+</mapper>

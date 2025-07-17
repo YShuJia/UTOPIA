@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yshujia.mapper.WebsiteMapper">
+	
+	<!-- 公共的 WHERE 条件片段 -->
+	<sql id="website_where">
+		<where>
+			<if test="id != null">and tw.id = #{id}</if>
+			<if test="labelId != null">and tw.label_id = #{labelId}</if>
+			<if test="title != null">and tw.title like concat('%', #{title}, '%')</if>
+			<if test="avatar != null">and tw.avatar like concat('%', #{avatar}, '%')</if>
+			<if test="introduction != null">and tw.introduction like concat('%', #{introduction}, '%')</if>
+			<if test="url != null">and tw.url like concat('%', #{url}, '%')</if>
+			<if test="cover != null">and tw.cover like concat('%', #{cover}, '%')</if>
+			<if test="recommend != null">and tw.is_recommend = #{recommend}</if>
+			<if test="createTime != null">and tw.create_time &gt;= #{createTime}</if>
+			<if test="updateTime != null">and tw.update_time &gt;= #{updateTime}</if>
+			<if test="createBy != null">and tw.create_by = #{createBy}</if>
+			<if test="updateBy != null">and tw.update_by = #{updateBy}</if>
+			<if test="enabled != null">and tw.is_enabled = #{enabled}</if>
+			<if test="reviewed != null">and tw.is_reviewed = #{reviewed}</if>
+		</where>
+	</sql>
+	
+	<!-- 通用查询结果列 -->
+	<sql id="UI_Column_List">
+		tw.title, tw.avatar, tw.introduction, tw.url, tw.cover, tw.create_time
+	</sql>
+	
+	<select id="list" resultType="cn.yshujia.ui.vo.WebsiteVO">
+		select
+		<include refid="UI_Column_List"/>,
+		tl.name as label_name
+		from t_website tw
+		left join t_label tl on tw.label_id = tl.id
+		<include refid="website_where"/>
+		order by tw.id
+	</select>
+	
+	<!-- 管理端 -->
+	<sql id="Admin_Column_List">
+		tw.id, tw.label_id, tw.title, tw.avatar, tw.introduction, tw.url,
+        tw.cover, tw.is_recommend as recommend, tw.create_time, tw.update_time,
+		tw.create_by, tw.is_enabled as enabled, tw.is_reviewed as reviewed
+	</sql>
+	
+	<select id="listByAdmin" resultType="cn.yshujia.admin.vo.AdminWebsiteVO">
+		select
+		<include refid="Admin_Column_List"/>,
+		tu.username as create_username,
+		(select username from t_user where id = tw.update_by) as update_username,
+		tl.name as label_name
+		from t_website tw
+		left join t_label tl on tw.label_id = tl.id
+		left join t_user tu on tw.create_by = tu.id
+		<include refid="website_where"/>
+	</select>
+</mapper>

@@ -1,0 +1,220 @@
+server:
+  port: 9898
+  http2:
+    enabled: true
+  servlet:
+    session:
+      timeout: 30m
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # 连接数满后的排队数，默认为100
+    accept-count: 10000
+    threads:
+      # tomcat最大线程数，默认为200
+      max: 1024
+      # Tomcat启动初始化的线程数，默认值10
+      min-spare: 100
+
+socketio:
+  host: localhost
+  port: 9092
+  # 单条消息最大长度，3M
+  maxFramePayloadLength: 1048576
+  # HTTP请求最大长度，默认为-1（无限制）
+  maxHttpContentLength: 1048576
+  # 连接池连接数
+  bossCount: 1
+  # 线程池数量，默认为10
+  workCount: 100
+  # 协议升级超时时间（毫秒），默认10秒。HTTP握手升级为ws协议超时时间
+  upgradeTimeout: 100000
+  # 心跳超时时间（毫秒），默认60秒
+  pingTimeout: 600000
+  # 是否允许自定义请求，默认值false
+  allowCustomRequests: true
+  # 心跳间隔时间 默认25s
+  pingInterval: 25000
+  # namespaces 以逗号隔开 每个空间需要对应一个Bean的名字，XXXMessageEventHandler,如chatMessageEventHandler
+  namespaces: /comment
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  aop:
+    auto: true
+  #  数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/utopia?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      db-type: mysql
+      # 初始连接数
+      initialSize: 5
+      # 最小连接池数量
+      minIdle: 10
+      # 最大连接池数量
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置连接超时时间
+      connectTimeout: 30000
+      # 配置网络超时时间
+      socketTimeout: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      webStatFilter:
+        enabled: true
+      statViewServlet:
+        enabled: true
+        # 设置白名单，不填则允许所有访问
+        allow:
+        url-pattern: /druid/*
+        # 控制台管理用户名和密码
+        login-username: yshujia
+        login-password: 123456
+      filter:
+        stat:
+          enabled: true
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+  data:
+    redis:
+      database: 0
+      port: 6379
+      host: localhost
+      password: 123456
+      lettuce:
+        pool:
+          max-active: 16 # 连接池最大连接数（使用负值表示没有限制）
+          max-idle: 16 # 连接池中的最大空闲连接
+          min-idle: 0 # 连接池中的最小空闲连接
+          max-wait: -1 # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        shutdown-timeout: 100   # 关闭超时时间
+
+  #文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 512MB
+      # 总上传大小
+      max-request-size: 512MB
+
+  # 服务模块
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: true
+
+# 日志记录
+decorator:
+  datasource:
+    p6spy:
+      log-format: "%(sqlSingleLine)"
+      logging: custom
+      custom-appender-class: cn.yshujia.config.P6SpyLog
+      multiline: true
+
+#日志
+logging:
+  charset:
+    console: utf-8
+  config: classpath:logback.xml
+  level:
+    root: error
+    org.springframework: warn
+    cn.yshujia: error
+    cn.yshujia.aop: info
+    cn.yshujia.config: debug
+
+# 配置 mybatis
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    # 驼峰命名
+    call-setters-on-nulls: true
+    map-underscore-to-camel-case: true
+
+# 分页插件
+pagehelper:
+  # 分页合理化 规整页码范围
+  reasonable: true
+  # 规整方法参数获取
+  support-methods-arguments: true
+  params: count=countSql
+
+# knife4j 和 springdoc
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    enabled: true
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+    enable-version: true
+    enable-document-manage: true
+
+# jwt
+jwt:
+  # expire 单位分钟
+  expire: 4320 # 3天
+  secret: "6789566B59703373367639792F423F4528482B4D6251655468576D5A71341234"
+  # 自动续 token 时间 单位分钟
+  refresh: 60
+
+minio:
+  accessKey: root
+  secretKey: 12345678
+  bucketName: static
+  endpoint: http://localhost:9000
+  # 超过 10m 压缩，图片无损转 webp 时大小会减少一半
+  max-img-size: 10485760
+  # 图片压缩质量限制 0-1
+  compression-quality: 0.9
+  # 静态资源访问前缀
+  domain: http://localhost:9000/static
+
+# 系统配置
+system:
+  # 作者
+  author: YShuJia
+  # 密码试错间隔时间 单位 h
+  error-time: 3
+  # 密码试错次数（在 3小时内错误 5次封禁 72小时）
+  error-times: 5
+  # 接口限流时间 单位 h
+  limit-time: 3
+  # 接口限流（在3小时内触发内部接口限流 30 次封禁 72 小时）
+  limit-times: 30
+  # 密码试错，过度接口访问封禁时间 单位 h
+  ban-time: 72
+  # 敏感数据替换符
+  replace-char: "[非礼无言]"
+  # 每天可以获取的最大经验值
+  max-experience: 300
+  # 生成角色权限字符的表
+  tables: [ "album", "article", "classify", "comment", "diary", "file", "label", "leave_word", "like", "role", "router", "user", "website" ]
