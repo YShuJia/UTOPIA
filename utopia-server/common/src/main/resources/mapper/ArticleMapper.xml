@@ -108,10 +108,10 @@
 	
 	<!-- 管理端 -->
 	<sql id="Admin_Column_List">
-		ta.id, ta.label_id, ta.title, ta.cover, ta.content, ta.copyright, ta.like_count,
-        ta.view_count, ta.comment_count, ta.has_video, ta.video_url, ta.password,
-        ta.password_tip, ta.create_time, ta.update_time,  ta.is_recommend,
-		ta.is_likeable, ta.is_commentable, ta.is_enabled, ta.is_reviewed
+		ta.id, ta.label_id, ta.title, ta.cover, ta.content, ta.copyright,
+		ta.like_count, ta.view_count, ta.comment_count, ta.has_video,
+		ta.password, ta.password_tip, ta.create_time, ta.update_time,
+		ta.is_recommend, ta.is_likeable, ta.is_commentable, ta.is_enabled, ta.is_reviewed
 	</sql>
 	
 	<resultMap id="AdminArticleVO" type="cn.yshujia.admin.vo.AdminArticleVO" extends="ArticleVO">
