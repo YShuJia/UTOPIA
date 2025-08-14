@@ -22,7 +22,7 @@ const { item } = defineProps({
             :src="item.avatar"
             class="min-w-10 max-w-10 border-1 min-h-10 max-h-10 rounded-full"
           />
-          <a :href="item.url" class="flex items-center">
+          <a :href="item.url" target="_blank" class="flex items-center">
             <svg-button message="去康康" name="paper-plane" size="sm" />
           </a>
         </el-container>
