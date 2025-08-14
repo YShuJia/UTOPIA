@@ -2,7 +2,7 @@
 import type { CalendarDateType, CalendarInstance } from 'element-plus'
 import { RouteNameEnum } from '@/enum'
 import { initPageVO, type PageVO, type ResultType } from '@/request/config'
-import { type DiaryDTO, type DiaryVO, pageDiaryApi } from '@/request/api/Diary'
+import { type DiaryDTO, type DiaryVO, pageDiaryApi } from '@/request/api/diary'
 
 const calendar = ref<CalendarInstance>()
 const selectDate = (val: CalendarDateType) => {

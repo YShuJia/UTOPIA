@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { ResultType } from '@/request/config'
-import { type DiaryVO, getDiaryApi, initDiaryVO } from '@/request/api/Diary'
+import { type DiaryVO, getDiaryApi, initDiaryVO } from '@/request/api/diary'
 import { useSystemStore } from '@/stores/system'
 
 const route = useRoute()

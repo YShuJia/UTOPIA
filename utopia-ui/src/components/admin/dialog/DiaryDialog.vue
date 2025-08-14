@@ -4,7 +4,7 @@ import { useSystemStore } from '@/stores/system'
 import type { UploadType } from '@/components/editor/UploadImg.vue'
 import { useGlobalDialog } from '@/hooks'
 import { addToFormData, isEmpty } from '@/utils'
-import { addDiaryApi, type DiaryDTO, updateDiaryApi } from '@/request/api/Diary'
+import { addDiaryApi, type DiaryDTO, updateDiaryApi } from '@/request/api/diary'
 
 const systemStore = useSystemStore()
 

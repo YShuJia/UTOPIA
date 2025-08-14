@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { CalendarDateType, CalendarInstance } from 'element-plus'
 import { initPageDTO, initPageVO, type PageVO, type ResultType } from '@/request/config'
-import { type DiaryDTO, type DiaryVO, pageDiaryApi } from '@/request/api/Diary'
+import { type DiaryDTO, type DiaryVO, pageDiaryApi } from '@/request/api/diary'
 
 const route = useRoute()
 
