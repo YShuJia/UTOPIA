@@ -60,7 +60,7 @@ onDeactivated(() => {
         id="treeHoleBox"
         ref="treeHoleBoxRef"
         :style="{ backgroundImage: `url(${url})` }"
-        class="w-screen h-screen overflow-hidden bg-no-repeat bg-cover flex items-center relative"
+        class="w-screen h-screen overflow-hidden bg-no-repeat bg-center bg-cover flex items-center relative"
       >
         <div
           class="bg-gray-600/60 py-1 px-3 mx-auto border-2 flex items-center rounded-full relative z-30 text-base text-gray-50"

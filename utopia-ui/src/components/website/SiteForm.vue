@@ -68,11 +68,11 @@ let showLetter = ref<boolean>(false)
   >
     <el-image
       :src="letterTop"
-      class="z-0 cursor-pointer w-[520px] !absolute bottom-[125px] max-sm:bottom-[102px] max-sm:w-[420px] max-xs:w-80 max-xs:bottom-[78px]"
+      class="z-0 cursor-pointer w-[520px] !absolute bottom-[125px] max-sm:bottom-[102px] max-sm:w-[420px] max-xs:w-full max-xs:bottom-[78px]"
       fit="cover"
       @click="showLetter = !showLetter"
     />
-    <div class="p-5 pb-0 z-10 w-[520px] max-sm:w-[420px] max-xs:w-80">
+    <div class="p-5 pb-0 z-10 w-[520px] max-sm:w-[420px] max-xs:w-full">
       <el-container
         :class="
           'relative radius-lg shadow use-transition-size overflow-hidden ' +
@@ -109,7 +109,7 @@ let showLetter = ref<boolean>(false)
     </div>
     <el-image
       :src="letterBottom"
-      class="z-20 cursor-pointer w-[520px] !absolute bottom-0 max-sm:w-[420px] max-xs:w-80"
+      class="z-20 cursor-pointer w-[520px] !absolute bottom-0 max-sm:w-[420px] max-xs:w-full"
       fit="cover"
       @click="showLetter = !showLetter"
     />

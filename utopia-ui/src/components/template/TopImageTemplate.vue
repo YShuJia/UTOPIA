@@ -32,7 +32,7 @@ onMounted(() => {
         height: `${imgHeight}px`,
         backgroundImage: 'url(' + (img !== '' ? img : defaultImg) + ')'
       }"
-      class="sticky top-0 max-md:!h-[450px] max-sm:!h-96 z-0 bg-cover bg-center bg-no-repeat"
+      class="sticky top-0 max-md:!h-[450px] z-0 bg-cover bg-center bg-no-repeat"
     >
       <el-container class="flex items-center justify-center">
         <slot class="z-10" name="title" />

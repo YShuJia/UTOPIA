@@ -21,6 +21,12 @@
 	gap: 3.33%;
 }
 
+.auto-avatar-column {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 0.6rem;
+}
+
 .auto-icon-column {
 	display: grid !important;
 	grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));

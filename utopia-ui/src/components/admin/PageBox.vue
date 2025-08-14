@@ -3,7 +3,7 @@ import { useScrollStore } from '@/stores/scroll'
 
 const scrollStore = useScrollStore()
 
-const { total, change } = defineProps({
+const { total, change} = defineProps({
   total: {
     type: Number,
     default: 0
@@ -11,7 +11,7 @@ const { total, change } = defineProps({
   change: {
     type: Function,
     default: () => {}
-  }
+  },
 })
 
 const dto = defineModel('dto', {
@@ -40,6 +40,7 @@ const changeHandler = () => {
     :total="total"
     background
     layout="total, sizes, prev, pager, next, jumper"
+    :hide-on-single-page="true"
     @change="changeHandler"
     @currentChange="pageChange"
   />
