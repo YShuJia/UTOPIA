@@ -4,7 +4,7 @@ import type { MakeOptional } from '@/type'
 import { getEnFiled } from '@/request/api/index'
 import type { ArticleVO } from '@/request/api/article'
 import type { AlbumVO } from '@/request/api/album'
-import type { DiaryVO } from '@/request/api/Diary'
+import type { DiaryVO } from '@/request/api/diary'
 
 export type UserVO = {
   avatar: string

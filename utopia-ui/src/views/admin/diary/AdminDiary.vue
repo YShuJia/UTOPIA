@@ -7,7 +7,7 @@ import {
   pageDiaryAdminApi,
   updateDiaryApi,
   updateDiaryReviewedApi
-} from '@/request/api/Diary'
+} from '@/request/api/diary'
 
 const columns: ColumnsType[] = [
   {

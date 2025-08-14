@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useSystemStore } from '@/stores/system'
-import { type DiaryVO, initDiaryVO } from '@/request/api/Diary'
+import { type DiaryVO, initDiaryVO } from '@/request/api/diary'
 
 const systemStore = useSystemStore()
 
