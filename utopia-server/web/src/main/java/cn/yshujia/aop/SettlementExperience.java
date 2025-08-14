@@ -63,12 +63,12 @@ public class SettlementExperience {
 					.last("limit 1"));
 			UserVO vo = (UserVO) redis.get(RedisKeys.USER + id);
 			Integer total = vo.getExperience() + value;
-			Long roleId = vo.getRoleId();
-			if (role != null) {
-				roleId = total >= role.getExperience() ? role.getId() : vo.getRoleId();
+			Long roleId = loginUser.getRoleId();
+			if (role != null && total >= role.getExperience()) {
+				roleId =  role.getId();
 			}
 			mapper.update(new LambdaUpdateWrapper<User>()
-					              .eq(User::getId, vo.getId())
+					              .eq(User::getId, id)
 					              .set(User::getExperience, total)
 					              .set(User::getRoleId, roleId));
 			vo.setExperience(total);
