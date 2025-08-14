@@ -57,7 +57,7 @@ onMounted(() => {
           <span class="text-white ml-2 text-xl">{{ message }}</span>
           <span class="top_text h-1/2"></span>
         </el-container>
-        <a class="absolute bottom-36" href="javascript:" @click="lookMore">
+        <a class="absolute bottom-36 max-sm:bottom-32" href="javascript:" @click="lookMore">
           <svg-icon class="animate-bounce" name="downward" size="4xl" />
         </a>
       </el-container>

@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { useSystemStore } from '@/stores/system'
 import { type DialogEnum, TableEnum } from '@/enum'
+import { useSlots } from "vue";
+const slots = useSlots()
+
 
 const systemStore = useSystemStore()
 
@@ -28,7 +31,9 @@ const { attribute, title } = defineProps({
       <span v-if="title != ''" class="flex text-xl justify-center pb-8">{{ title }}</span>
       <slot name="default" />
     </el-scrollbar>
-    <slot name="footer" />
+    <el-container v-if="slots.footer" class="px-5 pb-5 overflow-auto">
+      <slot name="footer" />
+    </el-container>
   </el-dialog>
 </template>
 

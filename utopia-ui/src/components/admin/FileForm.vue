@@ -39,12 +39,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <dialog-template :attribute="DialogEnum.MEDIA_FORM" class="p-5">
-    <el-container class="auto-min-column">
+  <dialog-template :attribute="DialogEnum.MEDIA_FORM">
+    <el-container :class="`overflow-y-auto ${type === 'wall' ? 'auto-min-column' : 'auto-avatar-column'}`">
       <image-box
         v-for="item in vo.list"
         :key="item.url"
-        :class="`radius-lg cursor-pointer shadow ${type === 'wall' ? 'aspect-video' : 'aspect-square'}`"
+        :class="`radius-lg cursor-pointer ${type === 'wall' ? 'aspect-video' : 'aspect-square'}`"
         :src="item.url"
         @click="
           () => {
@@ -54,7 +54,7 @@ onMounted(() => {
         "
       />
     </el-container>
-    <template #footer>
+    <template #footer v-if="!vo.isEmpty">
       <page-box v-model:dto="dto" :change="getList" :total="vo.total" />
     </template>
   </dialog-template>
