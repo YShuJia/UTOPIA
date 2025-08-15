@@ -41,7 +41,7 @@
       </el-container>
       <el-container class="inner-box" direction="vertical">
         <el-container class="gap-5 items-end px-4">
-          <svg-icon class="pb-1.5 border-b-4" message="如梦令" name="picture" size="2xl" />
+          <svg-icon class="pb-1.5 border-b-4" message="友人帐" name="friend-link" size="2xl" />
           <span>虽千万人吾往矣...</span>
         </el-container>
         <start-friend />
