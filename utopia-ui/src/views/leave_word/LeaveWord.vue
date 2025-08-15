@@ -18,12 +18,10 @@ const page = reactive<LeaveWordDTO>({
 const list = ref<LeaveWordVO[]>([])
 const getList = () => {
   pageLeaveWordApi(page).then((res: ResultType<PageVO<LeaveWordVO>>) => {
-    if (res.data != null && res.data.list.length > 0) {
-      if (res.data.isEmpty) {
-        page.pageNum = 1
-      }
-      list.value.push(...res.data.list)
+    if (res.data.isEmpty) {
+      page.pageNum = 1
     }
+    list.value.push(...res.data.list)
   })
   page.pageNum = (page.pageNum ?? 1) + 1
 }
