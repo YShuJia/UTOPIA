@@ -83,7 +83,7 @@ const to = (to: RouteLocationRaw) => {
         class="py-1 px-5 use-link-default"
         @click="
           to({
-            name: RouteNameEnum.DIARY,
+            name: RouteNameEnum.DIARY_DETAIL,
             params: {
               id: p.id
             }
