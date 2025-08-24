@@ -18,6 +18,11 @@ const form = defineModel<ClassifyDTO>('form', {
   default: {}
 })
 
+
+const open = () => {
+  form.value.key = form.value.key?.replace("sys:classify:", '')
+}
+
 // 表单
 const formRef = ref<any>()
 
@@ -54,7 +59,7 @@ const submitForm = () => {
 
 <template>
   <!-- 添加或修改对话框 -->
-  <dialog-template :attribute="TableEnum.CLASSIFY" :title="form.id ? '修改类别' : '新增类别'">
+  <dialog-template :open="open" :attribute="TableEnum.CLASSIFY" :title="form.id ? '修改类别' : '新增类别'">
     <el-form ref="formRef" :model="form" :rules="rules" class="flex flex-col gap-5">
       <el-form-item label="名称" prop="name">
         <el-input v-model="form.name" maxlength="16" placeholder="请输入（max 16）" />
