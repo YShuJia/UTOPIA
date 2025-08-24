@@ -28,6 +28,7 @@ public class DiaryTransform {
 		diary.setEnabled(diaryDTO.getEnabled());
 		diary.setReviewed(diaryDTO.getReviewed());
 		diary.setCreateBy(diaryDTO.getCreateBy());
+		diary.setCreateTime(diaryDTO.getCreateTime());
 		return diary;
 	}
 	

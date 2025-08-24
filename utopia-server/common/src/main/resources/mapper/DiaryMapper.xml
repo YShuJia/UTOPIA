@@ -73,7 +73,7 @@
 		from t_diary td
 		left join t_user tu on td.create_by = tu.id
 		<include refid="diary_where"/>
-		order by td.id desc
+		order by td.id
 	</select>
 	
 	
