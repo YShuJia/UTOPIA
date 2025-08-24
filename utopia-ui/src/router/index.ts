@@ -156,17 +156,7 @@ router.afterEach(async (to) => {
   } else {
     //等待 Vue 完成 DOM 更新
     await nextTick()
-    const timer = setTimeout(() => {
-      loading?.close()
-      clearTimeout(timer)
-    }, 500)
-    // 滚动到指定位置（如果有）
-    if (useScrollStore().scroll.isToTop && to.query.id != undefined) {
-      const doc = document.getElementById(to.query.id.toString())
-      if (doc != null) {
-        useScrollStore().scrollTo(doc.offsetTop + doc.clientHeight - 100)
-      }
-    }
+    loading?.close()
   }
 })
 
