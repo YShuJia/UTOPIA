@@ -54,7 +54,7 @@ onMounted(() => {
         "
       />
     </el-container>
-    <template #footer v-if="!vo.isEmpty">
+    <template #footer>
       <page-box v-model:dto="dto" :change="getList" :total="vo.total" />
     </template>
   </dialog-template>
