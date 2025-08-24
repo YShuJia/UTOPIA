@@ -7,7 +7,7 @@ const slots = useSlots()
 
 const systemStore = useSystemStore()
 
-const { attribute, title } = defineProps({
+const { attribute, title, open } = defineProps({
   attribute: {
     type: String as unknown as PropType<TableEnum | DialogEnum>,
     required: true
@@ -15,6 +15,10 @@ const { attribute, title } = defineProps({
   title: {
     type: String,
     default: ''
+  },
+  open: {
+    type: Function,
+    default: () => {}
   }
 })
 </script>
@@ -25,6 +29,7 @@ const { attribute, title } = defineProps({
     :show-close="false"
     class="overflow-hidden p-0 !min-w-72 w-full max-w-[1024px] use-box-large"
     top="5vh"
+    @open="open"
     @close="systemStore.dialog[attribute] = false"
   >
     <el-scrollbar class="flex flex-col max-h-[80vh] p-5">

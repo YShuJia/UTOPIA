@@ -94,6 +94,9 @@ public class AdminClassifyServiceImpl extends ServiceImpl<ClassifyMapper, Classi
 	@Transactional(rollbackFor = {Exception.class})
 	public void update(ClassifyDTO dto) {
 		Classify classify = ClassifyTransform.dto2Entity(dto);
+		if (!classify.getKey().contains("sys:classify:")) {
+			classify.setKey("sys:classify:" + classify.getKey());
+		}
 		try {
 			int n = mapper.update(classify, SecurityUtils.createUpdateWrapper(classify.getId()));
 			if (n <= 0) {

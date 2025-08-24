@@ -40,7 +40,6 @@ const changeHandler = () => {
     :total="total"
     background
     layout="total, sizes, prev, pager, next, jumper"
-    :hide-on-single-page="true"
     @change="changeHandler"
     @currentChange="pageChange"
   />

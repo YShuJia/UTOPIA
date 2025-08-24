@@ -25,7 +25,7 @@ export enum RouteNameEnum {
   ABOUT = 'about',
   USER_INFO = 'user_info',
   ADMIN_HOME = 'admin_home',
-  FRIEND = 'friend'
+  FRIEND = 'friends'
 }
 
 export enum RouterEnum {
