@@ -43,7 +43,7 @@ const openUrl = (item: RouterType) => {
           :href="child.meta.frame ? child.path : 'javascript:'"
           @click="child.components ? routerTo(child.name) : ''"
         >
-          <el-menu-item :index="RouterEnum.ADMIN + '/' + item.path + '/' + child.path">
+          <el-menu-item :index="RouterEnum.ADMIN + '/' + item.path + '/' + child.path" class="bg-color-three">
             <svg-icon
               :message="child.meta.title"
               :name="child.meta.icon"

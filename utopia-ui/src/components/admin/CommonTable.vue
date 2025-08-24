@@ -232,6 +232,7 @@ onMounted(() => {
       border
       height="100%"
       row-key="id"
+      class="use-theme"
       table-layout="auto"
       @selection-change="handleSelectionChange"
     >
