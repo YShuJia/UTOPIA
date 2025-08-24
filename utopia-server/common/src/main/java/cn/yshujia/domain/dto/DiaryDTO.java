@@ -6,7 +6,9 @@ import cn.yshujia.validation.UpdateGroup;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,7 +54,9 @@ public class DiaryDTO extends PageDTO {
 	// 是修改状态还是修改所有数据
 	@NotNull(groups = {UpdateGroup.class}, message = "[是否只修改状态] 不能为空！")
 	private Boolean updateStatus;
-	
+
 	private Long createBy;
-	
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date createTime;
 }

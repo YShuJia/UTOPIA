@@ -7,7 +7,6 @@ import cn.yshujia.domain.vo.PageVO;
 import cn.yshujia.mapper.DiaryMapper;
 import cn.yshujia.transform.DiaryTransform;
 import cn.yshujia.ui.vo.DiaryVO;
-import cn.yshujia.utils.CollectionUtils;
 import cn.yshujia.utils.PageUtils;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -63,14 +62,14 @@ public class DiaryServiceImpl extends ServiceImpl<DiaryMapper, Diary> {
 	}
 	
 	public PageVO<DiaryVO> page(DiaryDTO dto) {
-		List<DiaryVO> list = redis.range(RedisKeys.DIARY_LIST, dto.getPageNum(), dto.getPageSize());
-		if (!CollectionUtils.isEmpty(list) || dto.getPageNum() != 1) {
-			return PageUtils.page(dto, list);
+		List<DiaryVO> list;
+		if (dto.getCreateTime() != null) {
+			dto.setEnabled(true);
+			dto.setReviewed(1);
+			list = mapper.list(DiaryTransform.dto2Entity(dto));
+		} else {
+			list = redis.range(RedisKeys.DIARY_LIST, dto.getPageNum(), dto.getPageSize());
 		}
-		dto.setEnabled(true);
-		dto.setReviewed(1);
-		list = mapper.list(DiaryTransform.dto2Entity(dto));
-		redis.rightPushAll(RedisKeys.DIARY_LIST, list, RedisKeys.ONE_DAYS);
 		return PageUtils.page(dto, list);
 	}
 	

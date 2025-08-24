@@ -9,6 +9,10 @@ dayjs.extend(duration)
 dayjs.extend(relativeTime)
 
 export const formatDate = (date: string | Date | number) => {
+  return dayjs(date).format('YYYY-MM-DD')
+}
+
+export const formatDatetime = (date: string | Date | number) => {
   return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
 }
 
@@ -19,8 +23,8 @@ export const fromNow = (date: string | Date | number) => {
 // 计算日期差异并返回格式化字符串
 export function getDateDiff(start: string | Date | number, end: string | Date | number) {
   // 创建起始日期和结束日期对象
-  const startDate = dayjs(formatDate(start), 'YYYY-MM-DD HH:mm:ss')
-  const endDate = dayjs(formatDate(end), 'YYYY-MM-DD HH:mm:ss')
+  const startDate = dayjs(formatDatetime(start), 'YYYY-MM-DD HH:mm:ss')
+  const endDate = dayjs(formatDatetime(end), 'YYYY-MM-DD HH:mm:ss')
   // 计算日期差异
   const diff = endDate.diff(startDate)
   // 提取差异的时间单位

@@ -29,6 +29,7 @@ export type AdminDiaryVO = DiaryVO & {
 
 export type DiaryDTO = MakeOptional<PageDTO> &
   MakeOptional<DiaryVO> & {
+    createTime?: Date | string
     recommend?: boolean
     enabled?: boolean
     reviewed?: number

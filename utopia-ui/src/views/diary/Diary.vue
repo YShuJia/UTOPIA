@@ -2,6 +2,7 @@
 import type { CalendarDateType, CalendarInstance } from 'element-plus'
 import { initPageDTO, initPageVO, type PageVO, type ResultType } from '@/request/config'
 import { type DiaryDTO, type DiaryVO, pageDiaryApi } from '@/request/api/diary'
+import { formatDate, formatDatetime } from '@/utils/timeUtils'
 
 const route = useRoute()
 
@@ -13,16 +14,22 @@ const selectDate = (val: CalendarDateType) => {
   calendar.value.selectDate(val)
 }
 
+const date = ref(new Date())
 const vo = ref<PageVO<DiaryVO>>(initPageVO())
 
-const page = ref<DiaryDTO>(initPageDTO())
+const page = ref<DiaryDTO>({
+  pageSize: 10,
+  pageNum: 1,
+})
+
 const getList = () => {
   pageDiaryApi(page.value).then((res: ResultType<PageVO<DiaryVO>>) => {
     vo.value = res.data
   })
 }
 
-onMounted(() => {
+watchEffect(() => {
+  page.value.createTime = formatDate(date.value)
   getList()
 })
 </script>
@@ -37,7 +44,7 @@ onMounted(() => {
     </template>
     <el-container class="inner-box gap-10" direction="vertical">
       <el-container class="p-5 use-theme">
-        <el-calendar ref="calendar" class="use-box-large bg-transparent">
+        <el-calendar v-model="date" ref="calendar" class="use-box-large bg-transparent">
           <template #date-cell="{ data }">
             <p
               :class="data.isSelected ? 'is-selected relative text-center' : 'relative text-center'"
@@ -73,6 +80,7 @@ onMounted(() => {
           :index="index"
         />
       </el-container>
+      <loading-more :action="getList" :empty="vo.isEmpty"/>
     </el-container>
   </top-image-template>
 </template>
