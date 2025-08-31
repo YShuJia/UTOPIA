@@ -28,26 +28,26 @@ import java.util.List;
 
 @Service
 public class WebsiteServiceImpl extends ServiceImpl<WebsiteMapper, Website> {
-	
+
 	@Resource
 	public WebsiteMapper mapper;
-	
+
 	@Resource
 	RedisServiceImpl<WebsiteVO> redis;
-	
+
 	public PageVO<WebsiteVO> page(WebsiteDTO dto) {
 		// 判断缓存中是否存在
 		List<WebsiteVO> list = redis.range(RedisKeys.WEBSITE_LIST_RECOMMEND + dto.getRecommend(), dto.getPageNum(), dto.getPageSize());
-		
+
 		if (!CollectionUtils.isEmpty(list) || dto.getPageNum() != 1) {
 			return PageUtils.page(dto, list, redis.listSize(RedisKeys.WEBSITE_LIST_RECOMMEND + dto.getRecommend()));
 		}
 		// 获取数据库数据
-		list = mapper.list(WebsiteTransform.dto2Entity(dto));
+		list = mapper.list(new Website(dto.getRecommend(), true, 1));
 		redis.rightPushAll(RedisKeys.WEBSITE_LIST_RECOMMEND + dto.getRecommend(), list, RedisKeys.THREE_DAYS);
 		return PageUtils.page(dto, list);
 	}
-	
+
 	@Transactional(rollbackFor = {Exception.class})
 	public void insert(WebsiteDTO dto) {
 		Website website = WebsiteTransform.dto2Entity(dto);
@@ -63,5 +63,5 @@ public class WebsiteServiceImpl extends ServiceImpl<WebsiteMapper, Website> {
 			throw new CustomException(e.getMessage());
 		}
 	}
-	
+
 }
