@@ -4,7 +4,7 @@ import type { UserVO } from '@/request/api/user'
 import { SmUtils } from '@/utils/smUtils'
 import { useSystemStore } from '@/stores/system'
 
-export const loginApi = (username: string, password: string, code: string) => {
+export const loginApi = (username: string, password: string) => {
   return http<UserVO>({
     url: `/login`,
     method: 'POST',
@@ -14,7 +14,6 @@ export const loginApi = (username: string, password: string, code: string) => {
     data: {
       username: getEnFiled(username),
       password: getEnFiled(password),
-      code: code
     }
   })
 }

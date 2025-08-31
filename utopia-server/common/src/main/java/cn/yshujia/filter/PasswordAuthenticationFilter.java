@@ -15,7 +15,10 @@ import cn.yshujia.repository.SMRepository;
 import cn.yshujia.service.TokenService;
 import cn.yshujia.service.impl.RedisServiceImpl;
 import cn.yshujia.ui.vo.UserVO;
-import cn.yshujia.utils.*;
+import cn.yshujia.utils.IDUtils;
+import cn.yshujia.utils.JwtTokenUtils;
+import cn.yshujia.utils.RequestUtils;
+import cn.yshujia.utils.ResponseUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +35,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Optional;
 
 /**
  * @author yshujia
@@ -42,29 +44,29 @@ import java.util.Optional;
 
 @Slf4j
 public class PasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-	
+
 	private final AuthenticationManager authenticationManager;
-	
+
 	@Resource
 	TokenService service;
-	
+
 	@Resource
 	SMRepository smRepository;
-	
+
 	@Resource
 	UserMapper userMapper;
-	
+
 	@Resource
 	RedisServiceImpl<Object> redis;
-	
+
 	@Resource
 	SystemConfig systemConfig;
-	
+
 	@Autowired
 	public PasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
 	}
-	
+
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 		String key = systemConfig.getPasswordBanKey() + RequestUtils.getIp(request);
@@ -73,34 +75,23 @@ public class PasswordAuthenticationFilter extends UsernamePasswordAuthentication
 			ResponseUtils.writeFailure(response, "已被封禁，" + expiration + "小时后解封！");
 			return null;
 		}
-		// 验证码校验
-		String code = request.getParameter("code");
-		String ip = RequestUtils.getIp(request);
-		String captcha = Optional.ofNullable(redis.get(RedisKeys.CAPTCHA + ip)).orElse("").toString();
-		if (StringUtils.isEmpty(captcha)) {
-			ResponseUtils.writeFailure(response, "验证码已过期！");
-		} else if (!code.equals(captcha)) {
-			ResponseUtils.writeFailure(response, "验证码错误！");
-		} else {
-			String encryptedUsername = request.getParameter("username");
-			String encryptedPassword = request.getParameter("password");
-			String privateKey = this.smRepository.getPrivateKey(request);
-			String username;
-			String password;
-			try {
-				username = SMEncrypt.deSm2(privateKey, encryptedUsername);
-				password = SMEncrypt.deSm2(privateKey, encryptedPassword);
-			} catch (CustomException e) {
-				// 移除 密钥 缓存
-				smRepository.remove(request);
-				throw new ServiceException("数据解密失败，请刷新页面后重试！");
-			}
-			UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
-			return this.authenticationManager.authenticate(authRequest);
+		String encryptedUsername = request.getParameter("username");
+		String encryptedPassword = request.getParameter("password");
+		String privateKey = this.smRepository.getPrivateKey(request);
+		String username;
+		String password;
+		try {
+			username = SMEncrypt.deSm2(privateKey, encryptedUsername);
+			password = SMEncrypt.deSm2(privateKey, encryptedPassword);
+		} catch (CustomException e) {
+			// 移除 密钥 缓存
+			smRepository.remove(request);
+			throw new ServiceException("数据解密失败，请刷新页面后重试！");
 		}
-		return null;
+		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+		return this.authenticationManager.authenticate(authRequest);
 	}
-	
+
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
 		LoginUser loginUser = (LoginUser) authResult.getPrincipal();
@@ -129,7 +120,7 @@ public class PasswordAuthenticationFilter extends UsernamePasswordAuthentication
 		}
 		ResponseUtils.writeSuccess(response, apiVO);
 	}
-	
+
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
 		Long times = ban(request);
@@ -141,8 +132,8 @@ public class PasswordAuthenticationFilter extends UsernamePasswordAuthentication
 			ResponseUtils.writeFailure(response, "邮箱或密码错误，还可验证 " + times + " 次！");
 		}
 	}
-	
-	
+
+
 	private Long ban(HttpServletRequest request) {
 		String key = systemConfig.getPasswordErrorKey() + RequestUtils.getIp(request);
 		Long times = redis.increment(key, 1L, Duration.ofHours(systemConfig.getErrorTime()));
@@ -152,5 +143,5 @@ public class PasswordAuthenticationFilter extends UsernamePasswordAuthentication
 		}
 		return systemConfig.getErrorTimes() - times;
 	}
-	
+
 }

@@ -94,20 +94,15 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
       }
     },
     server: {
-      proxy: {},
+      proxy: {
+        [env.VITE_API_PREFIX]: {
+          target: env.VITE_PROXY_URL,
+          changeOrigin: true,
+          rewrite: (path: string) => path.replace(env.VITE_API_PREFIX, '')
+        }
+      },
       warmup: {
         clientFiles: ['./index.html', './src/{views,components}/**']
-      }
-    }
-  }
-
-  // 只有在开发模式下才添加 server.proxy
-  if (mode === 'dev' && env.VITE_PROXY_OPEN && config.server) {
-    config.server.proxy = {
-      [env.VITE_API_PREFIX]: {
-        target: env.VITE_PROXY_URL,
-        changeOrigin: true,
-        rewrite: (path: string) => path.replace(env.VITE_API_PREFIX, '')
       }
     }
   }

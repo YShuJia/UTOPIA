@@ -17,7 +17,7 @@ server:
       min-spare: 100
 
 socketio:
-  host: localhost
+  host: 0.0.0.0
   port: 9092
   # 单条消息最大长度，3M
   maxFramePayloadLength: 1048576
@@ -44,12 +44,13 @@ spring:
     allow-circular-references: true
   aop:
     auto: true
+
   #  数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 123456
-    url: jdbc:mysql://localhost:3306/utopia?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+    username: your_name
+    password: your_pass
+    url: jdbc:mysql://mysql:3306/utopia?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       db-type: mysql
@@ -84,8 +85,8 @@ spring:
         allow:
         url-pattern: /druid/*
         # 控制台管理用户名和密码
-        login-username: yshujia
-        login-password: 123456
+        login-username: your_name
+        login-password: your_pass
       filter:
         stat:
           enabled: true
@@ -100,8 +101,8 @@ spring:
     redis:
       database: 0
       port: 6379
-      host: localhost
-      password: 123456
+      host: redis
+      password: your_pass
       lettuce:
         pool:
           max-active: 16 # 连接池最大连接数（使用负值表示没有限制）
@@ -123,24 +124,23 @@ spring:
   # 邮件推送
   mail:
     host: smtp.163.com
-    port: 25
-    username: yshujia2001@163.com
+    port: 587
+    username: your_name
     # 邮箱 POP3/SMTP 服务授权码，一般有效期 180 天
-    password: NVpFSEqmtTv8hT6y
+    password: your_pass
     default-encoding: UTF-8
     properties:
       mail:
         smtp:
           auth: true
           ssl:
-            enabled: false
+            enable: true
           starttls:
             enable: true
             required: true
-          # 设置邮件超时时间防止服务器阻塞
-          timeout: 5000
-          connection-timeout: 5000
-          write-timeout: 5000
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
 
   #文件上传
   servlet:
@@ -154,7 +154,7 @@ spring:
   devtools:
     restart:
       # 热部署开关
-      enabled: true
+      enabled: false
 
 # 日志记录
 decorator:
@@ -165,7 +165,6 @@ decorator:
       custom-appender-class: cn.yshujia.config.P6SpyLog
       multiline: true
 
-#日志
 logging:
   charset:
     console: utf-8
@@ -177,13 +176,14 @@ logging:
     cn.yshujia.aop: info
     cn.yshujia.config: debug
 
-# 配置 mybatis
+# 配置mybatis
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   configuration:
     # 驼峰命名
     call-setters-on-nulls: true
     map-underscore-to-camel-case: true
+
 
 # 分页插件
 pagehelper:
@@ -192,6 +192,7 @@ pagehelper:
   # 规整方法参数获取
   support-methods-arguments: true
   params: count=countSql
+
 
 # knife4j 和 springdoc
 springdoc:
@@ -214,21 +215,21 @@ knife4j:
 jwt:
   # expire 单位分钟
   expire: 4320 # 3天
-  secret: "6789566B59703373367639792F423F4528482B4D6251655468576D5A71341234"
+  secret: "5223426B59703373367639792F423F4528482B4D6251655468576D5A71341238"
   # 自动续 token 时间 单位分钟
   refresh: 60
 
 minio:
-  accessKey: root
-  secretKey: 12345678
+  accessKey: your_name
+  secretKey: your_pass
   bucketName: static
-  endpoint: http://localhost:9000
-  # 超过 10m 压缩，图片无损转 webp 时大小会减少一半
+  endpoint: https://static.yshujia.cn:9000
+  # 图片压缩大小限制 超过 10m 压缩 
   max-img-size: 10485760
   # 图片压缩质量限制 0-1
   compression-quality: 0.9
-  # # 静态资源访问域名前缀
-  domain: http://localhost:9000/static
+  # 静态资源访问域名前缀
+  domain: https://static.yshujia.cn/static
 
 # 系统配置
 system:
@@ -242,7 +243,7 @@ system:
   limit-time: 3
   # 接口限流（在 3 小时内触发内部接口限流 30 次封禁 72 小时）
   limit-times: 30
-  # 密码试错 / 过度接口访问封禁时间 单位 h
+  # 密码试错/过度接口访问封禁时间 单位 h
   ban-time: 72
   # 敏感数据替换符
   replace-char: "[非礼无言]"

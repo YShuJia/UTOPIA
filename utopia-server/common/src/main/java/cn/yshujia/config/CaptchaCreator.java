@@ -9,16 +9,16 @@ import com.google.code.kaptcha.text.impl.DefaultTextCreator;
  * @description 验证码文本生成器
  */
 public class CaptchaCreator extends DefaultTextCreator {
-	
+
 	private static final String[] C_NUMBERS = "0,1,2,3,4,5,6,7,8,9,10".split(",");
-	
+
 	@Override
 	public String getText() {
 		Integer result;
-		int x = RandomUtils.getRandom(10);
-		int y = RandomUtils.getRandom(10);
+		int x = RandomUtils.random(10);
+		int y = RandomUtils.random(10);
 		StringBuilder suChinese = new StringBuilder();
-		int randomOperands = RandomUtils.getRandom(3);
+		int randomOperands = RandomUtils.random(3);
 		if (randomOperands == 0) {
 			result = x * y;
 			suChinese.append(C_NUMBERS[x]);
@@ -52,5 +52,5 @@ public class CaptchaCreator extends DefaultTextCreator {
 		suChinese.append("=?@").append(result);
 		return suChinese.toString();
 	}
-	
+
 }

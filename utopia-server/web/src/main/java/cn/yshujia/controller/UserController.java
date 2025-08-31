@@ -22,35 +22,37 @@ import org.springframework.web.bind.annotation.*;
  * @create 2024/4/23
  * @description 控制器
  */
+
 @RestController
 @Tag(name = "User", description = "用户Api")
 @RequestMapping("/ui/user")
 public class UserController extends BaseController {
-	
+
 	@Resource
 	private UserServiceImpl service;
-	
+
 	@RateLimiter
 	@GetMapping("/code")
-	@Operation(summary = "获取登录注册验证码")
-	public ApiVO<String> getCode(HttpServletRequest request) {
-		return success(service.getCaptcha(request));
+	@Operation(summary = "发送注册邮箱验证码，返回验证码过期时间")
+	@DecryptFields(value = {"email"})
+	public ApiVO<Integer> getCode(@RequestParam String email) {
+		return success(service.sendCode(email));
 	}
-	
+
 	@RateLimiter(count = 2)
 	@GetMapping("/exchange")
 	@Operation(summary = "交换sm2密钥")
 	public ApiVO<String> exchange(HttpServletRequest request) {
 		return success(service.exchangeSm2Key(request));
 	}
-	
+
 	@RateLimiter(count = 2)
 	@GetMapping("/search/{key}")
 	@Operation(summary = "全局搜索功能")
 	public ApiVO<SearchVO> searchByTask(@PathVariable String key) {
 		return success(service.searchByTask(key));
 	}
-	
+
 	@RateLimiter(count = 2)
 	@GetMapping("/today/experience")
 	@Operation(summary = "获取用户今日经验值")
@@ -58,7 +60,7 @@ public class UserController extends BaseController {
 		Long userId = SecurityUtils.getUserId();
 		return success(service.getExperience(userId));
 	}
-	
+
 	@RateLimiter(count = 2)
 	@DecryptFields
 	@GetMapping("/info")
@@ -69,16 +71,16 @@ public class UserController extends BaseController {
 		user.setToken(loginUser.getToken());
 		return success(user);
 	}
-	
+
 	@RateLimiter
 	@DecryptFields(value = {"email", "password"})
 	@PostMapping("/insert")
 	@Operation(summary = "注册用户")
-	public ApiVO<Boolean> insert(@RequestParam String email, @RequestParam String password) {
-		service.insert(email, password);
+	public ApiVO<Boolean> insert(@RequestParam String code, @RequestParam String email, @RequestParam String password) {
+		service.insert(code, email, password);
 		return message("用户注册成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@DecryptFields(value = {"email", "password"})
@@ -90,7 +92,7 @@ public class UserController extends BaseController {
 		service.update(user);
 		return message("用户信息更新成功！");
 	}
-	
+
 	@RateLimiter
 	@DecryptFields(value = {"password", "newPassword"})
 	@PutMapping("/update/password")
@@ -100,5 +102,5 @@ public class UserController extends BaseController {
 		service.updatePassword(SecurityUtils.getUserId(), password, newPassword);
 		return message("密码更新成功，请重新登录！");
 	}
-	
+
 }

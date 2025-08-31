@@ -75,6 +75,7 @@ services:
     ports:
       - "9898:9898"
       - "9092:9092"
+      - "587:587"
     networks:
       - server_net
 

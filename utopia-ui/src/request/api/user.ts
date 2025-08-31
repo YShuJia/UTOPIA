@@ -39,19 +39,6 @@ export type AdminUserVO = BaseUser & {
   updateUsername: string
 }
 
-export const userAdminVO2DTO = (vo: AdminUserVO): UserDTO => {
-  return {
-    id: vo.id,
-    roleId: vo.roleId,
-    avatar: vo.avatar,
-    username: vo.username,
-    gender: vo.gender,
-    email: vo.email,
-    password: undefined,
-    enabled: vo.enabled
-  }
-}
-
 export const initUserVO = (): UserVO => {
   return {
     avatar: '',
@@ -93,10 +80,13 @@ export const initSearchVO = (): SearchVO => {
   }
 }
 
-export const getCodeApi = () => {
-  return http<string>({
+export const getCodeApi = (email: string) => {
+  return http<number>({
     url: `/ui/user/code`,
-    method: 'GET'
+    method: 'GET',
+    params: {
+      email: getEnFiled(email)
+    }
   })
 }
 
@@ -121,7 +111,7 @@ export const getTodayExperienceApi = () => {
   })
 }
 
-export const insertUserApi = (email: string, password: string) => {
+export const insertUserApi = (code: string, email: string, password: string) => {
   return http<boolean>({
     url: `/ui/user/insert`,
     method: 'POST',
@@ -129,6 +119,7 @@ export const insertUserApi = (email: string, password: string) => {
       'content-type': 'application/x-www-form-urlencoded'
     },
     data: {
+      code: code,
       email: getEnFiled(email),
       password: getEnFiled(password)
     }

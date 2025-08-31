@@ -16,6 +16,11 @@ export const useUserStore = defineStore(
       user.value.avatar = icon
     }
 
+    const code = ref({
+      expireTime: 180,
+      isCountdown: false
+    })
+
     const logout = async () => {
       await useGlobalDialog('确定要退出登录？').then((res) => {
         if (res) {
@@ -34,12 +39,13 @@ export const useUserStore = defineStore(
     return {
       user,
       logout,
-      clear
+      clear,
+      code
     }
   },
   {
     persist: {
-      paths: [],
+      paths: ['code'],
       afterRestore: async (state) => {
         const token = getToken()
         if (token !== null) {

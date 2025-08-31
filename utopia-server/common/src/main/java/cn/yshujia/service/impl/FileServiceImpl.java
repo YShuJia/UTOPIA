@@ -26,13 +26,13 @@ import java.util.List;
  */
 @Service
 public class FileServiceImpl extends ServiceImpl<FileMapper, File> {
-	
+
 	@Resource
 	public FileMapper mapper;
-	
+
 	@Resource
 	RedisServiceImpl<FileVO> redis;
-	
+
 	public PageVO<FileVO> pageAvatar(FileDTO dto) {
 		Long labelId = dto.getLabelId();
 		if (labelId == null) {
@@ -40,7 +40,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> {
 		}
 		return listCache(labelId);
 	}
-	
+
 	public PageVO<FileVO> pageWall(FileDTO dto) {
 		Long labelId = dto.getLabelId();
 		if (labelId == null) {
@@ -48,7 +48,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> {
 		}
 		return listCache(labelId);
 	}
-	
+
 	public PageVO<FileVO> listCache(Long labelId) {
 		List<FileVO> voList = redis.range(RedisKeys.FILE_LABEL_ID + labelId, 0, -1);
 		if (CollectionUtils.isEmpty(voList)) {
@@ -57,29 +57,29 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> {
 		}
 		return PageUtils.page(voList);
 	}
-	
+
 	public String selectRandomIcon() {
 		List<FileVO> list = redis.range(RedisKeys.FILE_LABEL_ID + DefaultConst.ICON_LABEL_ID, 0, -1);
 		if (!CollectionUtils.isEmpty(list)) {
-			return list.get(RandomUtils.getRandom(list.size())).getUrl();
+			return list.get(RandomUtils.random(list.size())).getUrl();
 		}
 		list = mapper.list(new File(DefaultConst.ICON_LABEL_ID, true, 1));
 		if (!CollectionUtils.isEmpty(list)) {
-			return list.get(RandomUtils.getRandom(list.size())).getUrl();
+			return list.get(RandomUtils.random(list.size())).getUrl();
 		}
 		return null;
 	}
-	
+
 	public String selectRandomWall() {
 		List<FileVO> list = redis.range(RedisKeys.FILE_LABEL_ID + DefaultConst.WALL_LABEL_ID, 0, -1);
 		if (!CollectionUtils.isEmpty(list)) {
-			return list.get(RandomUtils.getRandom(list.size())).getUrl();
+			return list.get(RandomUtils.random(list.size())).getUrl();
 		}
 		list = mapper.list(new File(DefaultConst.WALL_LABEL_ID, true, 1));
 		if (!CollectionUtils.isEmpty(list)) {
-			return list.get(RandomUtils.getRandom(list.size())).getUrl();
+			return list.get(RandomUtils.random(list.size())).getUrl();
 		}
 		return null;
 	}
-	
+
 }

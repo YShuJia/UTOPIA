@@ -16,16 +16,15 @@ import cn.yshujia.mapper.ArticleMapper;
 import cn.yshujia.mapper.DiaryMapper;
 import cn.yshujia.mapper.UserMapper;
 import cn.yshujia.repository.SMRepository;
+import cn.yshujia.service.EmailService;
 import cn.yshujia.transform.UserTransform;
 import cn.yshujia.ui.vo.*;
 import cn.yshujia.utils.IDUtils;
 import cn.yshujia.utils.RandomUtils;
-import cn.yshujia.utils.RequestUtils;
 import cn.yshujia.utils.TimeUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.google.code.kaptcha.Producer;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.*;
 
 /**
@@ -47,55 +47,52 @@ import java.util.concurrent.*;
 @Service
 @Transactional(rollbackFor = {Exception.class})
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> {
-	
+
 	@Resource
 	public AlbumMapper albumMapper;
-	
+
 	@Resource
 	public DiaryMapper diaryMapper;
-	
+
 	@Resource
 	public ArticleMapper articleMapper;
-	
+
 	@Resource
 	UserMapper mapper;
-	
+
 	@Resource
 	RedisServiceImpl<Object> redis;
-	
+
 	@Resource
 	PasswordEncoder passwordEncoder;
-	
+
 	@Resource
 	FileServiceImpl fileService;
-	
+	@Resource
+	EmailService emailService;
 	@Resource(name = "Task")
 	private Executor executor;
-	
-	@Resource(name = "captcha")
-	private Producer producer;
-	
 	@Resource
 	private SMRepository smRepository;
-	
+
 	public String exchangeSm2Key(HttpServletRequest request) {
 		// 返回后端公钥
 		return smRepository.getPublicKey(request);
 	}
-	
-	public String getCaptcha(HttpServletRequest request) {
-		String ip = RequestUtils.getIp(request);
-		// 生成验证码
-		String captcha = producer.createText();
-		if (null != captcha) {
-			redis.set(RedisKeys.CAPTCHA + ip, captcha, RedisKeys.THREE_MINUTES);
-			// 返回验证码
-			return captcha;
+
+	public Integer sendCode(String email) {
+		String captcha = Optional.ofNullable(redis.get(RedisKeys.CAPTCHA + email))
+				.map(Object::toString)
+				.orElse(null);
+		if (null == captcha) {
+			// 生成验证码
+			captcha = String.valueOf(RandomUtils.random(100000, 999999));
+			redis.set(RedisKeys.CAPTCHA + email, captcha, RedisKeys.THREE_MINUTES);
+			emailService.captchaRegister(email, captcha, 3);
 		}
-		return null;
+		return 180;
 	}
-	
-	
+
 	public SearchVO searchByTask(String search) {
 		SearchVO searchVO = new SearchVO();
 		CompletableFuture<List<AlbumVO>> album = getAlbumVO(search);
@@ -113,19 +110,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> {
 		}
 		return searchVO;
 	}
-	
+
 	private CompletableFuture<List<AlbumVO>> getAlbumVO(String search) {
 		return CompletableFuture.supplyAsync(() -> albumMapper.list(new Album(search, true, 1)), executor);
 	}
-	
+
 	private CompletableFuture<List<ArticleVO>> getArticleVO(String search) {
 		return CompletableFuture.supplyAsync(() -> articleMapper.list(new Article(search, true, 1)), executor);
 	}
-	
+
 	private CompletableFuture<List<DiaryVO>> getDiaryVO(String search) {
 		return CompletableFuture.supplyAsync(() -> diaryMapper.list(new Diary(search, true, 1)), executor);
 	}
-	
+
 	public UserVO oneById(Long userId) {
 		UserVO userVO = (UserVO) redis.get(RedisKeys.USER + userId);
 		if (null != userVO) {
@@ -135,22 +132,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> {
 		redis.set(RedisKeys.USER + userId, userVO, RedisKeys.THREE_DAYS);
 		return userVO;
 	}
-	
+
 	public Integer getExperience(Long id) {
 		Integer experience = (Integer) redis.get(RedisKeys.EXPERIENCE + id + ":" + TimeUtils.getDay(new Date()));
 		return null != experience ? experience : 0;
 	}
-	
-	
+
+
 	@Transactional(rollbackFor = {Exception.class})
-	public void insert(String email, String password) throws ServiceException {
+	public void insert(String code, String email, String password) throws ServiceException {
+		String captcha = Optional.ofNullable(redis.get(RedisKeys.CAPTCHA + email))
+				.map(Object::toString)
+				.orElse(null);
+		if (null == captcha) {
+			throw new ServiceException("验证码已过期！");
+		}
+		if (!code.equals(captcha)) {
+			throw new ServiceException("验证码错误！");
+		}
 		// 判断邮箱是否重复
 		User old = mapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, AESEncrypt.encrypt(email)));
 		if (old != null) {
 			throw new ServiceException(HttpCode.HAD_USER, "该账号已被注册！");
 		}
 		Long id = IDUtils.getId();
-		User user = new User(id, "用户" + RandomUtils.getRandom(10000, 99999), passwordEncoder.encode(password), email, fileService.selectRandomIcon());
+		User user = new User(id, "用户" + RandomUtils.randomIncludeMax(10000, 99999), passwordEncoder.encode(password), email, fileService.selectRandomIcon());
 		user.setCreateBy(id);
 		user.setUpdateBy(id);
 		user.setRoleId(DefaultConst.MIN_ROLE_ID);
@@ -163,7 +169,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> {
 			throw new CustomException(e.getMessage());
 		}
 	}
-	
+
 	@Transactional(rollbackFor = {Exception.class})
 	public void update(UserDTO dto) {
 		User user = UserTransform.dtoToEntity(dto);
@@ -177,7 +183,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> {
 			throw new CustomException(e.getMessage());
 		}
 	}
-	
+
 	@Transactional(rollbackFor = {Exception.class})
 	public void updatePassword(Long id, String password, String newPassword) {
 		User user = mapper.selectById(id);
@@ -189,8 +195,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> {
 		}
 		try {
 			int n = mapper.update(new LambdaUpdateWrapper<User>()
-					                      .set(User::getPassword, passwordEncoder.encode(newPassword))
-					                      .eq(User::getId, id));
+					.set(User::getPassword, passwordEncoder.encode(newPassword))
+					.eq(User::getId, id));
 			if (n <= 0) {
 				throw new ServiceException("更新密码失败，请稍后再试！");
 			}
@@ -198,5 +204,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> {
 			throw new CustomException(e.getMessage());
 		}
 	}
-	
+
 }
