@@ -128,7 +128,7 @@
 			<artifactId>redisson-spring-boot-starter</artifactId>
 			<version>3.33.0</version>
 		</dependency>
-		<!--请求发送httpclient-->
+		<!--请求发送 httpclient-->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
