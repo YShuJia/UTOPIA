@@ -22,7 +22,7 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
   const { mode } = configEnv
   const env = loadEnv(mode, process.cwd(), '')
   // 基础配置对象
-  const config: UserConfig = {
+  return {
     build: {
       // 清除所有console和debugger
       minify: 'terser',
@@ -106,5 +106,4 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
       }
     }
   }
-  return config
 })
