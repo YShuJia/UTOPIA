@@ -15,30 +15,36 @@ import java.util.regex.Pattern;
 
 
 public class DomainContentHandler extends AbstractJsonTypeHandler<String> {
-	
+
 	public DomainContentHandler(Class<?> type) {
 		super(type);
 	}
-	
+
 	@Override
 	public String parse(String json) {
 		if (StringUtils.isEmpty(json)) {
 			return "";
 		}
-		// 匹配 src 属性 添加静态资源域名
-		Pattern srcPattern = Pattern.compile("src='((?!http).*?)'");
-		String replacement = "src='" + MinioUtils.STATIC_DOMAIN + "$1'";
-		Matcher matcher = srcPattern.matcher(json);
+		Pattern pattern = Pattern.compile("(src|poster)\\s*=\\s*(['\"])(.*?)\\2", Pattern.DOTALL);
+		Matcher matcher = pattern.matcher(json);
 		StringBuilder text = new StringBuilder();
-		// 替换匹配
+
 		while (matcher.find()) {
-			matcher.appendReplacement(text, replacement);
+			// "src" 或 "poster"
+			String attr = matcher.group(1);
+			String quote = matcher.group(2);
+			String url = matcher.group(3);
+			
+			if (url.startsWith("http")) {
+				continue;
+			}
+			String newUrl = MinioUtils.STATIC_DOMAIN + url;
+			matcher.appendReplacement(text, "");
+			text.append(attr).append("=").append(quote).append(newUrl).append(quote);
 		}
-		// 将剩余部分添加到结果中
-		matcher.appendTail(text);
-		return text.toString();
+		return matcher.appendTail(text).toString();
 	}
-	
+
 	@Override
 	public String toJson(String obj) {
 		if (StringUtils.isEmpty(obj)) {
@@ -48,5 +54,5 @@ public class DomainContentHandler extends AbstractJsonTypeHandler<String> {
 		obj = obj.replaceAll(MinioUtils.STATIC_DOMAIN, "");
 		return obj;
 	}
-	
+
 }
