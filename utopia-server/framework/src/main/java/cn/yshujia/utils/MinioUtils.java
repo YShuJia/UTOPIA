@@ -71,6 +71,7 @@ public class MinioUtils {
 	 */
 	public static Map<String, String> uploadNameUrl(MultipartFile file, MinioFolder folder) {
 		Boolean isImage = isImage(file);
+		System.out.println(file.getSize());
 		String uniqueFileName = createUrl(folder.getFolder(), isImage);
 		String contentType = isImage ? "image/webp" : "video/mp4";
 		byte[] bytes = isImage ? createWebp(file) : createMp4(file);

@@ -137,7 +137,7 @@ export const listArchiveApi = () => {
   })
 }
 
-export const uploadArticleImgApi = (data: FormData) => {
+export const uploadArticleFileApi = (data: FormData) => {
   return http<string[]>({
     url: `/admin/article/upload/files`,
     method: 'POST',
