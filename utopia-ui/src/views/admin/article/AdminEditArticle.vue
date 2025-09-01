@@ -98,22 +98,16 @@ const onUploadVideo: UploadProps['onChange'] = async (
   let poster
   try {
     poster = await extractFrameFromVideo(uploadFile.raw!)
-    const posterFormData = new FormData()
-    posterFormData.append('files', poster)
-    // 上传视频
     const formData = new FormData()
+    formData.append('files', poster)
+    // 上传视频
     formData.append('files', uploadFile.raw!)
-    const results: Awaited<ResultType<string[]>>[] = await Promise.all([
-      uploadArticleFileApi(formData),
-      uploadArticleFileApi(posterFormData)
-    ])
-    console.log('上传成功', results)
+    const results = await uploadArticleFileApi(formData)
     temporaryStore.article.urls = temporaryStore.article.urls ?? []
-    temporaryStore.article.urls.push(...results[0].data)
-    temporaryStore.article.urls.push(...results[1].data)
+    temporaryStore.article.urls.push(...results.data)
     /* poster='poster' 占位 提交时替换为封面图片 */
     insert(
-      `<video width='100%' controls src='${results[0].data[0]}' poster='${results[1].data[0]}'></video>`
+      `<video width='100%' controls poster='${results.data[0]}' src='${results.data[1]}'></video>`
     )
   } catch (error: any) {
     useGlobalNotification({ message: error, type: 'error' })
