@@ -34,31 +34,28 @@ import java.util.regex.Pattern;
 
 @Service
 public class AdminArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> {
-	
+
 	@Resource
 	public ArticleMapper mapper;
-	
+
 	@Resource
 	RedisServiceImpl<ArticleVO> redis;
-	
-	
+
 	@Resource
 	BCryptPasswordEncoder passwordEncoder;
-	
-	
+
 	public AdminArticleVO oneById(Long id, Long userId) {
 		Article article = new Article(id, null, null, null);
 		article.setCreateBy(userId);
 		return mapper.oneByAdmin(article);
 	}
-	
-	
+
 	public PageVO<AdminArticleVO> pageAdmin(ArticleDTO dto) {
 		Article article = ArticleTransform.dto2Entity(dto);
 		List<AdminArticleVO> list = mapper.listByAdmin(article);
 		return PageUtils.page(list);
 	}
-	
+
 	@Transactional(rollbackFor = {Exception.class})
 	public void insert(ArticleDTO dto) {
 		dto.setId(IDUtils.getTimeId());
@@ -77,12 +74,12 @@ public class AdminArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 			redis.delKeysByPrefix(RedisKeys.ARTICLE);
 		} catch (Exception e) {
 			throw new CustomException(e.getMessage());
-			
+
 		} finally {
 			MinioUtils.delete(urls);
 		}
 	}
-	
+
 	/**
 	 * @author: yshujia
 	 * @create: 2025/4/12 17:59
@@ -127,7 +124,7 @@ public class AdminArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 			throw new CustomException(e.getMessage());
 		}
 	}
-	
+
 	@Transactional(rollbackFor = Exception.class)
 	public void remove(List<Long> ids) {
 		Wrapper<Article> qw = SecurityUtils.createDeleteWrapper(ids);
@@ -145,7 +142,7 @@ public class AdminArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 			throw new CustomException(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * @author: yshujia
 	 * @create: 2025/4/12 18:10
@@ -157,16 +154,15 @@ public class AdminArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 		if (StringUtils.isEmpty(content)) {
 			return new HashSet<>();
 		}
-		Pattern pattern = Pattern.compile("src='(.*?)'");
+		Pattern pattern = Pattern.compile("(?:src|poster)\\s*=\\s*(['\"])(.*?)\\1", Pattern.DOTALL);
 		Matcher matcher = pattern.matcher(content);
 		// 用于存储 src 内容的列表
 		Set<String> set = new HashSet<>();
 		// 查找所有匹配项并提取 src 值
 		while (matcher.find()) {
 			// 将提取到的 src 添加到列表中
-			set.add(matcher.group(1));
+			set.add(matcher.group(2));
 		}
 		return set;
 	}
-	
 }

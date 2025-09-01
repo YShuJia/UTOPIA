@@ -34,12 +34,12 @@ import java.util.List;
 @Tag(name = "Article", description = "管理端文章Api")
 @RequestMapping("/admin/article")
 public class AdminArticleController extends BaseController {
-	
+
 	@Resource
 	private AdminArticleServiceImpl service;
-	
+
 	@Logger
-	@RateLimiter
+	@RateLimiter(count = 10)
 	@PostMapping("/upload/files")
 	@Operation(summary = "上传文章文件，返回上传地址")
 	@PreAuthorize("@sys.hasOnePermission('article:admin', 'article:select')")
@@ -48,8 +48,8 @@ public class AdminArticleController extends BaseController {
 		urls.replaceAll(s -> MinioUtils.STATIC_DOMAIN + s);
 		return success(urls);
 	}
-	
-	
+
+
 	@RateLimiter
 	@Experience
 	@GetMapping("/{id}")
@@ -58,7 +58,7 @@ public class AdminArticleController extends BaseController {
 	public ApiVO<AdminArticleVO> article(@PathVariable Long id) {
 		return success(service.oneById(id, getUserId()));
 	}
-	
+
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
 	@Operation(summary = "admin通过分页数据获取文章集合")
@@ -70,7 +70,7 @@ public class AdminArticleController extends BaseController {
 		}
 		return success(service.pageAdmin(dto));
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
@@ -80,7 +80,7 @@ public class AdminArticleController extends BaseController {
 		service.insert(dto);
 		return message("文章添加成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
@@ -91,7 +91,7 @@ public class AdminArticleController extends BaseController {
 		service.update(dto);
 		return message("文章更新成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
@@ -101,7 +101,7 @@ public class AdminArticleController extends BaseController {
 		service.update(dto);
 		return message(dto.getReviewed() == 0 ? "已拒绝文章提交！" : "已同意文章提交！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
@@ -111,5 +111,5 @@ public class AdminArticleController extends BaseController {
 		service.remove(ids);
 		return message("文章删除成功！");
 	}
-	
+
 }
