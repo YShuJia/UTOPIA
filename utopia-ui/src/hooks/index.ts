@@ -22,11 +22,11 @@ export async function useGlobalDialog(
     beforeClose: (action, instance, done) => {
       if (action === 'confirm') {
         instance.confirmButtonLoading = true
-        instance.confirmButtonText = 'Loading...'
+        instance.confirmButtonText = '上传中...'
         setTimeout(() => {
           done()
           instance.confirmButtonLoading = false
-        }, 2000)
+        }, 500)
       } else {
         done()
       }
