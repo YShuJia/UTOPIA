@@ -1,8 +1,4 @@
-<script lang="ts" setup>
-import { useUserStore } from '@/stores/user'
-
-const userStore = useUserStore()
-</script>
+<script lang="ts" setup></script>
 
 <template>
   <el-container class="inner-min-box gap-5 pt-16" direction="vertical">

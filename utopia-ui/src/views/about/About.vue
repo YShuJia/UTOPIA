@@ -11,6 +11,7 @@ const role = ref<RoleVO[]>([])
 const getRoleList = () => {
   listRoleApi().then((res: ResultType<RoleVO[]>) => {
     role.value = res.data
+    console.log(role.value)
   })
 }
 
@@ -124,7 +125,7 @@ onMounted(() => {
       class="use-box-large inner-box max-sm:rounded-none max-sm:shadow-none gap-5 p-5"
       direction="vertical"
     >
-      <svg-icon message="系统段位信息" name="setting" size="lg" />
+      <svg-icon message="系统段位信息" name="setting" size="xl" />
       <el-container class="gap-5" direction="vertical">
         <span>每日最多可获取 300 点经验值</span>
         <el-row class="border-b-2 pb-0.5">
@@ -146,11 +147,12 @@ onMounted(() => {
       </el-container>
       <el-container class="gap-5" direction="vertical">
         <span>段位对应的经验值</span>
-        <el-container class="auto-column gap-x-0">
-          <el-row v-for="p in role" :gutter="0" class="border-b-2 pb-0.5">
-            <el-col :span="12">{{ p.name }}</el-col>
-            <el-col :span="12">{{ p.experience }} 点</el-col>
-          </el-row>
+        <el-container class="gap-5" direction="vertical">
+          <el-container v-for="p in role" class="border-b-2 pb-0.5 gap-x-5 gap-y-1 flex-wrap">
+            <span class="w-40">段位：{{ p.name }}</span>
+            <span class="w-32">经验：{{ p.experience }}</span>
+            <span class="w-full" v-html="'特权：' + p.introduction"></span>
+          </el-container>
         </el-container>
       </el-container>
     </el-container>

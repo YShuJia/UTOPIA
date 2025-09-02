@@ -1,5 +1,6 @@
 package cn.yshujia.handler;
 
+import cn.yshujia.repository.SMRepository;
 import cn.yshujia.service.TokenService;
 import cn.yshujia.utils.JwtTokenUtils;
 import cn.yshujia.utils.ResponseUtils;
@@ -23,29 +24,22 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class LogoutSuccessHandle implements LogoutSuccessHandler {
-	
+
 	@Resource
 	private TokenService tokenService;
-	
+
+	@Resource
+	private SMRepository smRepository;
+
 	@Override
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-		// 删除 redis 中的用户信息
-		try {
-			log.info("退出登录, {}", SecurityUtils.getLoginUser());
-		} catch (Exception e) {
-		
-		}
 		String uuid = JwtTokenUtils.getId(request);
 		if (uuid != null) {
 			SecurityUtils.clearContext();
 			tokenService.delLoginUser(uuid);
-		}
-		try {
-			log.info("退出成功, {}", SecurityUtils.getLoginUser());
-		} catch (Exception e) {
-		
+			smRepository.remove(request);
 		}
 		ResponseUtils.writeSuccess(response, "退出成功，即将重新加载页面！", true);
 	}
-	
+
 }
