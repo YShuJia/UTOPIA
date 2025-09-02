@@ -5,6 +5,8 @@ import { useGlobalDialog } from '@/hooks'
 import { getUserApi, initUserVO, type UserVO } from '@/request/api/user'
 import { logoutApi } from '@/request/api'
 import { clearToken, getToken } from '@/utils/tokenUtils'
+import { routerTo } from '@/router'
+import { RouteNameEnum } from '@/enum'
 
 export const useUserStore = defineStore(
   'user',
@@ -25,12 +27,13 @@ export const useUserStore = defineStore(
       await useGlobalDialog('确定要退出登录？').then((res) => {
         if (res) {
           logoutApi().then((res: ResultType<boolean>) => {
+            routerTo(RouteNameEnum.HOME)
             setTimeout(() => {
               clearToken()
               user.value = initUserVO()
               user.value.avatar = icon
               window.location.reload()
-            }, 1500)
+            }, 2000)
           })
         }
       })
