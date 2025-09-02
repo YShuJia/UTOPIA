@@ -20,7 +20,7 @@ onMounted(() => {
       <el-menu
         :collapse="!systemStore.admin.isShowAside"
         :default-active="route.fullPath"
-        class="h-screen hidden-scroll overflow-y-auto"
+        class="h-screen hidden-scroll overflow-y-auto bg-color"
       >
         <a class="flex px-5 py-3 line-clamp-1" href="javascript:">
           <span class="text-3xl line-clamp-1">UTOPIA</span>

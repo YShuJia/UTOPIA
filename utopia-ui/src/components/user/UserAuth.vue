@@ -232,18 +232,21 @@ onBeforeMount(() => {
         </el-container>
 
         <el-container class="px-5" direction="vertical">
-          <span>
+          <span class="pb-2">
             今日已获取：
             <span class="text-xl text-amber-500">{{ todayExperience }}</span>
             点经验
           </span>
-          <span v-if="gtRole">
-            距离下一个段位 [{{ gtRole ? gtRole.name : '未知' }}] 还差
-            <span class="text-xl text-amber-500">{{
-              gtRole.experience - userStore.user.experience
-            }}</span>
-            经验值
-          </span>
+          <template v-if="gtRole">
+            <span v-if="gtRole.experience - userStore.user.experience >= 0">
+              距离下一个段位 [{{ gtRole ? gtRole.name : '未知' }}] 还差
+              <span class="text-xl text-amber-500">{{
+                gtRole.experience - userStore.user.experience
+              }}</span>
+              经验值
+            </span>
+            <span v-else>段位已升级，请重新登录！</span>
+          </template>
           <span v-else>恭喜你，已达到最高段位！</span>
           <el-progress
             :duration="30"
