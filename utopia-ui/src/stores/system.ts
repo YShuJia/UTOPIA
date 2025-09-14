@@ -15,19 +15,21 @@ export const useSystemStore = defineStore(
     // 系统信息
     const system = ref<SystemType>({
       isLeave: false,
-      isOpenLenis: true,
+      isOpenLenis: false,
       isOpenClick: true,
       isShowMobile: false,
       isShowHeader: true,
       isLt1024: false,
       isLt768: false,
       isMobile: Boolean(isMobile),
-      isOpenAnimation: true,
-      isAutoAnimation: true,
+      isOpenAnimation: false,
+      isAutoAnimation: false,
       browserName: browserName,
       browserVersion: browserVersion,
       osName: osName,
-      osVersion: osVersion
+      osVersion: osVersion,
+      innerWidth: window.innerWidth,
+      innerHeight: window.innerHeight
     })
 
     // 后台信息
@@ -39,6 +41,8 @@ export const useSystemStore = defineStore(
     // 监听窗口大小
     const handleResize = throttle(() => {
       const w = window.innerWidth
+      system.value.innerWidth = w
+      system.value.innerHeight = window.innerHeight
       system.value.isLt1024 = w < 1024
       system.value.isLt768 = w < 768
       system.value.isMobile = w < 1024
