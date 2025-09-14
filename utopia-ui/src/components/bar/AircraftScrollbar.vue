@@ -21,7 +21,7 @@ const transformStyle = computed(() => {
 <template>
   <el-container
     :style="transformStyle"
-    class="-top-28 toTop_box duration-100 absolute z-40 right-5 max-sm:right-2"
+    class="-top-28 toTop_box duration-150 absolute z-40 right-5 max-sm:right-2"
   >
     <el-container class="items-center" direction="vertical">
       <span @click="toTopOrBottom">
