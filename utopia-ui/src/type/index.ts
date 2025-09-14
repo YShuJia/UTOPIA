@@ -51,6 +51,9 @@ export type SystemType = {
   osName: string
   // 操作系统版本信息
   osVersion: string
+  // 屏幕宽高
+  innerWidth: number
+  innerHeight: number
 }
 
 /* 管理端 store 数据类型 */

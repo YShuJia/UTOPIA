@@ -42,6 +42,8 @@ export const useScrollStore = defineStore('scroll', () => {
           scroll.value.lenis?.raf(time * 1000)
         }
       }
+      // 先移除，再添加 gsap ticker
+      gsap.ticker.remove(gaspFun)
       gsap.ticker.add(gaspFun)
     } else {
       if (gaspFun) {
@@ -50,6 +52,24 @@ export const useScrollStore = defineStore('scroll', () => {
     }
   }
 
+  // 滚动结束后使飞机向上
+  const debouncedRotate180 = debounce(() => {
+    scroll.value.isDown = false
+  }, 3000)
+
+  // 节流滚动事件
+  let scheduled = false
+  const scheduleUpdate = (progress: number) => {
+    if (!scheduled) {
+      requestAnimationFrame(() => {
+        computerScroll(progress)
+        scheduled = false
+      })
+      scheduled = true
+    }
+  }
+
+  // 初始化
   const initScroll = () => {
     if (
       !systemStore.system.isLt1024 &&
@@ -62,14 +82,14 @@ export const useScrollStore = defineStore('scroll', () => {
         wrapper: scroll.value.scrollRef,
         content: scroll.value.contentRef,
         // 线性插值强度（介于 0 和 1 之间）默认 0.1
-        lerp: 0.05,
+        lerp: 0.1,
         // 用于鼠标滚轮事件的乘数 默认 1
         wheelMultiplier: 0.5
       })
       scroll.value.lenis.on('scroll', (e: any) => {
         ScrollTrigger.update()
         scroll.value.isDown = e.direction > 0
-        computerScroll(e.progress)
+        scheduleUpdate(e.progress)
       })
       toggleScroll(true)
       gsap.ticker.lagSmoothing(0)
@@ -99,31 +119,41 @@ export const useScrollStore = defineStore('scroll', () => {
 
   const oldProgress = ref<number>(0)
   const computerScroll = (progress: number) => {
-    // 比例乘以窗口高度，得到飞机应该滑动距离
-    scroll.value.scrollTop = progress * window.innerHeight
-    // 跟新滚动条状态
-    scroll.value.isToTop = progress < 0.01
-    scroll.value.isToBottom = progress > 0.99
-    scroll.value.isDown = oldProgress.value < progress
-    systemStore.system.isShowHeader = oldProgress.value > progress
+    const newScrollTop = progress * systemStore.system.innerHeight
+    const newIsToTop = progress < 0.01
+    const newIsToBottom = progress > 0.99
+    const newIsDown = oldProgress.value < progress
+    // 只有变化时才更新
+    if (scroll.value.scrollTop !== newScrollTop) {
+      scroll.value.scrollTop = newScrollTop
+    }
+    if (scroll.value.isToTop !== newIsToTop) {
+      scroll.value.isToTop = newIsToTop
+    }
+    if (scroll.value.isToBottom !== newIsToBottom) {
+      scroll.value.isToBottom = newIsToBottom
+    }
+    if (scroll.value.isDown !== newIsDown) {
+      scroll.value.isDown = newIsDown
+    }
+    // header 显示逻辑
+    if (oldProgress.value > progress !== systemStore.system.isShowHeader) {
+      systemStore.system.isShowHeader = oldProgress.value > progress
+    }
     oldProgress.value = progress
     debouncedRotate180()
   }
-
-  // 滚动结束后使飞机向上
-  const debouncedRotate180 = debounce(() => {
-    scroll.value.isDown = false
-  }, 3000)
 
   // 关闭滚动阻尼时的滚动事件
   const handleScroll = (e: any) => {
     if (!scroll.value.lenis) {
       // 获取滚动内容总高度
-      const contentHeight = scroll.value.contentRef?.clientHeight ?? window.innerHeight + 1
+      const contentHeight =
+        scroll.value.contentRef?.clientHeight ?? systemStore.system.innerHeight + 1
       // 计算比例 (滚动距离/(滚动内容总高度 - 可视区高度))
-      let scale = e.target.scrollTop / (contentHeight - window.innerHeight)
+      let scale = e.target.scrollTop / (contentHeight - systemStore.system.innerHeight)
       scale = scale > 1 ? 1 : scale
-      computerScroll(scale)
+      scheduleUpdate(scale)
     }
   }
 
