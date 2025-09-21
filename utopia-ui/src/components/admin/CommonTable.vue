@@ -131,16 +131,19 @@ const handleSelectionChange = (selection: any[]) => {
 
 // 查询参数改变、分页改变等刷新数据
 const select = async () => {
-  const { data } = await selectApi(dto.value)
-  vo.value = data
-  loading.value = false
+  selectApi(dto.value)
+    .then((res: ResultType<PageVO<any>>) => {
+      vo.value = res.data
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
-const update = async (dto: any) => {
-  const { data } = await updateApi(dto)
-  if (data) {
-    await select()
-  }
+const update = (dto: any) => {
+  updateApi(dto).then(() => {
+    select()
+  })
 }
 
 /** 删除按钮操作 */
@@ -230,9 +233,9 @@ onMounted(() => {
       :data="vo.list"
       :tooltip-effect="styleStore.background.bgType"
       border
+      class="use-theme"
       height="100%"
       row-key="id"
-      class="use-theme"
       table-layout="auto"
       @selection-change="handleSelectionChange"
     >
@@ -364,6 +367,7 @@ onMounted(() => {
   <role-dialog v-model:form="form" :refresh="select" />
   <diary-dialog v-model:form="form" :refresh="select" />
   <leave-word-dialog v-model:form="form" :refresh="select" />
+  <sys-config-dialog v-model:form="form" :refresh="select" />
 </template>
 
 <style lang="scss" scoped></style>

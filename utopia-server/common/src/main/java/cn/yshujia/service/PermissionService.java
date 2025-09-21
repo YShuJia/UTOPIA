@@ -18,7 +18,7 @@ import java.util.Set;
 
 @Service("sys")
 public class PermissionService {
-	
+
 	/**
 	 * @param args 权限字符串数组
 	 * @return 只要有其中一个权限，返回 true
@@ -39,7 +39,7 @@ public class PermissionService {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @param args 权限字符串数组
 	 * @return 必须含有所有权限，返回 true
@@ -60,5 +60,5 @@ public class PermissionService {
 		}
 		return true;
 	}
-	
+
 }

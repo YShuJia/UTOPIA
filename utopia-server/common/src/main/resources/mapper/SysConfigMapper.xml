@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yshujia.mapper.SysConfigMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.yshujia.domain.entity.SysConfig">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="sys_password_count" property="sysPasswordCount"/>
+		<result column="sys_password_time" property="sysPasswordTime"/>
+		<result column="sys_password_ban" property="sysPasswordBan"/>
+		<result column="sys_limit_count" property="sysLimitCount"/>
+		<result column="sys_limit_time" property="sysLimitTime"/>
+		<result column="sys_limit_ban" property="sysLimitBan"/>
+		<result column="sys_replace_char" property="sysReplaceChar"/>
+		<result column="sys_max_exp" property="sysMaxExp"/>
+		<result column="sys_role_table" property="sysRoleTable"
+				typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+		<result column="is_enabled" property="enabled"/>
+		<result column="create_time" property="createTime"/>
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, name, sys_password_count, sys_password_time, sys_password_ban, sys_limit_count, sys_limit_time, sys_limit_ban, sys_replace_char, sys_max_exp, sys_role_table, is_enabled, create_time
+	</sql>
+
+	<!-- 公共的 WHERE 条件片段 -->
+	<sql id="sys_where">
+		<where>
+			<if test="id != null">and id = #{id}</if>
+			<if test="name != null">and name like concat('%',#{name},'%')</if>
+			<if test="sysPasswordCount != null">and sys_password_count = #{sysPasswordCount}</if>
+			<if test="sysPasswordTime != null">and sys_password_time = #{sysPasswordTime}</if>
+			<if test="sysPasswordBan != null">and sys_password_ban = #{sysPasswordBan}</if>
+			<if test="sysLimitCount != null">and sys_limit_count = #{sysLimitCount}</if>
+			<if test="sysLimitTime != null">and sys_limit_time = #{sysLimitTime}</if>
+			<if test="sysLimitBan != null">and sys_limit_ban = #{sysLimitBan}</if>
+			<if test="sysReplaceChar != null">and sys_replace_char like concat('%',#{sysReplaceChar},'%')</if>
+			<if test="sysMaxExp != null">and sys_max_exp = #{sysMaxExp}</if>
+			<if test="sysRoleTable != null">and sys_role_table like concat('%',#{sysRoleTable},'%')</if>
+			<if test="enabled != null">and is_enabled = #{enabled}</if>
+			<if test="createTime != null">and create_time = #{createTime}</if>
+		</where>
+	</sql>
+
+	<select id="listByAdmin" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM t_sys_config
+		<include refid="sys_where"/>
+	</select>
+
+</mapper>

@@ -67,8 +67,10 @@ export enum TableEnum {
   ARTICLE = 'article',
   // 网站修改、新增弹窗
   WEBSITE = 'website',
-  // 树洞弹窗
-  LEAVE_WORD = 'leave_word'
+  // 留言弹窗
+  LEAVE_WORD = 'leave_word',
+  // 配置
+  SYS_CONFIG = 'sys_config'
 }
 
 export enum DialogEnum {

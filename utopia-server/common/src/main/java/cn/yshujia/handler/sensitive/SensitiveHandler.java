@@ -18,9 +18,9 @@ import java.sql.SQLException;
  */
 
 public class SensitiveHandler extends BaseTypeHandler<String> {
-	
+
 	WordReplaceUtils wordReplaceUtils = new WordReplaceUtils();
-	
+
 	@Override
 	public void setNonNullParameter(PreparedStatement preparedStatement, int i, String s, JdbcType jdbcType) throws SQLException {
 		if (StringUtils.isEmpty(s)) {
@@ -30,23 +30,23 @@ public class SensitiveHandler extends BaseTypeHandler<String> {
 		String str = SensitiveWordHelper.replace(s, wordReplaceUtils);
 		preparedStatement.setString(i, str);
 	}
-	
-	
+
+
 	@Override
 	public String getNullableResult(ResultSet resultSet, String s) throws SQLException {
 		return resultSet.getString(s);
 	}
-	
+
 	@Override
 	public String getNullableResult(ResultSet resultSet, int i) throws SQLException {
 		return resultSet.getString(i);
 	}
-	
+
 	@Override
 	public String getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
 		return callableStatement.getString(i);
 	}
-	
+
 }
 
 

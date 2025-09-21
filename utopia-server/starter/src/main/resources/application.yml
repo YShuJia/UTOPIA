@@ -229,24 +229,3 @@ minio:
   compression-quality: 0.9
   # # 静态资源访问域名前缀
   domain: http://localhost:9000/static
-
-# 系统配置
-system:
-  # 作者
-  author: YShuJia
-  # 密码试错间隔时间 单位 h
-  error-time: 3
-  # 密码试错次数（在 3 小时内错误 5 次封禁 72 小时）
-  error-times: 5
-  # 接口限流时间 单位 h
-  limit-time: 3
-  # 接口限流（在 3 小时内触发内部接口限流 30 次封禁 72 小时）
-  limit-times: 30
-  # 密码试错 / 过度接口访问封禁时间 单位 h
-  ban-time: 72
-  # 敏感数据替换符
-  replace-char: "[非礼无言]"
-  # 每天可以获取的最大经验值
-  max-experience: 300
-  # 生成角色权限字符的表
-  tables: [ "album", "article", "classify", "comment", "diary", "file", "label", "leave_word", "like", "role", "router", "user", "website" ]

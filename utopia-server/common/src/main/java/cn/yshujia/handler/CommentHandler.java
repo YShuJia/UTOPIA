@@ -18,13 +18,13 @@ import java.util.List;
  * @description: CommentHandler
  */
 public class CommentHandler extends AbstractJsonTypeHandler<List<String>> {
-	
+
 	WordReplaceUtils wordReplaceUtils = new WordReplaceUtils();
-	
+
 	public CommentHandler(Class<?> type) {
 		super(type);
 	}
-	
+
 	@Override
 	public List<String> parse(String json) {
 		if (StringUtils.isEmpty(json)) {
@@ -36,7 +36,7 @@ public class CommentHandler extends AbstractJsonTypeHandler<List<String>> {
 		}
 		return list;
 	}
-	
+
 	@Override
 	public String toJson(List<String> list) {
 		if (CollectionUtils.isEmpty(list)) {
@@ -50,5 +50,5 @@ public class CommentHandler extends AbstractJsonTypeHandler<List<String>> {
 		list.set(0, SensitiveWordHelper.replace(list.get(0), wordReplaceUtils));
 		return JSON.toJSONString(list);
 	}
-	
+
 }

@@ -20,23 +20,23 @@ import java.util.Map;
 @Slf4j
 @Component
 public class SMRepository {
-	
+
 	private static final Duration OVERDUE = Duration.ofDays(1L);
-	
+
 	private static final String PUBLIC_KEY = "sm2:public:";
-	
+
 	private static final String PRIVATE_KEY = "sm2:private:";
-	
+
 	// 备用密钥
 	private static final String PUBLIC_SECRET = "0437eb7b089007bbf70471cd59a21f84bd2e9616922fb339b05a8639466c262b36682d257a6e318e800a63348789d2b58482cb53ccda6701838be1ae1ca2223c29";
-	
+
 	private static final String PRIVATE_SECRET = "aca4d4a7ee4edced1ef5d290b21b979159a263f04e290d5c1fb09c05958ed04e";
-	
+
 	private static final Map<String, String> MAP = Map.of(SecurityConst.PUBLIC_KEY, PUBLIC_SECRET, SecurityConst.PRIVATE_KEY, PRIVATE_SECRET);
-	
+
 	@Resource
 	RedisTemplate<String, String> redis;
-	
+
 	public String getPublicKey(HttpServletRequest request) {
 		String ip = RequestUtils.getIp(request);
 		String pubKey = redis.opsForValue().get(PUBLIC_KEY + ip);
@@ -51,7 +51,7 @@ public class SMRepository {
 		}
 		return pubKey;
 	}
-	
+
 	public String getPrivateKey(HttpServletRequest request) {
 		String ip = RequestUtils.getIp(request);
 		String privateKey = redis.opsForValue().get(PRIVATE_KEY + ip);
@@ -67,19 +67,19 @@ public class SMRepository {
 		}
 		return privateKey;
 	}
-	
+
 	@Async("Task")
 	public void remove(HttpServletRequest request) {
 		String ip = RequestUtils.getIp(request);
 		redis.delete(PUBLIC_KEY + ip);
 		redis.delete(PRIVATE_KEY + ip);
 	}
-	
-	
+
+
 	@Async("Task")
 	protected void set(Map<String, String> map, String ip) {
 		redis.opsForValue().set(PUBLIC_KEY + ip, map.get(SecurityConst.PUBLIC_KEY), OVERDUE);
 		redis.opsForValue().set(PRIVATE_KEY + ip, map.get(SecurityConst.PRIVATE_KEY), OVERDUE);
 	}
-	
+
 }
