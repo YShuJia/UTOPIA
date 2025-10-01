@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yshujia.mapper.WebConfigMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.yshujia.domain.entity.WebConfig">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="author_name" property="authorName"/>
+		<result column="author_avatar" property="authorAvatar"/>
+		<result column="author_tag" property="authorTag"
+				typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+		<result column="author_contact" property="authorContact"
+				typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+		<result column="author_payment" property="authorPayment"
+				typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+		<result column="author_home" property="authorHome"
+				typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+		<result column="author_mbti" property="authorMbti"
+				typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+		<result column="author_skill" property="authorSkill"
+				typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+		<result column="author_game" property="authorGame"
+				typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+		<result column="author_book" property="authorBook"
+				typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+		<result column="author_footprint" property="authorFootprint"
+				typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
+		<result column="author_about" property="authorAbout"/>
+		<result column="site_title" property="siteTitle"/>
+		<result column="site_motto" property="siteMotto"/>
+		<result column="site_record" property="siteRecord"/>
+		<result column="site_favicon" property="siteFavicon"/>
+		<result column="site_about" property="siteAbout"/>
+		<result column="site_create_time" property="siteCreateTime"/>
+		<result column="is_enabled" property="enabled"/>
+		<result column="create_time" property="createTime"/>
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, name, author_name, author_avatar, author_tag, author_contact, author_payment, author_home, author_mbti, author_skill, author_game, author_book, author_footprint, author_about, site_title, site_motto, site_record, site_favicon, site_about, site_create_time, is_enabled, create_time
+	</sql>
+
+	<!-- 公共的 WHERE 条件片段 -->
+	<sql id="web_where">
+		<where>
+			<if test="id != null">and id = #{id}</if>
+			<if test="name != null">and name like concat('%',#{name},'%')</if>
+			<if test="authorName != null">and author_name like concat('%',#{authorName},'%')</if>
+			<if test="authorAvatar != null">and author_avatar like concat('%',#{authorAvatar},'%')</if>
+			<if test="authorTag != null">and author_tag like concat('%',#{authorTag},'%')</if>
+			<if test="authorContact != null">and author_contact like concat('%',#{authorContact},'%')</if>
+			<if test="authorPayment != null">and author_payment like concat('%',#{authorPayment},'%')</if>
+			<if test="authorHome != null">and author_home like concat('%',#{authorHome},'%')</if>
+			<if test="authorMbti != null">and author_mbti like concat('%',#{authorMbti},'%')</if>
+			<if test="authorSkill != null">and author_skill like concat('%',#{authorSkill},'%')</if>
+			<if test="authorGame != null">and author_game like concat('%',#{authorGame},'%')</if>
+			<if test="authorBook != null">and author_book like concat('%',#{authorBook},'%')</if>
+			<if test="authorFootprint != null">and author_footprint like concat('%',#{authorFootprint},'%')</if>
+			<if test="authorAbout != null">and author_about like concat('%',#{authorAbout},'%')</if>
+			<if test="siteTitle != null">and site_title like concat('%',#{siteTitle},'%')</if>
+			<if test="siteMotto != null">and site_motto like concat('%',#{siteMotto},'%')</if>
+			<if test="siteRecord != null">and site_record like concat('%',#{siteRecord},'%')</if>
+			<if test="siteFavicon != null">and site_favicon like concat('%',#{siteFavicon},'%')</if>
+			<if test="siteAbout != null">and site_about like concat('%',#{siteAbout},'%')</if>
+			<if test="siteCreateTime != null">and site_create_time = #{siteCreateTime}</if>
+			<if test="enabled != null">and is_enabled = #{enabled}</if>
+			<if test="createTime != null">and create_time = #{createTime}</if>
+		</where>
+	</sql>
+
+	<select id="listByAdmin" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM t_web_config
+		<include refid="web_where"/>
+	</select>
+</mapper>

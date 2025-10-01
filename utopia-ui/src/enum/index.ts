@@ -25,7 +25,10 @@ export enum RouteNameEnum {
   ABOUT = 'about',
   USER_INFO = 'user_info',
   ADMIN_HOME = 'admin_home',
-  FRIEND = 'friends'
+  FRIEND = 'friends',
+  SYS_CONFIG = 'sys_config',
+  WEB_CONFIG = 'web_config',
+  WEB_CONFIG_EDIT = 'web_config_edit'
 }
 
 export enum RouterEnum {
@@ -70,7 +73,9 @@ export enum TableEnum {
   // 留言弹窗
   LEAVE_WORD = 'leave_word',
   // 配置
-  SYS_CONFIG = 'sys_config'
+  SYS_CONFIG = 'sys_config',
+  // 配置
+  WEB_CONFIG = 'web_config'
 }
 
 export enum DialogEnum {

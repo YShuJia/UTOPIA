@@ -20,7 +20,7 @@ public class SysConfigDTO {
 	@Positive(groups = UpdateGroup.class, message = "[路由ID] 不能为空！")
 	private Long id;
 
-	@NotNull(groups = InsertGroup.class, message = "[配置名] 不能为空！")
+	@NotBlank(groups = InsertGroup.class, message = "[配置名] 不能为空！")
 	@Size(groups = {InsertGroup.class, UpdateGroup.class}, max = 16, message = "[配置名] 长度不能超过 16！")
 	private String name;
 
@@ -61,7 +61,7 @@ public class SysConfigDTO {
 	@PositiveOrZero(message = "[最大经验值] 必须为正整数！")
 	@Max(value = 65535, groups = {InsertGroup.class, UpdateGroup.class}, message = "[最大经验值] 值范围 [0, 65535]！")
 	@Min(value = 0, groups = {InsertGroup.class, UpdateGroup.class}, message = "[最大经验值] 值范围 [0, 65535]！")
-	private Integer sysMaxExp;
+	private Short sysMaxExp;
 
 	@NotEmpty(groups = InsertGroup.class, message = "[生成角色权限的表配置] 不能为空！")
 	private List<String> sysRoleTable;

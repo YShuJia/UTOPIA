@@ -28,7 +28,7 @@ const form = defineModel<SysConfigDTO>('form', {
 
 const rules = {
   name: [{ required: true, message: '昵称不能为空', trigger: 'blur' }],
-  sysReplaceChar: [{ required: true, message: '角色不能为空', trigger: 'blur' }],
+  sysReplaceChar: [{ required: true, message: '敏感词替换符不能为空', trigger: 'blur' }],
   sysMaxExp: [{ required: true, message: '最大经验不能为空', trigger: 'blur' }],
   sysRoleTable: [{ required: true, message: '角色权限表不能为空', trigger: 'blur' }],
   sysPasswordCount: [{ required: true, message: '试错次数不能为空', trigger: 'blur' }],

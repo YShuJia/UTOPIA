@@ -4,7 +4,7 @@ import type { PageVO } from '@/request/config'
 
 export type SysConfigVO = {
   id: number
-  name: number
+  name: string
   sysPasswordCount: number
   sysPasswordTime: number
   sysPasswordBan: number
@@ -14,7 +14,7 @@ export type SysConfigVO = {
   sysReplaceChar: string
   sysMaxExp: number
   sysRoleTable: string[]
-  enabled: number
+  enabled: boolean
   createdTime: Date
 }
 

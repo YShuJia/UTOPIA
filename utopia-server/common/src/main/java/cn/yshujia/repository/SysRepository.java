@@ -3,14 +3,12 @@ package cn.yshujia.repository;
 
 import cn.yshujia.domain.entity.SysConfig;
 import cn.yshujia.mapper.SysConfigMapper;
-import cn.yshujia.service.PermissionService;
 import cn.yshujia.service.impl.RedisServiceImpl;
 import cn.yshujia.utils.RequestUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
@@ -46,8 +44,6 @@ public class SysRepository {
 
 	@Resource
 	private SysConfigMapper mapper;
-	@Autowired
-	private PermissionService sys;
 
 	public SysConfig getSysConfig() {
 		SysConfig sysConfig = (SysConfig) redis.get(SYS_CONFIG_KEY);
@@ -58,7 +54,6 @@ public class SysRepository {
 		redis.set(SYS_CONFIG_KEY, sysConfig, null);
 		return sysConfig;
 	}
-
 
 	@Async("Task")
 	public void removeSysConfig() {

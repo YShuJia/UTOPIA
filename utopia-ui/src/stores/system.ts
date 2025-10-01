@@ -73,6 +73,8 @@ export const useSystemStore = defineStore(
       [TableEnum.ARTICLE]: false,
       [TableEnum.COMMENT]: false,
       [TableEnum.WEBSITE]: false,
+      [TableEnum.SYS_CONFIG]: false,
+      [TableEnum.WEB_CONFIG]: false,
       [TableEnum.LEAVE_WORD]: false,
       [DialogEnum.MEDIA_FORM]: false,
       [DialogEnum.LOGIN]: false

@@ -69,7 +69,7 @@ public class SysConfig implements Serializable {
 
 	@Schema(description = "每天可获取的最大经验值")
 	@TableField("sys_max_exp")
-	private Integer sysMaxExp;
+	private Short sysMaxExp;
 
 	@Schema(description = "生成角色权限的表配置")
 	@TableField(value = "sys_role_table", typeHandler = Fastjson2TypeHandler.class)

@@ -25,10 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author: yshujia
@@ -38,36 +35,37 @@ import java.util.Set;
 
 @Service
 public class AdminFileServiceImpl extends ServiceImpl<FileMapper, File> {
-	
+
 	@Resource
 	RedisServiceImpl<FileVO> redis;
-	
+
 	@Resource
 	private FileMapper mapper;
-	
+
 	public PageVO<AdminFileVO> pageAdmin(FileDTO dto) {
 		File file = FileTransform.dto2Entity(dto);
 		List<AdminFileVO> list = mapper.listByAdmin(file);
 		return PageUtils.page(list);
 	}
-	
+
 	public PageVO<FileVO> pageSelect(FileDTO dto) {
 		File file = FileTransform.dto2Entity(dto);
 		List<FileVO> list = mapper.list(file);
 		return PageUtils.page(list);
 	}
-	
+
 	@Transactional(rollbackFor = {Exception.class})
 	public void insert(MultipartFile[] files, FileDTO dto) {
 		List<File> resourcesList = new ArrayList<>();
 		Map<String, BigDecimal> map = MinioUtils.uploadUrlKb(files, MinioFolder.files);
-		Set<String> urls = map.keySet();
-		for (String url : urls) {
+		List<String> urls = new ArrayList<>(map.keySet());
+		for (int i = 0; i < files.length; i++) {
 			File file = new File();
 			file.setId(IDUtils.getId());
-			file.setUrl(url);
-			file.setSize(map.get(url));
-			file.setName(dto.getName());
+			file.setUrl(urls.get(i));
+			file.setSize(map.get(urls.get(i)));
+			String name = files[i].getOriginalFilename();
+			file.setName(Optional.ofNullable(name).map(str -> str.substring(0, name.lastIndexOf("."))).orElse(dto.getName()));
 			file.setLabelId(dto.getLabelId());
 			file.setTags(dto.getTags());
 			resourcesList.add(file);
@@ -83,7 +81,7 @@ public class AdminFileServiceImpl extends ServiceImpl<FileMapper, File> {
 			throw new CustomException(e.getMessage());
 		}
 	}
-	
+
 	@Transactional(rollbackFor = {Exception.class})
 	public void update(MultipartFile files, FileDTO dto) {
 		File old = mapper.selectById(dto.getId());
@@ -112,7 +110,7 @@ public class AdminFileServiceImpl extends ServiceImpl<FileMapper, File> {
 			throw new CustomException(e.getMessage());
 		}
 	}
-	
+
 	@Transactional(rollbackFor = {Exception.class})
 	public void remove(List<Long> ids) {
 		Wrapper<File> qw = SecurityUtils.createDeleteWrapper(ids);
@@ -128,5 +126,5 @@ public class AdminFileServiceImpl extends ServiceImpl<FileMapper, File> {
 			throw new CustomException(e.getMessage());
 		}
 	}
-	
+
 }

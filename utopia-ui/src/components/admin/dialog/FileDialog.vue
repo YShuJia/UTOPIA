@@ -68,7 +68,20 @@ const submitForm = () => {
 const color = ['昼', '夜', '红色', '橙色', '黄色', '绿色', '青色', '蓝色', '紫色', '粉色']
 const season = ['春季', '夏季', '秋季', '冬季']
 const label = ['女性', '男性', '影视', '游戏', '科技', '自然', '动物']
-const mood = ['快乐', '乐观', '治愈', '悲伤', '忧郁', '孤独', '平静', '愤怒', '失望', '惊恐', '嫌弃', '激动']
+const mood = [
+  '快乐',
+  '乐观',
+  '治愈',
+  '悲伤',
+  '忧郁',
+  '孤独',
+  '平静',
+  '愤怒',
+  '失望',
+  '惊恐',
+  '嫌弃',
+  '激动'
+]
 
 const checkList = ref<string[]>([])
 const tagsChange = () => {
@@ -112,7 +125,7 @@ const open = () => {
           </el-form-item>
           <classify-label-form v-model:label-id="form.labelId" :classify-key="ClassifyEnum.FILE" />
           <el-form-item label="文件">
-            <upload-img v-model:upload="upload" :limit="50" />
+            <upload-img v-model:upload="upload" :limit="100" />
           </el-form-item>
           <el-form-item label="标记" prop="tags">
             <el-checkbox-group

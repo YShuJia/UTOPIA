@@ -8,7 +8,6 @@ import cn.yshujia.ex.ServiceException;
 import cn.yshujia.mapper.SysConfigMapper;
 import cn.yshujia.repository.SysRepository;
 import cn.yshujia.transform.SysConfigTransform;
-import cn.yshujia.ui.vo.AlbumVO;
 import cn.yshujia.utils.IDUtils;
 import cn.yshujia.utils.PageUtils;
 import cn.yshujia.utils.SecurityUtils;
@@ -45,9 +44,6 @@ public class AdminSysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysC
 
 	@Resource
 	public SysConfigMapper mapper;
-
-	@Resource
-	RedisServiceImpl<AlbumVO> redis;
 
 	@Resource(name = "dataSource")
 	private DataSource dataSource;
