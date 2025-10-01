@@ -1,20 +1,14 @@
 server:
   port: 9898
-  http2:
-    enabled: true
   servlet:
     session:
       timeout: 30m
-  tomcat:
-    # tomcat的URI编码
-    uri-encoding: UTF-8
-    # 连接数满后的排队数，默认为100
-    accept-count: 10000
+  undertow:
     threads:
-      # tomcat最大线程数，默认为200
-      max: 1024
-      # Tomcat启动初始化的线程数，默认值10
-      min-spare: 100
+      io: 4
+      worker: 32
+    buffer-size: 16384
+    direct-buffers: true
 
 socketio:
   host: localhost
