@@ -1,5 +1,4 @@
 import cn.yshujia.ServerApplication;
-import cn.yshujia.config.SystemConfig;
 import cn.yshujia.mapper.FileMapper;
 import cn.yshujia.mapper.LabelMapper;
 import cn.yshujia.mapper.LeaveWordMapper;
@@ -15,22 +14,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = ServerApplication.class)
 public class ServerApplicationTests {
-	
+
 	@Resource
 	LeaveWordMapper leaveWordMapper;
-	
+
 	@Resource
 	FileMapper fileMapper;
-	
+
 	@Resource
 	LabelMapper labelMapper;
-	
-	@Resource
-	SystemConfig systemConfig;
-	
+
 	@Test
 	public void test() {
-	
+
 	}
-	
+
 }

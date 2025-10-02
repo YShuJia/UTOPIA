@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { type ArticleDTO } from '@/request/api/article'
+import { initWebConfigDTO, type WebConfigDTO } from '@/request/api/web_config'
 
 export const useTemporaryStore = defineStore(
   'temporary',
@@ -24,15 +25,19 @@ export const useTemporaryStore = defineStore(
     const initArticle = () => {
       article.value = {}
     }
+
+    const webConfig = ref<WebConfigDTO>(initWebConfigDTO())
+
     return {
       article,
-      initArticle
+      initArticle,
+      webConfig
     }
   },
   {
     persist: {
       key: 'temporary',
-      paths: ['article']
+      paths: ['article', 'webConfig']
     }
   }
 )

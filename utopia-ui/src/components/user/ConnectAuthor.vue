@@ -3,7 +3,7 @@ import wechat from '@/assets/img/wechat.png'
 import QQ from '@/assets/img/qq.png'
 import { useSystemStore } from '@/stores/system'
 
-const systemStore = useSystemStore()
+const sys = useSystemStore()
 </script>
 
 <template>
@@ -47,14 +47,10 @@ const systemStore = useSystemStore()
       class="p-5 gap-2 use-box-large bg-gradient-to-r from-teal-100 to-orange-100"
       direction="vertical"
     >
-      <span class="text-black">联系作者 - yshujia</span>
+      <span class="text-black">联系作者 - {{ sys.webConfig.authorName }}</span>
       <el-container class="gap-5">
-        <image-box
-          :src="wechat"
-          class="radius-sm !size-24"
-          @click="systemStore.preview.open(wechat)"
-        />
-        <image-box :src="QQ" class="radius-sm !size-24" @click="systemStore.preview.open(QQ)" />
+        <image-box :src="wechat" class="radius-sm !size-24" @click="sys.preview.open(wechat)" />
+        <image-box :src="QQ" class="radius-sm !size-24" @click="sys.preview.open(QQ)" />
       </el-container>
     </el-container>
   </el-container>

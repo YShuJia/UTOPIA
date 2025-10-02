@@ -7,6 +7,8 @@ import { useSocketStore } from '@/stores/socket'
 import { useScrollStore } from '@/stores/scroll'
 import { useTemporaryStore } from '@/stores/temporary'
 import { disableInfo, throttle } from '@/utils'
+import { getWebConfigDefaultApi, type WebConfigVO } from '@/request/api/web_config'
+import type { ResultType } from '@/request/config'
 
 const route = useRoute()
 
@@ -36,6 +38,10 @@ const headerHandle = throttle(() => {
 }, 1000)
 
 onMounted(() => {
+  // 获取网站配置
+  getWebConfigDefaultApi().then((res: ResultType<WebConfigVO>) => {
+    systemStore.webConfig = res.data
+  })
   window.addEventListener('resize', systemStore.handleResize)
   window.addEventListener('click', (e) => {
     headerHandle()

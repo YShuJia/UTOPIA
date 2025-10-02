@@ -1,7 +1,6 @@
 package cn.yshujia.utils;
 
 import cn.yshujia.config.JwtConfig;
-import cn.yshujia.config.SystemConfig;
 import cn.yshujia.constant.SecurityConst;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -26,23 +25,21 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtTokenUtils {
-	
+
 	// 加密算法
 	private final static SecureDigestAlgorithm<SecretKey, SecretKey> ALGORITHM = Jwts.SIG.HS256;
-	
+
 	// jwt主题
 	private final static String SUBJECT = "Peripherals";
-	
-	private static JwtConfig jwtConfig;
-	
 	// jwt签发者
-	private static String JWT_ISS;
-	
+	private static final String JWT_ISS = "YSHUJIA";
+	private static JwtConfig jwtConfig;
+
 	@Autowired
-	public JwtTokenUtils(JwtConfig jwtConfig, SystemConfig systemConfig) {
+	public JwtTokenUtils(JwtConfig jwtConfig) {
 		JwtTokenUtils.jwtConfig = jwtConfig;
-		JwtTokenUtils.JWT_ISS = systemConfig.getAuthor();
 	}
+
 	/*
 	这些是一组预定义的声明，它们 不是强制性的，而是推荐的 ，以 提供一组有用的、可互操作的声明 。
 	iss: jwt签发者
@@ -54,9 +51,9 @@ public class JwtTokenUtils {
 	jti: jwt的唯一身份标识，主要用来作为一次性token,从而回避重放攻击
 	*/
 	public static String generatorToken(String id) {
-		
+
 		Date exprireDate = Date.from(Instant.now().plusSeconds(jwtConfig.getExpire() * 60L));
-		
+
 		return Jwts.builder()
 				// 设置头部信息header
 				.header()
@@ -79,7 +76,7 @@ public class JwtTokenUtils {
 				.signWith(Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes(StandardCharsets.UTF_8)), ALGORITHM)
 				.compact();
 	}
-	
+
 	public static String getId(String jwt) {
 		jwt = jwt.replace(SecurityConst.TOKEN_PREFIX, "");
 		Claims claims = parseClaim(jwt);
@@ -88,12 +85,12 @@ public class JwtTokenUtils {
 		}
 		return claims.get("id").toString();
 	}
-	
+
 	public static String getId(HttpServletRequest req) {
 		String jwt = req.getHeader(SecurityConst.TOKEN_KEY);
 		return getId(jwt);
 	}
-	
+
 	/**
 	 * 解析 token
 	 */
@@ -109,7 +106,7 @@ public class JwtTokenUtils {
 		}
 		return null;
 	}
-	
+
 	//判断是否需要刷新
 	public static Boolean isRefresh(String jwt) {
 		if (null == jwt) {
@@ -123,7 +120,7 @@ public class JwtTokenUtils {
 		Date expirationDate = parseClaim.getExpiration();
 		return expirationDate.getTime() / 1000 - jwtConfig.getRefresh() * 60 <= new Date().getTime() / 1000;
 	}
-	
+
 	//判断是否过期
 	public static Boolean isExpired(String jwt) {
 		jwt = jwt.replace(SecurityConst.TOKEN_PREFIX, "");
@@ -135,5 +132,5 @@ public class JwtTokenUtils {
 		String date = TimeUtils.getParallelTime(expirationDate);
 		return date.compareTo(TimeUtils.getParallelTime()) < 0;
 	}
-	
+
 }

@@ -1,6 +1,5 @@
 package cn.yshujia.filter;
 
-import cn.yshujia.config.SystemConfig;
 import cn.yshujia.constant.HttpCode;
 import cn.yshujia.constant.RedisKeys;
 import cn.yshujia.constant.SecurityConst;
@@ -12,6 +11,7 @@ import cn.yshujia.ex.CustomException;
 import cn.yshujia.ex.ServiceException;
 import cn.yshujia.mapper.UserMapper;
 import cn.yshujia.repository.SMRepository;
+import cn.yshujia.repository.SysRepository;
 import cn.yshujia.service.TokenService;
 import cn.yshujia.service.impl.RedisServiceImpl;
 import cn.yshujia.ui.vo.UserVO;
@@ -34,7 +34,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import java.io.IOException;
-import java.time.Duration;
 
 /**
  * @author yshujia
@@ -60,7 +59,9 @@ public class PasswordAuthenticationFilter extends UsernamePasswordAuthentication
 	RedisServiceImpl<Object> redis;
 
 	@Resource
-	SystemConfig systemConfig;
+	SysRepository sysRepository;
+
+	private String username;
 
 	@Autowired
 	public PasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -69,10 +70,9 @@ public class PasswordAuthenticationFilter extends UsernamePasswordAuthentication
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-		String key = systemConfig.getPasswordBanKey() + RequestUtils.getIp(request);
-		if (redis.hasKey(key)) {
-			Long expiration = redis.getExpireHours(key);
-			ResponseUtils.writeFailure(response, "已被封禁，" + expiration + "小时后解封！");
+		Double expiration = sysRepository.expirationPassword(request);
+		if (expiration > 0) {
+			ResponseUtils.writeFailure(response, "账号、IP已被封禁，" + expiration + "小时后解封！");
 			return null;
 		}
 		String encryptedUsername = request.getParameter("username");
@@ -82,6 +82,12 @@ public class PasswordAuthenticationFilter extends UsernamePasswordAuthentication
 		String password;
 		try {
 			username = SMEncrypt.deSm2(privateKey, encryptedUsername);
+			expiration = sysRepository.expirationPassword(username);
+			if (expiration > 0) {
+				ResponseUtils.writeFailure(response, "账号、IP已被封禁，" + expiration + "小时后解封！");
+				return null;
+			}
+			this.username = username;
 			password = SMEncrypt.deSm2(privateKey, encryptedPassword);
 		} catch (CustomException e) {
 			// 移除 密钥 缓存
@@ -122,26 +128,15 @@ public class PasswordAuthenticationFilter extends UsernamePasswordAuthentication
 	}
 
 	@Override
-	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
-		Long times = ban(request);
-		if (times == 0) {
-			ResponseUtils.writeFailure(response, "邮箱或密码错误，已封禁 ip！");
-		} else if (times < 0) {
-			ResponseUtils.writeFailure(response, "已被封禁，" + systemConfig.getBanTime() + "小时后解封！");
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+		Long count = sysRepository.refreshPasswordBanCount(this.username, request);
+		if (count == 0) {
+			ResponseUtils.writeFailure(response, "邮箱或密码错误，已封禁账号、ip！");
+		} else if (count < 0) {
+			ResponseUtils.writeFailure(response, "已被封禁，" + sysRepository.getSysConfig().getSysPasswordBan() + "小时后解封！");
 		} else {
-			ResponseUtils.writeFailure(response, "邮箱或密码错误，还可验证 " + times + " 次！");
+			ResponseUtils.writeFailure(response, "邮箱或密码错误，还可验证 " + count + " 次！");
 		}
-	}
-
-
-	private Long ban(HttpServletRequest request) {
-		String key = systemConfig.getPasswordErrorKey() + RequestUtils.getIp(request);
-		Long times = redis.increment(key, 1L, Duration.ofHours(systemConfig.getErrorTime()));
-		if (times > systemConfig.getErrorTimes()) {
-			redis.set(systemConfig.getPasswordBanKey() + RequestUtils.getIp(request), "true", Duration.ofHours(systemConfig.getBanTime()));
-			return -1L;
-		}
-		return systemConfig.getErrorTimes() - times;
 	}
 
 }

@@ -8,6 +8,7 @@ import { browserName, browserVersion, isMobile, osName, osVersion } from 'vue-de
 import { useScrollStore } from '@/stores/scroll'
 import { throttle } from '@/utils'
 import { exchangeSm2Api } from '@/request/api/user'
+import { initWebConfigVO, type WebConfigVO } from '@/request/api/web_config'
 
 export const useSystemStore = defineStore(
   'system',
@@ -73,6 +74,8 @@ export const useSystemStore = defineStore(
       [TableEnum.ARTICLE]: false,
       [TableEnum.COMMENT]: false,
       [TableEnum.WEBSITE]: false,
+      [TableEnum.SYS_CONFIG]: false,
+      [TableEnum.WEB_CONFIG]: false,
       [TableEnum.LEAVE_WORD]: false,
       [DialogEnum.MEDIA_FORM]: false,
       [DialogEnum.LOGIN]: false
@@ -108,6 +111,8 @@ export const useSystemStore = defineStore(
       return file.value[random].url
     }
 
+    const webConfig = ref<WebConfigVO>(initWebConfigVO())
+
     return {
       system,
       admin,
@@ -116,6 +121,7 @@ export const useSystemStore = defineStore(
       handleResize,
       dialog,
       backendSm2,
+      webConfig,
       getRandomImg
     }
   },

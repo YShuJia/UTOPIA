@@ -1,10 +1,9 @@
 package cn.yshujia.filter;
 
-import cn.yshujia.config.SystemConfig;
 import cn.yshujia.domain.LoginUser;
+import cn.yshujia.repository.SysRepository;
 import cn.yshujia.service.TokenService;
 import cn.yshujia.service.impl.RedisServiceImpl;
-import cn.yshujia.utils.RequestUtils;
 import cn.yshujia.utils.ResponseUtils;
 import cn.yshujia.utils.SecurityUtils;
 import jakarta.annotation.Resource;
@@ -32,22 +31,22 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
-	
+
 	@Resource
 	private TokenService service;
-	
+
 	@Resource
 	private RedisServiceImpl<Long> redis;
-	
+
 	@Resource
-	private SystemConfig config;
-	
+	private SysRepository sysRepository;
+
 	@Override
 	protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain chain) throws IOException, ServletException {
 		// 判断 IP 是否被封禁
-		String key = config.getLimitBanKey() + RequestUtils.getIp(request);
-		if (redis.hasKey(key)) {
-			ResponseUtils.writeFailure(response, "ip 已被封禁，请 " + redis.getExpireHours(key) + " 小时后重试");
+		Double expiration = sysRepository.expirationLimit(request);
+		if (expiration > 0) {
+			ResponseUtils.writeFailure(response, "ip 已被封禁，请 " + expiration + " 小时后重试");
 			return;
 		}
 		// 获取用户信息
@@ -64,5 +63,5 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 		}
 		chain.doFilter(request, response);
 	}
-	
+
 }

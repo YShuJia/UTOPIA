@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import type { ResultType } from '@/request/config'
-import icon from '@/assets/img/icon.png'
 import { useGlobalDialog } from '@/hooks'
 import { getUserApi, initUserVO, type UserVO } from '@/request/api/user'
 import { logoutApi } from '@/request/api'
@@ -12,10 +11,8 @@ export const useUserStore = defineStore(
   'user',
   () => {
     const user = ref<UserVO>(initUserVO())
-    user.value.avatar = icon
     const clear = () => {
       user.value = initUserVO()
-      user.value.avatar = icon
     }
 
     const code = ref({
@@ -31,7 +28,6 @@ export const useUserStore = defineStore(
             setTimeout(() => {
               clearToken()
               user.value = initUserVO()
-              user.value.avatar = icon
               window.location.reload()
             }, 2000)
           })

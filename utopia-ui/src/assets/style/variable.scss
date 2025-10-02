@@ -1,43 +1,43 @@
 :root {
-	--el-bg-color: #fffef9;
-	--el-text-color-primary: #000000;
-	// 弹出框、下拉框等部分文本颜色
-	--el-text-color-regular: var(--el-text-color-primary);
-	// 表格头部等文本颜色
-	--el-text-color-secondary: var(--el-text-color-primary);
-	// 输入框等提示文字颜色
-	--el-text-color-placeholder: rgba(60, 60, 60, 0.6);
-	--el-text-color-disabled: rgb(50, 50, 50);
-	// 鼠标移入、分段组件等填充色
-	--el-fill-color-light: #efefef;
+  --el-bg-color: #fffef9;
+  --el-text-color-primary: #000000;
+  // 弹出框、下拉框等部分文本颜色
+  --el-text-color-regular: var(--el-text-color-primary);
+  // 表格头部等文本颜色
+  --el-text-color-secondary: var(--el-text-color-primary);
+  // 输入框等提示文字颜色
+  --el-text-color-placeholder: rgba(60, 60, 60, 0.6);
+  --el-text-color-disabled: rgb(50, 50, 50);
+  // 鼠标移入、分段组件等填充色
+  --el-fill-color-light: #efefef;
 
-	// 自定义
-	--shadow-color: #8e8e8e;
-	--shadow-contrast-color: #dedede;
-	--shadow-size: 3px;
+  // 自定义
+  --shadow-color: #8e8e8e;
+  --shadow-contrast-color: #dedede;
+  --shadow-size: 3px;
 
-	--radius-lg: 16px;
-	--radius-sm: 5px;
+  --radius-lg: 12px;
+  --radius-sm: 5px;
 
-	--hover-color: #F59E0B;
+  --hover-color: #F59E0B;
 
-	--text-color-gray: rgb(100, 100, 100);
+  --text-color-gray: rgb(100, 100, 100);
 
-	--bg-color-secondary: #f6f6f6;
-	--bg-color-three: #eeeeee;
+  --bg-color-secondary: #f6f6f6;
+  --bg-color-three: #eeeeee;
 }
 
 html.dark {
-	--el-bg-color: rgb(15, 20, 35);
-	--el-text-color-primary: #dedede;
-	--el-text-color-regular: #e1e1e1;
-	--el-text-color-secondary: #e1e1e1;
-	--el-text-color-placeholder: #878686;
-	--el-text-color-disabled: #e1e1e1;
+  --el-bg-color: rgb(15, 20, 35);
+  --el-text-color-primary: #dedede;
+  --el-text-color-regular: #e1e1e1;
+  --el-text-color-secondary: #e1e1e1;
+  --el-text-color-placeholder: #878686;
+  --el-text-color-disabled: #e1e1e1;
 
-	--shadow-color: #000000;
-	--shadow-contrast-color: #404040;
+  --shadow-color: #000000;
+  --shadow-contrast-color: #404040;
 
-	--bg-color-secondary: #0a0f1e;
-	--bg-color-three: #0a0a19;
+  --bg-color-secondary: #0a0f1e;
+  --bg-color-three: #0a0a19;
 }

@@ -47,7 +47,7 @@ const routerData: RouterType[] = getUiRouter()
           }
         "
       >
-        <span class="text-2xl font-bold">UTOPIA</span>
+        <span class="text-2xl font-bold">{{ systemStore.webConfig.siteTitle }}</span>
       </a>
     </el-container>
     <el-container class="z-50 gap-6 items-center mr-auto max-lg:!hidden">
@@ -80,7 +80,14 @@ const routerData: RouterType[] = getUiRouter()
       </el-link>
       <el-dropdown :teleported="false">
         <el-link :underline="false" class="min-w-10 h-10">
-          <image-box :src="userStore.user.avatar" class="!size-10 radius-sm" />
+          <image-box
+            :src="
+              userStore.user.avatar != ''
+                ? userStore.user.avatar
+                : systemStore.webConfig.siteFavicon
+            "
+            class="!size-10 radius-sm"
+          />
         </el-link>
         <template #dropdown>
           <el-container class="min-w-40 px-5 py-2" direction="vertical">

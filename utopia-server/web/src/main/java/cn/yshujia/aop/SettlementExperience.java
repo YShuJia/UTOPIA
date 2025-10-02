@@ -2,12 +2,12 @@ package cn.yshujia.aop;
 
 import cn.yshujia.annotation.Experience;
 import cn.yshujia.constant.RedisKeys;
-import cn.yshujia.constant.SystemConst;
 import cn.yshujia.domain.LoginUser;
 import cn.yshujia.domain.entity.Role;
 import cn.yshujia.domain.entity.User;
 import cn.yshujia.mapper.RoleMapper;
 import cn.yshujia.mapper.UserMapper;
+import cn.yshujia.repository.SysRepository;
 import cn.yshujia.service.impl.RedisServiceImpl;
 import cn.yshujia.ui.vo.UserVO;
 import cn.yshujia.utils.RequestUtils;
@@ -41,7 +41,8 @@ public class SettlementExperience {
 
 	@Resource
 	public RoleMapper roleMapper;
-
+	@Resource
+	public SysRepository sysRepository;
 	@Resource
 	RedisServiceImpl<Object> redis;
 
@@ -55,7 +56,7 @@ public class SettlementExperience {
 			String key = RedisKeys.EXPERIENCE + id + ":" + TimeUtils.getDay(new Date());
 			Integer experienceValue = (Integer) Optional.ofNullable(redis.get(key)).orElse(0);
 			// 如果今日已获取经验值达到上限则不处理
-			if (experienceValue > SystemConst.MAX_EXPERIENCE) {
+			if (experienceValue > sysRepository.getSysConfig().getSysMaxExp()) {
 				return;
 			}
 			Role role = roleMapper.selectOne(new LambdaUpdateWrapper<Role>()

@@ -1,7 +1,6 @@
 package cn.yshujia.service.impl;
 
 import cn.yshujia.admin.vo.AdminSelectRoleVO;
-import cn.yshujia.config.SystemConfig;
 import cn.yshujia.constant.RedisKeys;
 import cn.yshujia.domain.dto.RoleDTO;
 import cn.yshujia.domain.entity.Role;
@@ -9,6 +8,7 @@ import cn.yshujia.domain.vo.PageVO;
 import cn.yshujia.ex.CustomException;
 import cn.yshujia.ex.ServiceException;
 import cn.yshujia.mapper.RoleMapper;
+import cn.yshujia.repository.SysRepository;
 import cn.yshujia.transform.RoleTransform;
 import cn.yshujia.ui.vo.RoleVO;
 import cn.yshujia.utils.PageUtils;
@@ -27,30 +27,30 @@ import java.util.List;
 
 @Service
 public class AdminRoleServiceImpl extends ServiceImpl<RoleMapper, Role> {
-	
+
 	@Resource
 	public RoleMapper mapper;
-	
+
 	@Resource
 	RedisServiceImpl<RoleVO> redis;
-	
+
 	@Resource
-	SystemConfig systemConfig;
-	
+	SysRepository sysRepository;
+
 	public PageVO<RoleVO> pageByAdmin(RoleDTO dto) {
 		Role role = RoleTransform.dto2entity(dto);
 		List<RoleVO> list = mapper.listByAdmin(role);
 		return PageUtils.page(list);
 	}
-	
+
 	public List<AdminSelectRoleVO> listSelectData() {
 		return mapper.listSelectByAdmin();
 	}
-	
+
 	public List<String> table() {
-		return systemConfig.getTables();
+		return sysRepository.getSysConfig().getSysRoleTable();
 	}
-	
+
 	@Transactional(rollbackFor = Exception.class)
 	public void update(RoleDTO dto) {
 		Role role = RoleTransform.dto2entity(dto);
@@ -64,5 +64,5 @@ public class AdminRoleServiceImpl extends ServiceImpl<RoleMapper, Role> {
 			throw new CustomException(e.getMessage());
 		}
 	}
-	
+
 }
