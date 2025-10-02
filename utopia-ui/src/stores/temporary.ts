@@ -6,31 +6,14 @@ export const useTemporaryStore = defineStore(
   'temporary',
   () => {
     const article = ref<ArticleDTO>({
-      id: undefined,
-      labelId: undefined,
-      title: undefined,
-      cover: undefined,
-      content: undefined,
-      hasVideo: undefined,
-      videoUrl: undefined,
-      passwordTip: undefined,
-      recommend: undefined,
-      commentable: undefined,
-      copyright: undefined,
-      enabled: undefined,
-      password: undefined,
-      reviewed: undefined,
-      urls: undefined
+      urls: [],
+      isUpdated: false
     })
-    const initArticle = () => {
-      article.value = {}
-    }
 
     const webConfig = ref<WebConfigDTO>(initWebConfigDTO())
 
     return {
       article,
-      initArticle,
       webConfig
     }
   },
