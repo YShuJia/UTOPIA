@@ -12,6 +12,7 @@ import cn.yshujia.utils.IDUtils;
 import cn.yshujia.utils.PageUtils;
 import cn.yshujia.utils.SecurityUtils;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -38,6 +39,11 @@ public class AdminWebConfigServiceImpl extends ServiceImpl<WebConfigMapper, WebC
 	@Resource
 	private WebRepository webRepository;
 
+	public WebConfig oneById(Long id) {
+		return mapper.selectOne(new LambdaQueryWrapper<WebConfig>()
+				.eq(WebConfig::getId, id));
+	}
+
 	public PageVO<WebConfig> pageAdmin(WebConfigDTO dto) {
 		List<WebConfig> list = mapper.listByAdmin(WebConfigTransform.dto2Entity(dto));
 		return PageUtils.page(list);
@@ -59,10 +65,15 @@ public class AdminWebConfigServiceImpl extends ServiceImpl<WebConfigMapper, WebC
 
 	@Transactional(rollbackFor = Exception.class)
 	public void update(WebConfigDTO dto) {
+		WebConfig old = oneById(dto.getId());
 		WebConfig webConfig = WebConfigTransform.dto2Entity(dto);
 		// 禁用其他配置
 		if (dto.getEnabled()) {
 			mapper.update(new LambdaUpdateWrapper<WebConfig>().set(WebConfig::getEnabled, false));
+		}
+		// 确保有一个配置打开
+		if (old.getEnabled() && !dto.getEnabled()) {
+			dto.setEnabled(true);
 		}
 		// 更新数据
 		try {

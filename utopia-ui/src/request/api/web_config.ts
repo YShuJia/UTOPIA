@@ -1,4 +1,3 @@
-import type { MakeOptional } from '@/type'
 import { http } from '@/request/http'
 import type { PageVO } from '@/request/config'
 
@@ -8,14 +7,14 @@ export type WebConfigVO = {
   authorName: string
   authorAvatar: string
   authorTag: string[]
-  authorContact: string[]
-  authorPayment: string[]
+  authorContact: Array<{ name: string; url: string; type: string }>
+  authorPayment: Array<{ name: string; url: string }>
   authorHome: string[]
-  authorMbti: string[]
+  authorMbti: { name: string; E: number; S: number; T: number; J: number }
   authorSkill: string[]
   authorGame: string[]
   authorBook: string[]
-  authorFootprint: string[]
+  authorFootprint: Array<{ name: string; position: string; time: Date }>
   authorAbout: string
   siteTitle: string
   siteMotto: string
@@ -24,12 +23,73 @@ export type WebConfigVO = {
   siteAbout: string
   siteCreateTime: Date
   enabled: boolean
-  createdTime: Date
+  createTime: Date
 }
 
-export type WebConfigDTO = MakeOptional<WebConfigVO>
+export type WebConfigDTO = WebConfigVO & {
+  authorUrls: string[]
+  siteUrls: string[]
+  isUpdated: boolean
+}
 
-export const sysConfigVO2DTO = (entity: WebConfigVO): WebConfigDTO => {
+export const initWebConfigDTO = (): WebConfigDTO => {
+  return {
+    id: -1,
+    name: '',
+    authorName: '',
+    authorAvatar: '',
+    authorTag: [],
+    authorContact: [],
+    authorPayment: [],
+    authorHome: [],
+    authorMbti: { name: '', E: 0, S: 0, T: 0, J: 0 },
+    authorSkill: [],
+    authorGame: [],
+    authorBook: [],
+    authorFootprint: [],
+    authorAbout: '',
+    authorUrls: [],
+    siteTitle: '',
+    siteMotto: '',
+    siteRecord: '',
+    siteFavicon: '',
+    siteAbout: '',
+    siteCreateTime: new Date(),
+    siteUrls: [],
+    enabled: false,
+    createTime: new Date(),
+    isUpdated: false
+  }
+}
+
+export const initWebConfigVO = (): WebConfigVO => {
+  return {
+    id: -1,
+    name: '',
+    authorName: '',
+    authorAvatar: '',
+    authorTag: [],
+    authorContact: [],
+    authorPayment: [],
+    authorHome: [],
+    authorMbti: { name: '', E: 0, S: 0, T: 0, J: 0 },
+    authorSkill: [],
+    authorGame: [],
+    authorBook: [],
+    authorFootprint: [],
+    authorAbout: '',
+    siteTitle: '',
+    siteMotto: '',
+    siteRecord: '',
+    siteFavicon: '',
+    siteAbout: '',
+    siteCreateTime: new Date(),
+    enabled: false,
+    createTime: new Date()
+  }
+}
+
+export const webConfigVO2DTO = (entity: WebConfigVO): WebConfigDTO => {
   return {
     id: entity.id,
     name: entity.name,
@@ -50,9 +110,38 @@ export const sysConfigVO2DTO = (entity: WebConfigVO): WebConfigDTO => {
     siteRecord: entity.siteRecord,
     siteFavicon: entity.siteFavicon,
     siteAbout: entity.siteAbout,
-    siteCreateTime: entity.siteCreateTime,
-    enabled: entity.enabled
+    siteCreateTime: new Date(entity.siteCreateTime),
+    enabled: entity.enabled,
+    createTime: entity.createTime,
+    siteUrls: [],
+    authorUrls: [],
+    isUpdated: true
   }
+}
+
+export const getWebConfigDefaultApi = () => {
+  return http<WebConfigVO>({
+    url: `/ui/web-config/default`,
+    method: 'GET'
+  })
+}
+
+export const uploadWebConfigFileApi = (data: FormData) => {
+  return http<string[]>({
+    url: `/admin/web-config/upload/files`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data: data
+  })
+}
+
+export const getWebConfigAdminApi = (id: number) => {
+  return http<WebConfigVO>({
+    url: `/admin/web-config/${id}`,
+    method: 'GET'
+  })
 }
 
 export const pageWebConfigAdminApi = (dto: WebConfigDTO) => {

@@ -8,6 +8,7 @@ import { browserName, browserVersion, isMobile, osName, osVersion } from 'vue-de
 import { useScrollStore } from '@/stores/scroll'
 import { throttle } from '@/utils'
 import { exchangeSm2Api } from '@/request/api/user'
+import { initWebConfigVO, type WebConfigVO } from '@/request/api/web_config'
 
 export const useSystemStore = defineStore(
   'system',
@@ -110,6 +111,8 @@ export const useSystemStore = defineStore(
       return file.value[random].url
     }
 
+    const webConfig = ref<WebConfigVO>(initWebConfigVO())
+
     return {
       system,
       admin,
@@ -118,6 +121,7 @@ export const useSystemStore = defineStore(
       handleResize,
       dialog,
       backendSm2,
+      webConfig,
       getRandomImg
     }
   },

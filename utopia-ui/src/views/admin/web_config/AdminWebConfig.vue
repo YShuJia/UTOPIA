@@ -1,8 +1,13 @@
 <script lang="ts" setup>
 import { RouteNameEnum, TableEnum } from '@/enum'
 import type { ColumnsType } from '@/components/admin/CommonTable.vue'
-import { delSysConfigApi, pageSysConfigAdminApi, sysConfigVO2DTO, updateSysConfigApi } from '@/request/api/sys_config'
 import { routerTo } from '@/router'
+import {
+  delWebConfigApi,
+  pageWebConfigAdminApi,
+  updateWebConfigApi,
+  webConfigVO2DTO
+} from '@/request/api/web_config'
 
 const columns: ColumnsType[] = [
   {
@@ -16,54 +21,55 @@ const columns: ColumnsType[] = [
     fixed: 'left'
   },
   {
-    label: '启停状态',
-    prop: 'enabled',
-    dataType: { component: 'switch' }
+    label: '作者',
+    prop: 'authorName'
   },
   {
-    label: '密码试错次数',
-    prop: 'sysPasswordCount'
+    label: '作者头像',
+    prop: 'authorAvatar',
+    dataType: {
+      component: 'img',
+      type: 'string'
+    }
   },
   {
-    label: '试错间隔时间',
-    prop: 'sysPasswordTime'
+    label: '网站名',
+    prop: 'siteTitle'
   },
   {
-    label: '试错封禁时间',
-    prop: 'sysPasswordBan'
+    label: '网站默认头像',
+    prop: 'siteFavicon',
+    dataType: {
+      component: 'img',
+      type: 'string'
+    }
   },
   {
-    label: '限流次数',
-    prop: 'sysLimitCount'
+    label: '网站座右铭',
+    prop: 'siteMotto'
   },
   {
-    label: '限流间隔时间',
-    prop: 'sysLimitTime'
+    label: '网站备案信息',
+    prop: 'siteRecord'
   },
   {
-    label: '限流封禁时间',
-    prop: 'sysLimitBan'
-  },
-  {
-    label: '敏感词替换',
-    prop: 'sysReplaceChar'
-  },
-  {
-    label: '每天可获取最大经验',
-    prop: 'sysMaxExp'
-  },
-  {
-    label: '权限认证配置表',
-    prop: 'sysRoleTable'
+    label: '网站运行时间',
+    prop: 'siteCreateTime'
   },
   {
     label: '创建时间',
     prop: 'createTime'
   },
   {
+    label: '启停状态',
+    prop: 'enabled',
+    dataType: { component: 'switch' },
+    fixed: 'right'
+  },
+  {
     label: '操作',
     prop: '',
-    dataType: { component: 'operation', type: 'dialog' },
+    dataType: { component: 'operation', type: RouteNameEnum.WEB_CONFIG_EDIT },
     fixed: 'right'
   }
 ]
@@ -72,12 +78,12 @@ const columns: ColumnsType[] = [
 <template>
   <common-table
     :columns="columns"
-    :delete-api="delSysConfigApi"
-    :select-api="pageSysConfigAdminApi"
+    :delete-api="delWebConfigApi"
+    :select-api="pageWebConfigAdminApi"
     :show-add="false"
-    :table="TableEnum.SYS_CONFIG"
-    :update-api="updateSysConfigApi"
-    :vo-to-d-t-o="sysConfigVO2DTO"
+    :table="TableEnum.WEB_CONFIG"
+    :update-api="updateWebConfigApi"
+    :vo-to-d-t-o="webConfigVO2DTO"
   >
     <template #button>
       <el-button

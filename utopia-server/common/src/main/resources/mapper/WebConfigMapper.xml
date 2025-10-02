@@ -26,12 +26,13 @@
 				typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
 		<result column="author_footprint" property="authorFootprint"
 				typeHandler="com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler"/>
-		<result column="author_about" property="authorAbout"/>
+		<result column="author_about" property="authorAbout"
+				typeHandler="cn.yshujia.handler.domain.DomainContentHandler"/>
 		<result column="site_title" property="siteTitle"/>
 		<result column="site_motto" property="siteMotto"/>
 		<result column="site_record" property="siteRecord"/>
 		<result column="site_favicon" property="siteFavicon"/>
-		<result column="site_about" property="siteAbout"/>
+		<result column="site_about" property="siteAbout" typeHandler="cn.yshujia.handler.domain.DomainContentHandler"/>
 		<result column="site_create_time" property="siteCreateTime"/>
 		<result column="is_enabled" property="enabled"/>
 		<result column="create_time" property="createTime"/>

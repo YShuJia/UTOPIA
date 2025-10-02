@@ -153,11 +153,18 @@
 }
 
 /* 自定义文件上传 */
+.el-upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .el-upload-list {
   display: flex;
   gap: 5px;
 
   .el-upload {
+    display: flex;
     width: 100px;
     height: 100px;
 
@@ -165,6 +172,7 @@
       position: fixed !important;
     }
   }
+
   .el-upload-list__item {
     width: 100px;
     height: 100px;
@@ -220,6 +228,14 @@
 }
 
 /* 自定义 mdv3 的样式 */
+.md-editor-toolbar {
+  .md-editor-toolbar-item {
+    height: 3rem !important;
+    line-height: 1.6 !important;
+    justify-content: center !important;
+  }
+}
+
 .md-editor-preview {
   img, video {
     border-radius: 5px !important;

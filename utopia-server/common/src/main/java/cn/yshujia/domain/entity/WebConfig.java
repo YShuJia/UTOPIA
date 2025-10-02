@@ -1,5 +1,6 @@
 package cn.yshujia.domain.entity;
 
+import cn.yshujia.handler.domain.DomainContentHandler;
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -53,11 +54,11 @@ public class WebConfig implements Serializable {
 
 	@Schema(description = "作者联系方式配置")
 	@TableField(value = "author_contact", typeHandler = Fastjson2TypeHandler.class)
-	private List<String> authorContact;
+	private List<Object> authorContact;
 
 	@Schema(description = "作者支付方式配置")
 	@TableField(value = "author_payment", typeHandler = Fastjson2TypeHandler.class)
-	private List<String> authorPayment;
+	private List<Object> authorPayment;
 
 	@Schema(description = "作者家乡经纬度配置")
 	@TableField(value = "author_home", typeHandler = Fastjson2TypeHandler.class)
@@ -65,7 +66,7 @@ public class WebConfig implements Serializable {
 
 	@Schema(description = "作者mbti人格配置")
 	@TableField(value = "author_mbti", typeHandler = Fastjson2TypeHandler.class)
-	private List<String> authorMbti;
+	private Object authorMbti;
 
 	@Schema(description = "作者擅长的技术配置")
 	@TableField(value = "author_skill", typeHandler = Fastjson2TypeHandler.class)
@@ -81,10 +82,10 @@ public class WebConfig implements Serializable {
 
 	@Schema(description = "作者走过的地点配置")
 	@TableField(value = "author_footprint", typeHandler = Fastjson2TypeHandler.class)
-	private List<String> authorFootprint;
+	private List<Object> authorFootprint;
 
 	@Schema(description = "关于作者")
-	@TableField("author_about")
+	@TableField(value = "author_about", typeHandler = DomainContentHandler.class)
 	private String authorAbout;
 
 	@Schema(description = "网站标题")
@@ -104,11 +105,12 @@ public class WebConfig implements Serializable {
 	private String siteFavicon;
 
 	@Schema(description = "关于网站")
-	@TableField("site_about")
+	@TableField(value = "site_about", typeHandler = DomainContentHandler.class)
 	private String siteAbout;
 
 	@Schema(description = "网站运行起始时间")
 	@TableField("site_create_time")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date siteCreateTime;
 
 	@Schema(description = "是否启用该配置")

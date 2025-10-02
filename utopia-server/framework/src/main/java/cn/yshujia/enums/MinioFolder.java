@@ -10,7 +10,7 @@ import lombok.Getter;
 
 @Getter
 public enum MinioFolder {
-	
+
 	// 系统资源文件夹
 	files("/files"),
 	// 评论图片文件夹
@@ -20,10 +20,13 @@ public enum MinioFolder {
 	// 相册图片文件夹
 	ALBUM("/album"),
 	// 日记图片文件夹
-	DIARY("/diary");
-	
+	DIARY("/diary"),
+
+	CONFIG("/config");
+
+
 	private final String folder;
-	
+
 	MinioFolder(String folder) {
 		this.folder = folder;
 	}

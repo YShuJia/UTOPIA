@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { useGlobalDialog } from '@/hooks'
-import { initPageVO, type PageVO, type ResultType } from '@/request/config'
-import { ClassifyEnum, RouteNameEnum, TableEnum } from '@/enum'
-import { useStyleStore } from '@/stores/style'
-import { useSystemStore } from '@/stores/system'
+import {useGlobalDialog} from '@/hooks'
+import {initPageVO, type PageVO, type ResultType} from '@/request/config'
+import {ClassifyEnum, RouteNameEnum, TableEnum} from '@/enum'
+import {useStyleStore} from '@/stores/style'
+import {useSystemStore} from '@/stores/system'
 
 const router = useRouter()
 const styleStore = useStyleStore()

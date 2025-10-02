@@ -6,7 +6,9 @@ import cn.yshujia.domain.dto.WebConfigDTO;
 import cn.yshujia.domain.entity.WebConfig;
 import cn.yshujia.domain.vo.ApiVO;
 import cn.yshujia.domain.vo.PageVO;
+import cn.yshujia.enums.MinioFolder;
 import cn.yshujia.service.impl.AdminWebConfigServiceImpl;
+import cn.yshujia.utils.MinioUtils;
 import cn.yshujia.validation.InsertGroup;
 import cn.yshujia.validation.UpdateGroup;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +16,7 @@ import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,6 +36,25 @@ public class AdminWebConfigController extends BaseController {
 
 	@Resource
 	private AdminWebConfigServiceImpl service;
+
+	@Logger
+	@RateLimiter(count = 10)
+	@PostMapping("/upload/files")
+	@Operation(summary = "上传文件，返回上传地址")
+	@PreAuthorize("@sys.hasOnePermission('article:admin', 'article:select')")
+	public ApiVO<List<String>> upload(@RequestParam("files") MultipartFile[] files) {
+		List<String> urls = MinioUtils.upload(files, MinioFolder.CONFIG);
+		urls.replaceAll(s -> MinioUtils.STATIC_DOMAIN + s);
+		return success(urls);
+	}
+
+	@RateLimiter(count = 3)
+	@GetMapping("/{id}")
+	@Operation(summary = "admin获取配置分页")
+	@PreAuthorize("@sys.hasOnePermission('sys_config:admin')")
+	public ApiVO<WebConfig> one(@PathVariable Long id) {
+		return success(service.oneById(id));
+	}
 
 	@RateLimiter(count = 3)
 	@GetMapping("/page")

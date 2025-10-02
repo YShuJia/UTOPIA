@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { useScrollStore } from '@/stores/scroll'
+import { useSystemStore } from '@/stores/system'
 
+const sys = useSystemStore()
 let message = ref<string>('')
-let msg = ref<string>('虽千万人吾往矣')
+let msg = ref<string>(sys.webConfig.siteMotto)
 let interval = ref<any>()
 let timeout = ref<any>()
 let flagAnimation = ref<boolean>(true)

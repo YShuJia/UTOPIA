@@ -34,16 +34,15 @@ public class WebConfigDTO {
 	private List<String> authorTag;
 
 	@NotEmpty(groups = InsertGroup.class, message = "[作者联系方式] 不能为空！")
-	private List<String> authorContact;
+	private List<Object> authorContact;
 
 	@NotEmpty(groups = InsertGroup.class, message = "[作者打赏链接] 不能为空！")
-	private List<String> authorPayment;
+	private List<Object> authorPayment;
 
-	@NotEmpty(groups = InsertGroup.class, message = "[作者主页] 不能为空！")
+	@NotEmpty(groups = InsertGroup.class, message = "[作者家乡地址] 不能为空！")
 	private List<String> authorHome;
 
-	@NotEmpty(groups = InsertGroup.class, message = "[作者MBTI] 不能为空！")
-	private List<String> authorMbti;
+	private Object authorMbti;
 
 	@NotEmpty(groups = InsertGroup.class, message = "[作者技能] 不能为空！")
 	private List<String> authorSkill;
@@ -55,7 +54,7 @@ public class WebConfigDTO {
 	private List<String> authorBook;
 
 	@NotEmpty(groups = InsertGroup.class, message = "[作者足迹] 不能为空！")
-	private List<String> authorFootprint;
+	private List<Object> authorFootprint;
 
 	@NotBlank(groups = InsertGroup.class, message = "[关于作者] 不能为空！")
 	private String authorAbout;

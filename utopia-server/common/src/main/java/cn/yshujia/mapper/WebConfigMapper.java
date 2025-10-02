@@ -16,5 +16,6 @@ import java.util.List;
  */
 @Mapper
 public interface WebConfigMapper extends BaseMapper<WebConfig> {
+
 	List<WebConfig> listByAdmin(WebConfig sysConfig);
 }

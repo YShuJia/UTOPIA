@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import icon from '@/assets/img/icon.png'
 import { useSystemStore } from '@/stores/system'
 import { listRoleApi, type RoleVO } from '@/request/api/role'
 import type { ResultType } from '@/request/config'
 
-const systemStore = useSystemStore()
-const url = systemStore.getRandomImg()
+const sys = useSystemStore()
+const url = sys.getRandomImg()
 
 const role = ref<RoleVO[]>([])
 const getRoleList = () => {
@@ -14,34 +13,6 @@ const getRoleList = () => {
     console.log(role.value)
   })
 }
-
-const authorArray = [
-  'WX zy-utopia',
-  'QQ 2725364057',
-  '软件工程',
-  '00 后',
-  'SpringBoot',
-  'Java',
-  'Python',
-  'VUE',
-  'TypeScript',
-  'JavaScript CSS HTML',
-  '音乐 Perfect',
-  '音乐 海阔天空',
-  '音乐 Parachute',
-  '音乐 Between Worlds',
-  '音乐 壁上观',
-  '音乐 Like A Star',
-  '音乐 The One',
-  '音乐 III',
-  '音乐 I Must Come Back',
-  "音乐 I Don't Need You",
-  '音乐 安河桥',
-  '音乐 理想三旬',
-  '音乐 Lifter',
-  '音乐 ...',
-  '当然还有美食......'
-]
 
 const colors = [
   'rgb(179,103,111)',
@@ -70,12 +41,12 @@ onMounted(() => {
       direction="vertical"
     >
       <el-container class="items-center gap-2" direction="vertical">
-        <image-box :src="icon" class="!size-52 rounded-full" />
-        <span class="text-3xl z-10">YShuJia</span>
+        <image-box :src="sys.webConfig.authorAvatar" class="!size-52 rounded-full" />
+        <span class="text-3xl z-10">{{ sys.webConfig.authorName }}</span>
       </el-container>
       <el-container class="w-full px-5 flex-wrap justify-between gap-5 max-sm:gap-1">
         <span
-          v-for="(p, i) in authorArray"
+          v-for="(p, i) in sys.webConfig.authorTag"
           :key="i"
           :style="{
             backgroundColor: colors[Math.floor(Math.random() * colors.length)],
