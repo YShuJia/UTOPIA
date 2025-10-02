@@ -47,8 +47,9 @@ export type ArticleDTO = MakeOptional<BaseArticle> &
     recommend?: boolean
     enabled?: boolean
     reviewed?: number
-    urls?: string[]
     updateStatus?: boolean
+    urls: string[]
+    isUpdated: boolean
   }
 
 export type ArchiveVO = {
@@ -80,7 +81,9 @@ export const articleVO2DTO = (vo: AdminArticleVO): ArticleDTO => {
     enabled: vo.enabled,
     likeable: vo.likeable,
     reviewed: vo.reviewed,
-    password: undefined
+    password: undefined,
+    urls: [],
+    isUpdated: true
   }
 }
 

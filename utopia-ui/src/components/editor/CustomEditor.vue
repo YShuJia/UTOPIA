@@ -7,6 +7,7 @@ import { isEmpty } from '@/utils'
 import type { UploadFile, UploadProps } from 'element-plus'
 import { extractFrameFromVideo } from '@/utils/fileUtils'
 import type { ResultType } from '@/request/config'
+import { useTemporaryStore } from '@/stores/temporary'
 
 const formRef = ref<any>()
 const styleStore = useStyleStore()
@@ -74,7 +75,9 @@ const onUploadImg = async (files: File[]) => {
   }
   const { data } = await upload(formData)
   if (!isEmpty(data)) {
+    urls.value = urls.value ?? []
     urls.value.push(...data)
+    console.log(urls.value, useTemporaryStore().article.urls)
   }
   // 将文件路径返回给组件
   // callback(data.map((url) => url))
@@ -93,6 +96,7 @@ const onUploadVideo: UploadProps['onChange'] = async (uploadFile: UploadFile) =>
     // 上传视频
     formData.append('files', uploadFile.raw!)
     const results = await upload(formData)
+    urls.value = urls.value ?? []
     urls.value.push(...results.data)
     /* poster='poster' 占位 提交时替换为封面图片 */
     insert(
