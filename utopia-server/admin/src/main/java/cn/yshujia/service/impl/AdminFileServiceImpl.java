@@ -24,8 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author: yshujia
@@ -57,15 +59,16 @@ public class AdminFileServiceImpl extends ServiceImpl<FileMapper, File> {
 	@Transactional(rollbackFor = {Exception.class})
 	public void insert(MultipartFile[] files, FileDTO dto) {
 		List<File> resourcesList = new ArrayList<>();
-		Map<String, BigDecimal> map = MinioUtils.uploadUrlKb(files, MinioFolder.files);
-		List<String> urls = new ArrayList<>(map.keySet());
-		for (int i = 0; i < files.length; i++) {
+		List<String> urls = new ArrayList<>();
+		// 上传文件
+		List<MinioUtils.R> rList = MinioUtils.uploadAll(files, MinioFolder.files);
+		for (MinioUtils.R r : rList) {
 			File file = new File();
 			file.setId(IDUtils.getId());
-			file.setUrl(urls.get(i));
-			file.setSize(map.get(urls.get(i)));
-			String name = files[i].getOriginalFilename();
-			file.setName(Optional.ofNullable(name).map(str -> str.substring(0, name.lastIndexOf("."))).orElse(dto.getName()));
+			urls.add(r.getUrl());
+			file.setUrl(r.getUrl());
+			file.setSize(r.getSize());
+			file.setName(r.getName());
 			file.setLabelId(dto.getLabelId());
 			file.setTags(dto.getTags());
 			resourcesList.add(file);
@@ -90,7 +93,7 @@ public class AdminFileServiceImpl extends ServiceImpl<FileMapper, File> {
 		}
 		File file = FileTransform.dto2Entity(dto);
 		if (files != null) {
-			Map<String, BigDecimal> map = MinioUtils.uploadUrlKb(files, MinioFolder.files);
+			Map<String, Double> map = MinioUtils.uploadUrlKb(files, MinioFolder.files);
 			Set<String> urls = map.keySet();
 			for (String url : urls) {
 				file.setUrl(url);

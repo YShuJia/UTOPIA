@@ -1,8 +1,4 @@
 import cn.yshujia.ServerApplication;
-import cn.yshujia.mapper.FileMapper;
-import cn.yshujia.mapper.LabelMapper;
-import cn.yshujia.mapper.LeaveWordMapper;
-import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,19 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = ServerApplication.class)
 public class ServerApplicationTests {
-
-	@Resource
-	LeaveWordMapper leaveWordMapper;
-
-	@Resource
-	FileMapper fileMapper;
-
-	@Resource
-	LabelMapper labelMapper;
-
+	
 	@Test
 	public void test() {
-
 	}
 
 }
