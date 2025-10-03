@@ -4,9 +4,9 @@ import cn.yshujia.config.MinioConfig;
 import cn.yshujia.enums.MinioFolder;
 import cn.yshujia.ex.CustomException;
 import com.luciad.imageio.webp.WebPWriteParam;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
+import io.minio.*;
+import io.minio.messages.Item;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -73,6 +72,28 @@ public class MinioUtils {
 		return urls;
 	}
 
+	public static R uploadAll(MultipartFile file, MinioFolder folder) {
+		Map<String, Object> result = uploadFile(file, folder);
+		byte[] bytes = (byte[]) result.get(BYTES_KEY);
+		R r = new R();
+		// 获取文件名
+		String name = file.getOriginalFilename();
+		String suffix = Optional.ofNullable(name).map(str -> str.substring(0, name.lastIndexOf("."))).orElse("");
+		r.setName(suffix.length() < 32 ? suffix : suffix.substring(0, 32));
+		r.setUrl(result.get(URL_KEY).toString());
+		r.setSize(ArithUtils.div(bytes.length, 1024, 2));
+		return r;
+	}
+
+	public static List<R> uploadAll(MultipartFile[] files, MinioFolder folder) {
+		List<R> list = new ArrayList<>();
+		for (MultipartFile file : files) {
+			R r = uploadAll(file, folder);
+			list.add(r);
+		}
+		return list;
+	}
+
 	/**
 	 * @author: yshujia
 	 * @create: 2025/6/30 16:16
@@ -102,21 +123,21 @@ public class MinioUtils {
 	 * @create: 2025/6/30 16:17
 	 * @description: uploadUrlKb 返回上传的 url 和 size (kb)
 	 * @params: [file, folder] 传入文件和上传的文件夹
-	 * @return: Map<String, BigDecimal> key => url, value => size (kb)
+	 * @return: Map<String, Double> key => url, value => size (kb)
 	 */
-	public static Map<String, BigDecimal> uploadUrlKb(MultipartFile file, MinioFolder folder) {
+	public static Map<String, Double> uploadUrlKb(MultipartFile file, MinioFolder folder) {
 		Map<String, Object> result = uploadFile(file, folder);
 		// 返回map
-		Map<String, BigDecimal> map = new HashMap<>();
+		Map<String, Double> map = new HashMap<>();
 		byte[] bytes = (byte[]) result.get(BYTES_KEY);
-		map.put(result.get(URL_KEY).toString(), BigDecimal.valueOf(bytes.length / 1024L));
+		map.put(result.get(URL_KEY).toString(), ArithUtils.div(bytes.length, 1024, 2));
 		return map;
 	}
 
-	public static Map<String, BigDecimal> uploadUrlKb(MultipartFile[] files, MinioFolder folder) {
-		Map<String, BigDecimal> urls = new HashMap<>();
+	public static Map<String, Double> uploadUrlKb(MultipartFile[] files, MinioFolder folder) {
+		Map<String, Double> urls = new HashMap<>();
 		for (MultipartFile file : files) {
-			Map<String, BigDecimal> map = uploadUrlKb(file, folder);
+			Map<String, Double> map = uploadUrlKb(file, folder);
 			urls.putAll(map);
 		}
 		return urls;
@@ -161,6 +182,14 @@ public class MinioUtils {
 		result.put(CONTENT_TYPE_KEY, contentType);
 		result.put(BYTES_KEY, bytes);
 		return result;
+	}
+
+	public static Iterable<Result<Item>> getFileAll() {
+		return minioClient.listObjects(ListObjectsArgs.builder()
+				.bucket(config.getBucketName())
+				// 递归列出所有文件（包括子目录）
+				.recursive(true)
+				.build());
 	}
 
 	public static void delete(Collection<String> paths) {
@@ -283,5 +312,12 @@ public class MinioUtils {
 		} catch (IOException e) {
 			throw new CustomException(e.getMessage());
 		}
+	}
+
+	@Data
+	public static class R {
+		private String url;
+		private Double size;
+		private String name;
 	}
 }
