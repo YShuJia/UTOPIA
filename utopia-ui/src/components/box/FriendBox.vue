@@ -14,7 +14,7 @@ const { item } = defineProps({
 
 <template>
   <a v-slide-in="systemStore.system.isOpenAnimation" class="flex p-3" target="_blank">
-    <el-container class="card_box use-hover-box-large relative" direction="vertical">
+    <el-container class="card_box relative use-box-large" direction="vertical">
       <image-box :src="item.cover" class="h-36 img-box" />
       <el-container class="p-3 gap-1 justify-start" direction="vertical">
         <el-container class="gap-2 pl-3 justify-between items-center">
@@ -22,7 +22,7 @@ const { item } = defineProps({
             :src="item.avatar"
             class="min-w-10 max-w-10 border-1 min-h-10 max-h-10 rounded-full"
           />
-          <a :href="item.url" target="_blank" class="flex items-center">
+          <a :href="item.url" class="flex items-center" target="_blank">
             <svg-button message="去康康" name="paper-plane" size="sm" />
           </a>
         </el-container>
