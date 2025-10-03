@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -31,35 +30,35 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class File extends Base {
-	
+
 	@Schema(description = "标签ID")
 	@TableField("label_id")
 	private Long labelId;
-	
+
 	@Schema(description = "资源文件名")
 	@TableField("`name`")
 	private String name;
-	
+
 	@Schema(description = "链接")
 	@TableField(value = "url", typeHandler = DomainHandler.class)
 	private String url;
-	
+
 	@Schema(description = "大小kb")
 	@TableField("size")
-	private BigDecimal size;
-	
+	private Double size;
+
 	@Schema(description = "标签")
 	@TableField(value = "tags", typeHandler = Fastjson2TypeHandler.class)
 	private List<String> tags;
-	
+
 	@Schema(description = "是否通过审核")
 	@TableField("is_reviewed")
 	private Integer reviewed;
-	
+
 	public File(Long labelId, Boolean enabled, Integer reviewed) {
 		this.labelId = labelId;
 		this.enabled = enabled;
 		this.reviewed = reviewed;
 	}
-	
+
 }
