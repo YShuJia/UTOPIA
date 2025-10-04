@@ -32,11 +32,11 @@ import java.util.List;
 @Tag(name = "Website", description = "管理端网站Api")
 @RequestMapping("/admin/website")
 public class AdminWebsiteController extends BaseController {
-	
+
 	@Resource
 	private AdminWebsiteServiceImpl service;
-	
-	
+
+
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
 	@Operation(summary = "admin获取网站分页")
@@ -48,7 +48,7 @@ public class AdminWebsiteController extends BaseController {
 		}
 		return success(service.pageAdmin(dto));
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
@@ -56,10 +56,13 @@ public class AdminWebsiteController extends BaseController {
 	@Experience(value = 20)
 	@PreAuthorize("@sys.hasOnePermission('website:admin', 'website:insert')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody WebsiteDTO dto) {
+		if (!isAdmin()) {
+			dto.setReviewed(1);
+		}
 		service.insert(dto);
 		return message("网站添加成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
@@ -70,7 +73,7 @@ public class AdminWebsiteController extends BaseController {
 		service.update(dto);
 		return message("更新网站成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
@@ -80,7 +83,7 @@ public class AdminWebsiteController extends BaseController {
 		service.update(dto);
 		return message(dto.getReviewed() == 0 ? "已拒绝网站提交！" : "已同意网站提交！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
@@ -90,5 +93,5 @@ public class AdminWebsiteController extends BaseController {
 		service.remove(ids);
 		return message("删除网站成功！");
 	}
-	
+
 }

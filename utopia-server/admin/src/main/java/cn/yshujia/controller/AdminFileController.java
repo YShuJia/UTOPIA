@@ -35,10 +35,10 @@ import java.util.List;
 @Tag(name = "File", description = "管理端资源Api")
 @RequestMapping("/admin/file")
 public class AdminFileController extends BaseController {
-	
+
 	@Resource
 	private AdminFileServiceImpl service;
-	
+
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
 	@Operation(summary = "admin根据查询条件获取资源分页")
@@ -50,7 +50,7 @@ public class AdminFileController extends BaseController {
 		}
 		return success(service.pageAdmin(dto));
 	}
-	
+
 	@RateLimiter(count = 5)
 	@GetMapping("/page/select")
 	@Operation(summary = "admin获取资源做选择数据")
@@ -61,7 +61,7 @@ public class AdminFileController extends BaseController {
 		}
 		return success(service.pageSelect(dto));
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
@@ -69,10 +69,13 @@ public class AdminFileController extends BaseController {
 	@PreAuthorize("@sys.hasOnePermission('file:admin', 'file:insert')")
 	public ApiVO<Boolean> insert(@RequestParam("files") MultipartFile[] files,
 	                             @Validated(InsertGroup.class) FileDTO dto) {
+		if (!isAdmin()) {
+			dto.setReviewed(1);
+		}
 		service.insert(files, dto);
 		return message("资源新增成功");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
@@ -84,7 +87,7 @@ public class AdminFileController extends BaseController {
 		service.update(files, dto);
 		return message("资源更新成功");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
@@ -94,7 +97,7 @@ public class AdminFileController extends BaseController {
 		service.update(null, dto);
 		return message(dto.getReviewed() == 0 ? "已拒绝文件提交！" : "已同意文件提交！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
@@ -104,5 +107,5 @@ public class AdminFileController extends BaseController {
 		service.remove(ids);
 		return message("资源删除成功");
 	}
-	
+
 }

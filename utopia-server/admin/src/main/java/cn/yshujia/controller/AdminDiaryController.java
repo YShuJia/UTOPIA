@@ -37,10 +37,10 @@ import java.util.List;
 @Tag(name = "Diary", description = "管理端日记Api")
 @RequestMapping("/admin/diary")
 public class AdminDiaryController extends BaseController {
-	
+
 	@Resource
 	private AdminDiaryServiceImpl service;
-	
+
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
 	@Operation(summary = "admin分页查询日记")
@@ -52,7 +52,7 @@ public class AdminDiaryController extends BaseController {
 		}
 		return success(service.pageAdmin(dto));
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
@@ -60,10 +60,13 @@ public class AdminDiaryController extends BaseController {
 	@PreAuthorize("@sys.hasOnePermission('diary:admin', 'diary:insert')")
 	public ApiVO<Boolean> insert(@RequestPart(value = "files") MultipartFile[] files,
 	                             @Validated(InsertGroup.class) DiaryDTO dto) {
+		if (!isAdmin()) {
+			dto.setReviewed(1);
+		}
 		service.insert(files, dto);
 		return message("日记添加成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
@@ -75,7 +78,7 @@ public class AdminDiaryController extends BaseController {
 		service.update(files, dto);
 		return message("日记更新成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
@@ -85,7 +88,7 @@ public class AdminDiaryController extends BaseController {
 		service.update(dto);
 		return message(dto.getReviewed() == 0 ? "已拒绝日记提交！" : "已同意日记提交！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
@@ -96,5 +99,5 @@ public class AdminDiaryController extends BaseController {
 		service.remove(ids);
 		return message("日记删除成功！");
 	}
-	
+
 }
