@@ -8,7 +8,9 @@ const vo = ref<PageVO<ArticleVO>>(initPageVO())
 const page = reactive<ArticleDTO>({
   pageNum: 1,
   pageSize: 8,
-  recommend: true
+  recommend: true,
+  urls: [],
+  isUpdated: false
 })
 
 const getPage = () => {
