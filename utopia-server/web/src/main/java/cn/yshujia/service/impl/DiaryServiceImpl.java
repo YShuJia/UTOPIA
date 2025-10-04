@@ -28,25 +28,25 @@ import java.util.Optional;
 
 @Service
 public class DiaryServiceImpl extends ServiceImpl<DiaryMapper, Diary> {
-	
+
 	@Resource
 	public DiaryMapper mapper;
-	
+
 	@Resource
 	CommentServiceImpl commentService;
-	
+
 	@Resource
 	RedisServiceImpl<DiaryVO> redis;
-	
+
 	public DiaryVO now() {
 		DiaryVO vo = redis.get(RedisKeys.DIARY_NOW);
 		if (vo == null) {
 			vo = mapper.now();
-			redis.leftPush(RedisKeys.DIARY_NOW, vo, RedisKeys.ONE_DAYS);
+			redis.set(RedisKeys.DIARY_NOW, vo, RedisKeys.ONE_DAYS);
 		}
 		return vo;
 	}
-	
+
 	public DiaryVO selectById(Long id) {
 		DiaryVO vo = redis.get(RedisKeys.DIARY + id);
 		if (null == vo) {
@@ -60,7 +60,7 @@ public class DiaryServiceImpl extends ServiceImpl<DiaryMapper, Diary> {
 		updateCommentCount(id);
 		return vo;
 	}
-	
+
 	public PageVO<DiaryVO> page(DiaryDTO dto) {
 		List<DiaryVO> list;
 		if (dto.getCreateTime() != null) {
@@ -72,20 +72,20 @@ public class DiaryServiceImpl extends ServiceImpl<DiaryMapper, Diary> {
 		}
 		return PageUtils.page(dto, list);
 	}
-	
+
 	@Async("Task")
 	protected void updateViewCount(Long id, Integer viewCount) {
 		mapper.update(new LambdaUpdateWrapper<Diary>()
-				              .eq(Diary::getId, id)
-				              .set(Diary::getViewCount, viewCount));
+				.eq(Diary::getId, id)
+				.set(Diary::getViewCount, viewCount));
 	}
-	
+
 	@Async("Task")
 	protected void updateCommentCount(Long id) {
 		Long count = Optional.ofNullable(commentService.countBySourceId(id)).orElse(0L);
 		mapper.update(new LambdaUpdateWrapper<Diary>()
-				              .eq(Diary::getId, id)
-				              .set(Diary::getCommentCount, count));
+				.eq(Diary::getId, id)
+				.set(Diary::getCommentCount, count));
 	}
-	
+
 }

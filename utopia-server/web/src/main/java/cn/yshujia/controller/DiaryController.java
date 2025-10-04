@@ -27,17 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Diary", description = "日记Api")
 @RequestMapping("/ui/diary")
 public class DiaryController extends BaseController {
-	
+
 	@Resource
 	private DiaryServiceImpl service;
-	
-	@RateLimiter(count = 2)
-	@GetMapping("/now")
-	@Operation(summary = "获取最近的一篇日记")
-	public ApiVO<DiaryVO> now() {
-		return success(service.now());
-	}
-	
+
 	@RateLimiter
 	@Experience
 	@GetMapping("/{id}")
@@ -45,7 +38,7 @@ public class DiaryController extends BaseController {
 	public ApiVO<DiaryVO> info(@PathVariable Long id) {
 		return success(service.selectById(id));
 	}
-	
+
 	@RateLimiter(count = 2)
 	@GetMapping("/page")
 	@Operation(summary = "分页获取日记信息")
@@ -53,5 +46,5 @@ public class DiaryController extends BaseController {
 		startPage();
 		return success(service.page(dto));
 	}
-	
+
 }
