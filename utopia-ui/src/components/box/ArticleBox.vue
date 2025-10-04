@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import {useSystemStore} from '@/stores/system'
-import type {ArticleVO} from '@/request/api/article'
-import {RouteNameEnum} from '@/enum'
-import {routerTo} from '@/router'
+import { useSystemStore } from '@/stores/system'
+import type { ArticleVO } from '@/request/api/article'
+import { RouteNameEnum } from '@/enum'
+import { routerTo } from '@/router'
 
 const systemStore = useSystemStore()
 
@@ -24,9 +24,9 @@ const { item } = defineProps({
     <div class="h-36 flex relative justify-center items-center overflow-hidden w-full">
       <svg-icon
         v-if="item.hasVideo"
-        class="absolute rounded-lg z-10 bg-gray-100/70 py-1.5 px-5"
+        class="absolute rounded-lg z-10 bg-gray-100/70 py-2 px-6"
         name="play"
-        size="5xl"
+        size="4xl"
       />
       <image-box :src="item.cover" class="absolute use-hover-big" />
     </div>

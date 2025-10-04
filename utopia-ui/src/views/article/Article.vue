@@ -40,7 +40,9 @@ const updateSelectedLabel = (p: LabelVO) => {
 const page = reactive<ArticleDTO>({
   pageSize: 10,
   pageNum: 0,
-  labelId: 0
+  labelId: 0,
+  urls: [],
+  isUpdated: false
 })
 
 const article = reactive<PageVO<ArticleVO>>(initPageVO())

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { gsap } from 'gsap'
-import { debounce } from '@/utils'
+import { debounce, throttle } from '@/utils'
 import { useSystemStore } from '@/stores/system'
 
 export type ScrollType = {
@@ -57,7 +57,6 @@ export const useScrollStore = defineStore('scroll', () => {
     scroll.value.isDown = false
   }, 3000)
 
-  // 节流滚动事件
   let scheduled = false
   const scheduleUpdate = (progress: number) => {
     if (!scheduled) {
@@ -145,8 +144,8 @@ export const useScrollStore = defineStore('scroll', () => {
   }
 
   // 关闭滚动阻尼时的滚动事件
-  const handleScroll = (e: any) => {
-    if (!scroll.value.lenis) {
+  const handleScroll = throttle((e: any) => {
+    if (!systemStore.system.isOpenLenis) {
       // 获取滚动内容总高度
       const contentHeight =
         scroll.value.contentRef?.clientHeight ?? systemStore.system.innerHeight + 1
@@ -155,7 +154,7 @@ export const useScrollStore = defineStore('scroll', () => {
       scale = scale > 1 ? 1 : scale
       scheduleUpdate(scale)
     }
-  }
+  }, 50)
 
   const scrollTo = (top: number = 0, duration: number = 5) => {
     if (scroll.value.lenis) {
