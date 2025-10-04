@@ -77,6 +77,9 @@ public class AdminArticleController extends BaseController {
 	@Operation(summary = "admin插入文章")
 	@PreAuthorize("@sys.hasOnePermission('article:admin', 'article:insert')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody ArticleDTO dto) {
+		if (!isAdmin()) {
+			dto.setReviewed(1);
+		}
 		service.insert(dto);
 		return message("文章添加成功！");
 	}

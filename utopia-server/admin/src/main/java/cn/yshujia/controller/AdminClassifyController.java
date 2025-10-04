@@ -31,17 +31,17 @@ import java.util.List;
 @Tag(name = "Classify", description = "管理端分类Api")
 @RequestMapping("/admin/classify")
 public class AdminClassifyController extends BaseController {
-	
+
 	@Resource
 	AdminClassifyServiceImpl service;
-	
+
 	@RateLimiter(count = 5)
 	@GetMapping("/tree/{key}")
 	@Operation(summary = "通过分类 type 获取分类、标签树信息")
 	public ApiVO<List<AdminTreeVO>> treeList(@PathVariable String key) {
 		return success(service.treeList(key));
 	}
-	
+
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
 	@Operation(summary = "admin获取类别分页")
@@ -53,17 +53,20 @@ public class AdminClassifyController extends BaseController {
 		}
 		return success(service.pageAdmin(dto));
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
 	@Operation(summary = "admin添加分类")
 	@PreAuthorize("@sys.hasOnePermission('classify:admin', 'classify:insert')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody ClassifyDTO dto) {
+		if (!isAdmin()) {
+			dto.setReviewed(1);
+		}
 		service.insert(dto);
 		return message("分类添加成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
@@ -74,7 +77,7 @@ public class AdminClassifyController extends BaseController {
 		service.update(dto);
 		return message("分类更新成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
@@ -84,7 +87,7 @@ public class AdminClassifyController extends BaseController {
 		service.update(dto);
 		return message(dto.getReviewed() == 0 ? "已拒绝类别提交！" : "已同意类别提交！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
@@ -94,6 +97,6 @@ public class AdminClassifyController extends BaseController {
 		service.remove(ids);
 		return message("分类删除成功！");
 	}
-	
+
 }
 

@@ -31,10 +31,10 @@ import java.util.List;
 @Tag(name = "Album", description = "管理端相册Api")
 @RequestMapping("/admin/album")
 public class AdminAlbumController extends BaseController {
-	
+
 	@Resource
 	private AdminAlbumServiceImpl service;
-	
+
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
 	@Operation(summary = "admin获取相册分页")
@@ -46,7 +46,7 @@ public class AdminAlbumController extends BaseController {
 		}
 		return success(service.pageAdmin(dto));
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
@@ -54,10 +54,13 @@ public class AdminAlbumController extends BaseController {
 	@PreAuthorize("@sys.hasOnePermission('album:admin', 'album:insert')")
 	public ApiVO<Boolean> insert(@RequestPart("files") MultipartFile[] files,
 	                             @Validated(InsertGroup.class) AlbumDTO dto) {
+		if (!isAdmin()) {
+			dto.setReviewed(1);
+		}
 		service.insert(files, dto);
 		return message("相册添加成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
@@ -69,7 +72,7 @@ public class AdminAlbumController extends BaseController {
 		service.update(files, dto);
 		return message("相册更新成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
@@ -79,7 +82,7 @@ public class AdminAlbumController extends BaseController {
 		service.update(dto);
 		return message(dto.getReviewed() == 0 ? "已拒绝相册提交！" : "已同意相册提交！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
@@ -89,5 +92,5 @@ public class AdminAlbumController extends BaseController {
 		service.remove(ids);
 		return message("相册删除成功！");
 	}
-	
+
 }

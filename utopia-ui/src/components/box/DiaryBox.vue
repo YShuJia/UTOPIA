@@ -17,15 +17,15 @@ const { item } = defineProps({
 </script>
 
 <template>
-  <a class="flex relative w-full" href="javascript:">
+  <a class="flex relative w-full h-full" href="javascript:">
     <el-main class="note-box size-full use-theme absolute left-0 top-6 shadow" />
     <el-main class="note-box size-full use-theme absolute left-3 top-3 shadow" />
-    <el-container class="pl-8 pr-5 py-6 z-10" direction="vertical">
+    <el-container v-if="item.title" class="pl-8 pr-5 py-6 z-10" direction="vertical">
       <span class="flex text-xl font-bold border-b-2 border-amber-500"> {{ item.title }} </span>
       <el-container class="gap-5" direction="vertical">
-        <span class="pt-2 leading-8 text-justify">
+        <pre class="pt-2 leading-8 text-justify whitespace-break-spaces">
           {{ item.content }}
-        </span>
+        </pre>
         <div class="w-full h-fit auto-3-column">
           <div v-for="(url, index) in item.urls">
             <image-box
@@ -67,6 +67,7 @@ const { item } = defineProps({
         />
       </el-container>
     </el-container>
+    <el-empty v-else class="pl-8 pr-5 py-6 z-10 size-96" />
   </a>
 </template>
 

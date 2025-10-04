@@ -30,10 +30,10 @@ import java.util.List;
 @Tag(name = "Label", description = "管理端标签Api")
 @RequestMapping("/admin/label")
 public class AdminLabelController extends BaseController {
-	
+
 	@Resource
 	private AdminLabelServiceImpl service;
-	
+
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
 	@Operation(summary = "admin获取标签分页")
@@ -45,17 +45,20 @@ public class AdminLabelController extends BaseController {
 		}
 		return success(service.pageAdmin(dto));
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
 	@Operation(summary = "admin添加标签")
 	@PreAuthorize("@sys.hasOnePermission('label:admin', 'label:insert')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody LabelDTO dto) {
+		if (!isAdmin()) {
+			dto.setReviewed(1);
+		}
 		service.insert(dto);
 		return message("标签添加成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
@@ -66,7 +69,7 @@ public class AdminLabelController extends BaseController {
 		service.update(dto);
 		return message("标签更新成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
@@ -76,7 +79,7 @@ public class AdminLabelController extends BaseController {
 		service.update(dto);
 		return message(dto.getReviewed() == 0 ? "已拒绝标签提交！" : "已同意标签提交！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
@@ -86,7 +89,7 @@ public class AdminLabelController extends BaseController {
 		service.remove(ids);
 		return message("标签删除成功！");
 	}
-	
+
 }
 
 

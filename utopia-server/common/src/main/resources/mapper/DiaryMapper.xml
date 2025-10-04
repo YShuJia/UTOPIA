@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.yshujia.mapper.DiaryMapper">
-	
+
 	<!-- 公共的 WHERE 条件片段 -->
 	<sql id="diary_where">
 		<where>
@@ -23,19 +23,19 @@
 			<if test="reviewed != null">and td.is_reviewed = #{reviewed}</if>
 		</where>
 	</sql>
-	
+
 	<!-- 通用查询结果列 -->
 	<sql id="UI_Column_List">
 		td.id, td.title, td.content, td.urls, td.year, td.month, td.like_count, td.view_count,
 		td.comment_count, td.update_time, td.is_likeable, td.is_commentable
 	</sql>
-	
+
 	<resultMap id="DiaryVO" type="cn.yshujia.ui.vo.DiaryVO">
 		<id column="id" property="id"/>
 		<result column="content" property="content"/>
 		<result column="title" property="title"/>
 		<result column="urls" property="urls"
-		        typeHandler="cn.yshujia.handler.domain.DomainHandler"/>
+				typeHandler="cn.yshujia.handler.domain.DomainHandler"/>
 		<result column="year" property="year"/>
 		<result column="month" property="month"/>
 		<result column="like_count" property="likeCount"/>
@@ -46,18 +46,17 @@
 		<result column="is_commentable" property="commentable"/>
 		<result column="create_username" property="createUsername"/>
 	</resultMap>
-	
-	
+
+
 	<select id="now" resultMap="DiaryVO">
 		select
 		<include refid="UI_Column_List"/>, tu.username as create_username
 		from t_diary td
 		left join t_user tu on td.create_by = tu.id
 		where td.is_enabled = 1 and td.is_reviewed = 1
-		order by td.id desc
-		`limit` 1
+		order by td.id desc limit 1
 	</select>
-	
+
 	<select id="one" resultMap="DiaryVO">
 		select
 		<include refid="UI_Column_List"/>, tu.username as create_username
@@ -65,8 +64,8 @@
 		left join t_user tu on td.create_by = tu.id
 		<include refid="diary_where"/>
 	</select>
-	
-	
+
+
 	<select id="list" resultMap="DiaryVO">
 		select
 		<include refid="UI_Column_List"/>, tu.username as create_username
@@ -75,16 +74,16 @@
 		<include refid="diary_where"/>
 		order by td.id
 	</select>
-	
-	
+
+
 	<!-- 管理端 -->
-	
+
 	<sql id="Admin_Column_List">
 		td.id, td.title, td.content, td.urls, td.year, td.month, td.like_count, td.view_count,
 		td.comment_count, td.create_time, td.update_time, td.create_by, td.update_by,
 		td.is_recommend, td.is_likeable, td.is_commentable, td.is_enabled, td.is_reviewed
 	</sql>
-	
+
 	<resultMap id="AdminDiaryVO" type="cn.yshujia.admin.vo.AdminDiaryVO" extends="DiaryVO">
 		<result column="create_time" property="createTime"/>
 		<result column="create_by" property="createBy"/>
@@ -94,7 +93,7 @@
 		<result column="is_reviewed" property="reviewed"/>
 		<result column="update_username" property="updateUsername"/>
 	</resultMap>
-	
+
 	<select id="listByAdmin" resultMap="AdminDiaryVO">
 		select
 		<include refid="Admin_Column_List"/>,

@@ -50,9 +50,9 @@ const checked = ref(false)
             {{ diary.title }}
           </span>
           <el-container class="gap-5" direction="vertical">
-            <span class="pt-2 leading-8 text-justify">
+            <pre class="pt-2 leading-8 text-justify whitespace-break-spaces">
               {{ diary.content }}
-            </span>
+            </pre>
             <el-container class="w-full h-fit auto-3-column">
               <div v-for="(url, index) in diary.urls">
                 <image-box
