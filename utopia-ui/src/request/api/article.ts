@@ -10,7 +10,6 @@ type BaseArticle = {
   content: string
   copyright: string
   hasVideo: boolean
-  videoUrl: string
   passwordTip: string
   commentable: boolean
   likeable: boolean
@@ -73,7 +72,6 @@ export const articleVO2DTO = (vo: AdminArticleVO): ArticleDTO => {
     cover: vo.cover,
     content: vo.content,
     hasVideo: vo.hasVideo,
-    videoUrl: vo.videoUrl,
     passwordTip: vo.passwordTip,
     recommend: vo.recommend,
     commentable: vo.commentable,
@@ -101,7 +99,6 @@ export const initArticleVO = (): ArticleVO => {
     viewCount: 0,
     commentCount: 0,
     hasVideo: false,
-    videoUrl: '',
     passwordTip: '',
     commentable: false,
     likeable: false,

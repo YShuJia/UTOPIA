@@ -60,7 +60,7 @@ public class AdminClassifyController extends BaseController {
 	@Operation(summary = "admin添加分类")
 	@PreAuthorize("@sys.hasOnePermission('classify:admin', 'classify:insert')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody ClassifyDTO dto) {
-		if (!isAdmin()) {
+		if (isAdmin()) {
 			dto.setReviewed(1);
 		}
 		service.insert(dto);

@@ -74,7 +74,6 @@ public class AdminArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 			redis.delKeysByPrefix(RedisKeys.ARTICLE);
 		} catch (Exception e) {
 			throw new CustomException(e.getMessage());
-
 		} finally {
 			MinioUtils.delete(urls);
 		}
@@ -154,7 +153,7 @@ public class AdminArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 		if (StringUtils.isEmpty(content)) {
 			return new HashSet<>();
 		}
-		Pattern pattern = Pattern.compile("(?:src|poster)\\s*=\\s*(['\"])(.*?)\\1", Pattern.DOTALL);
+		Pattern pattern = Pattern.compile("(src|poster)=['\"](" + MinioUtils.STATIC_DOMAIN + "\\S*)['\"]", Pattern.DOTALL);
 		Matcher matcher = pattern.matcher(content);
 		// 用于存储 src 内容的列表
 		Set<String> set = new HashSet<>();

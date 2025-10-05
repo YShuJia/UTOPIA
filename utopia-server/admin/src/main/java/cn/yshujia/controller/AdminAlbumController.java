@@ -54,7 +54,7 @@ public class AdminAlbumController extends BaseController {
 	@PreAuthorize("@sys.hasOnePermission('album:admin', 'album:insert')")
 	public ApiVO<Boolean> insert(@RequestPart("files") MultipartFile[] files,
 	                             @Validated(InsertGroup.class) AlbumDTO dto) {
-		if (!isAdmin()) {
+		if (isAdmin()) {
 			dto.setReviewed(1);
 		}
 		service.insert(files, dto);

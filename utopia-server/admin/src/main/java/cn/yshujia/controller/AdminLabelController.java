@@ -52,7 +52,7 @@ public class AdminLabelController extends BaseController {
 	@Operation(summary = "admin添加标签")
 	@PreAuthorize("@sys.hasOnePermission('label:admin', 'label:insert')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody LabelDTO dto) {
-		if (!isAdmin()) {
+		if (isAdmin()) {
 			dto.setReviewed(1);
 		}
 		service.insert(dto);

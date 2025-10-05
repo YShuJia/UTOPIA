@@ -25,25 +25,37 @@ public class DomainContentHandler extends AbstractJsonTypeHandler<String> {
 		if (StringUtils.isEmpty(json)) {
 			return "";
 		}
-		Pattern pattern = Pattern.compile("(src|poster)\\s*=\\s*(['\"])(.*?)\\2", Pattern.DOTALL);
+		String regex = "(?i)\\b(src|poster)\\s*=\\s*(['\"])(.*?)\\2";
+		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(json);
-		StringBuilder text = new StringBuilder();
 
+		StringBuilder result = new StringBuilder();
 		while (matcher.find()) {
-			// "src" 或 "poster"
-			String attr = matcher.group(1);
-			String quote = matcher.group(2);
-			String url = matcher.group(3);
-			
-			if (url.startsWith("http")) {
-				continue;
+			String attribute = matcher.group(1); // src 或 poster
+			String quote = matcher.group(2);     // 引号类型
+			String url = matcher.group(3);       // 原始 URL
+			// 如果URL已经是http或https开头，则保持不变
+			if (!StringUtils.isEmpty(url) &&
+					(url.toLowerCase().startsWith("http:") || url.toLowerCase().startsWith("https:"))) {
+				matcher.appendReplacement(result, Matcher.quoteReplacement(matcher.group(0)));
+			} else {
+				// 添加域名前缀，如果URL不以/开头，则添加/
+				String newUrl = MinioUtils.STATIC_DOMAIN;
+				if (url != null && !url.isEmpty()) {
+					if (!url.startsWith("/")) {
+						newUrl += "/";
+					}
+					newUrl += url;
+				}
+				// 构造新的属性字符串
+				String replacement = attribute + "=" + quote + newUrl + quote;
+				matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
 			}
-			String newUrl = MinioUtils.STATIC_DOMAIN + url;
-			matcher.appendReplacement(text, "");
-			text.append(attr).append("=").append(quote).append(newUrl).append(quote);
 		}
-		return matcher.appendTail(text).toString();
+		return matcher.appendTail(result).toString();
+
 	}
+
 
 	@Override
 	public String toJson(String obj) {

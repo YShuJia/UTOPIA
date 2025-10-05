@@ -60,7 +60,7 @@ public class AdminDiaryController extends BaseController {
 	@PreAuthorize("@sys.hasOnePermission('diary:admin', 'diary:insert')")
 	public ApiVO<Boolean> insert(@RequestPart(value = "files") MultipartFile[] files,
 	                             @Validated(InsertGroup.class) DiaryDTO dto) {
-		if (!isAdmin()) {
+		if (isAdmin()) {
 			dto.setReviewed(1);
 		}
 		service.insert(files, dto);

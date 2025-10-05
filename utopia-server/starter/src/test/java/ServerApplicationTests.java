@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = ServerApplication.class)
 public class ServerApplicationTests {
-	
+
 	@Test
 	public void test() {
 	}

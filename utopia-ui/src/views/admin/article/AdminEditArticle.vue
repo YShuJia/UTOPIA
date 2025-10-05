@@ -56,6 +56,7 @@ onMounted(async () => {
       if (!res) {
         if (temporaryStore.article.urls.length > 0) {
           delMinioFilesApi(temporaryStore.article.urls)
+          temporaryStore.article.urls = []
         }
         id > 0 ? getArticle(id) : initArticle()
       }
@@ -131,13 +132,6 @@ const submitForm = () => {
           <el-radio :value="true">是</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="视频链接" prop="videoUrl">
-        <el-input
-          v-model="temporaryStore.article.videoUrl"
-          :disabled="!temporaryStore.article.hasVideo"
-          placeholder="请输入视频链接"
-        />
-      </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input v-model="temporaryStore.article.password" placeholder="请输入密码" />
       </el-form-item>
@@ -148,7 +142,7 @@ const submitForm = () => {
         <el-input v-model="temporaryStore.article.copyright" />
       </el-form-item>
 
-      <el-form-item label="文章内容">
+      <el-form-item label="文章内容" label-position="top">
         <custom-editor
           v-model:text="temporaryStore.article.content"
           v-model:urls="temporaryStore.article.urls"
