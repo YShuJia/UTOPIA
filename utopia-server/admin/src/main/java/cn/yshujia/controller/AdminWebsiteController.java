@@ -56,7 +56,7 @@ public class AdminWebsiteController extends BaseController {
 	@Experience(value = 20)
 	@PreAuthorize("@sys.hasOnePermission('website:admin', 'website:insert')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody WebsiteDTO dto) {
-		if (!isAdmin()) {
+		if (isAdmin()) {
 			dto.setReviewed(1);
 		}
 		service.insert(dto);
