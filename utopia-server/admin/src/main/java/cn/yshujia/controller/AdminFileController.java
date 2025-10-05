@@ -69,7 +69,7 @@ public class AdminFileController extends BaseController {
 	@PreAuthorize("@sys.hasOnePermission('file:admin', 'file:insert')")
 	public ApiVO<Boolean> insert(@RequestParam("files") MultipartFile[] files,
 	                             @Validated(InsertGroup.class) FileDTO dto) {
-		if (!isAdmin()) {
+		if (isAdmin()) {
 			dto.setReviewed(1);
 		}
 		service.insert(files, dto);
