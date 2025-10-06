@@ -8,14 +8,17 @@ import cn.yshujia.domain.entity.Classify;
 import cn.yshujia.domain.vo.PageVO;
 import cn.yshujia.mapper.ArticleMapper;
 import cn.yshujia.mapper.LabelMapper;
+import cn.yshujia.transform.ArticleTransform;
 import cn.yshujia.ui.vo.ArticleVO;
 import cn.yshujia.ui.vo.LabelVO;
 import cn.yshujia.utils.CollectionUtils;
 import cn.yshujia.utils.PageUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,19 +34,22 @@ import java.util.Optional;
 
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> {
-	
+
 	@Resource
 	RedisServiceImpl<ArticleVO> redis;
-	
+
 	@Resource
 	private ArticleMapper mapper;
-	
+
 	@Resource
 	private CommentServiceImpl commentService;
-	
+
 	@Resource
 	private LabelMapper labelMapper;
-	
+
+	@Resource
+	private BCryptPasswordEncoder passwordEncoder;
+
 	public ArticleVO oneById(Long id) {
 		ArticleVO vo = redis.get(RedisKeys.ARTICLE + id);
 		if (vo == null) {
@@ -57,7 +63,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> {
 		updateCommentCount(id);
 		return vo;
 	}
-	
+
+	public Boolean check(Long id, String password) {
+		Article article = mapper.selectOne(new LambdaQueryWrapper<Article>()
+				.eq(Article::getId, id).eq(Article::getEnabled, true).eq(Article::getReviewed, 1));
+		return passwordEncoder.matches(password, article.getPassword());
+	}
+
 	public PageVO<ArticleVO> page(ArticleDTO dto) {
 		String key = RedisKeys.ARTICLE;
 		if (dto.getLabelId() != null) {
@@ -71,11 +83,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> {
 			return PageUtils.page(dto, list, redis.listSize(key));
 		}
 		// 获取数据库数据
-		list = mapper.list(new Article(null, dto.getLabelId(), true, 1));
+		list = mapper.list(ArticleTransform.dto2Entity(dto));
 		redis.rightPushAll(key, list, RedisKeys.ONE_DAYS);
 		return PageUtils.page(list);
 	}
-	
+
 	public List<ArticleVO> selectDeployList() {
 		List<ArticleVO> voList = redis.range(RedisKeys.ARTICLE_DEPLOY, 0L, -1L);
 		if (!CollectionUtils.isEmpty(voList)) {
@@ -91,20 +103,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> {
 		redis.rightPushAll(RedisKeys.ARTICLE_DEPLOY, voList, RedisKeys.ONE_DAYS);
 		return voList;
 	}
-	
+
 	@Async("Task")
 	protected void updateViewCount(Long id, Integer viewCount) {
 		mapper.update(new LambdaUpdateWrapper<Article>()
-				              .eq(Article::getId, id)
-				              .set(Article::getViewCount, viewCount));
+				.eq(Article::getId, id)
+				.set(Article::getViewCount, viewCount));
 	}
-	
+
 	@Async("Task")
 	protected void updateCommentCount(Long id) {
 		Long count = Optional.ofNullable(commentService.countBySourceId(id)).orElse(0L);
 		mapper.update(new LambdaUpdateWrapper<Article>()
-				              .eq(Article::getId, id)
-				              .set(Article::getCommentCount, count));
+				.eq(Article::getId, id)
+				.set(Article::getCommentCount, count));
 	}
-	
+
 }

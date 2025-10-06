@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Album", description = "相册Api")
 @RequestMapping("/ui/album")
 public class AlbumController extends BaseController {
-	
+
 	@Resource
 	private AlbumServiceImpl service;
-	
+
 	@Experience
 	@RateLimiter
 	@GetMapping("/{id}")
@@ -36,13 +36,15 @@ public class AlbumController extends BaseController {
 	public ApiVO<AlbumVO> info(@PathVariable Long id) {
 		return success(service.selectById(id));
 	}
-	
+
 	@RateLimiter(count = 2)
 	@GetMapping("/page")
 	@Operation(summary = "获取相册分页")
-	public ApiVO<PageVO<AlbumVO>> page(AlbumDTO album) {
+	public ApiVO<PageVO<AlbumVO>> page(AlbumDTO dto) {
 		startPage();
-		return success(service.page(album));
+		dto.setReviewed(1);
+		dto.setEnabled(true);
+		return success(service.page(dto));
 	}
-	
+
 }

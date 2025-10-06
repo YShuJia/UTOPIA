@@ -61,6 +61,8 @@ public class AdminArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 		dto.setId(IDUtils.getTimeId());
 		if (StringUtils.isNotEmpty(dto.getPassword())) {
 			dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+		} else {
+			dto.setPasswordTip("");
 		}
 		Set<String> newUrls = getArticleUrls(dto.getContent());
 		List<String> urls = dto.getUrls() == null ? new ArrayList<>() : dto.getUrls();
@@ -106,6 +108,8 @@ public class AdminArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 		// 密码加密
 		if (StringUtils.isNotEmpty(dto.getPassword())) {
 			dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+		} else {
+			dto.setPasswordTip("");
 		}
 		try {
 			int n = mapper.update(ArticleTransform.dto2Entity(dto), SecurityUtils.createUpdateWrapper(dto.getId()));
