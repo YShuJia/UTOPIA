@@ -107,6 +107,17 @@ export const initArticleVO = (): ArticleVO => {
   }
 }
 
+export const checkArticlePasswordApi = (id: number, password: string) => {
+  return http<boolean>({
+    url: `/ui/article/password`,
+    method: 'GET',
+    params: {
+      id: id,
+      password: password
+    }
+  })
+}
+
 export const getArticleApi = (id: number) => {
   return http<ArticleVO>({
     url: `/ui/article/${id}`,

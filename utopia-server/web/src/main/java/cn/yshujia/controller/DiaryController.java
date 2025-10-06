@@ -44,6 +44,8 @@ public class DiaryController extends BaseController {
 	@Operation(summary = "分页获取日记信息")
 	public ApiVO<PageVO<DiaryVO>> page(DiaryDTO dto) {
 		startPage();
+		dto.setReviewed(1);
+		dto.setEnabled(true);
 		return success(service.page(dto));
 	}
 

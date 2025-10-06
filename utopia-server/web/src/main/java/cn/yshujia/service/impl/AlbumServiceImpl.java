@@ -5,6 +5,7 @@ import cn.yshujia.domain.dto.AlbumDTO;
 import cn.yshujia.domain.entity.Album;
 import cn.yshujia.domain.vo.PageVO;
 import cn.yshujia.mapper.AlbumMapper;
+import cn.yshujia.transform.AlbumTransform;
 import cn.yshujia.ui.vo.AlbumVO;
 import cn.yshujia.utils.CollectionUtils;
 import cn.yshujia.utils.PageUtils;
@@ -26,16 +27,16 @@ import java.util.Optional;
 
 @Service
 public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> {
-	
+
 	@Resource
 	RedisServiceImpl<AlbumVO> redis;
-	
+
 	@Resource
 	private AlbumMapper mapper;
-	
+
 	@Resource
 	private CommentServiceImpl commentService;
-	
+
 	public AlbumVO selectById(Long id) {
 		AlbumVO vo = redis.get(RedisKeys.ALBUM + id);
 		if (null == vo) {
@@ -49,7 +50,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> {
 		updateCommentCount(id);
 		return vo;
 	}
-	
+
 	public PageVO<AlbumVO> page(AlbumDTO dto) {
 		String key = RedisKeys.ALBUM_LABEL + dto.getLabelId();
 		// 判断缓存中是否存在
@@ -58,24 +59,24 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> {
 			return PageUtils.page(list);
 		}
 		// 获取数据库数据
-		list = mapper.list(new Album(null, dto.getLabelId(), true, 1));
+		list = mapper.list(AlbumTransform.dto2Entity(dto));
 		redis.rightPushAll(key, list, RedisKeys.ONE_DAYS);
 		return PageUtils.page(list);
 	}
-	
+
 	@Async("Task")
 	protected void updateViewCount(Long id, Integer viewCount) {
 		mapper.update(new LambdaUpdateWrapper<Album>()
-				              .eq(Album::getId, id)
-				              .set(Album::getViewCount, viewCount));
+				.eq(Album::getId, id)
+				.set(Album::getViewCount, viewCount));
 	}
-	
+
 	@Async("Task")
 	protected void updateCommentCount(Long id) {
 		Long count = Optional.ofNullable(commentService.countBySourceId(id)).orElse(0L);
 		mapper.update(new LambdaUpdateWrapper<Album>()
-				              .eq(Album::getId, id)
-				              .set(Album::getCommentCount, count));
+				.eq(Album::getId, id)
+				.set(Album::getCommentCount, count));
 	}
-	
+
 }

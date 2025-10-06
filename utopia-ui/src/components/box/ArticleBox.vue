@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useSystemStore } from '@/stores/system'
-import type { ArticleVO } from '@/request/api/article'
+import { type ArticleVO, checkArticlePasswordApi } from '@/request/api/article'
 import { RouteNameEnum } from '@/enum'
 import { routerTo } from '@/router'
 
@@ -12,6 +12,36 @@ const { item } = defineProps({
     default: []
   }
 })
+
+const toDetail = () => {
+  if (item.passwordTip) {
+    ElMessageBox.prompt(item.passwordTip, 'Tip', {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      inputPattern: /\w{1,*}/,
+      inputErrorMessage: '请输入密码！'
+    }).then(async ({ value }) => {
+      if (!value) {
+        ElMessage({
+          type: 'error',
+          message: '密码错误！'
+        })
+        return
+      }
+      const { data } = await checkArticlePasswordApi(item.id, value)
+      if (data) {
+        routerTo(RouteNameEnum.ARTICLE_DETAIL, { id: item.id })
+      } else {
+        ElMessage({
+          type: 'error',
+          message: '密码错误！'
+        })
+      }
+    })
+  } else {
+    routerTo(RouteNameEnum.ARTICLE_DETAIL, { id: item.id })
+  }
+}
 </script>
 
 <template>
@@ -19,7 +49,7 @@ const { item } = defineProps({
     v-slide-in="systemStore.system.isOpenAnimation"
     class="flex flex-col use-box-large h-72 overflow-hidden"
     href="javascript:"
-    @click="routerTo(RouteNameEnum.ARTICLE_DETAIL, { id: item.id })"
+    @click="toDetail"
   >
     <div class="h-36 flex relative justify-center items-center overflow-hidden w-full">
       <svg-icon
