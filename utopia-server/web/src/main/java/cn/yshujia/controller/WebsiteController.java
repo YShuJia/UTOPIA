@@ -24,18 +24,20 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Website", description = "网站Api")
 @RequestMapping("/ui/website")
 public class WebsiteController extends BaseController {
-	
+
 	@Resource
 	private WebsiteServiceImpl service;
-	
+
 	@RateLimiter(count = 2)
 	@GetMapping("/page")
 	@Operation(summary = "获取网站分页")
 	public ApiVO<PageVO<WebsiteVO>> page(WebsiteDTO dto) {
 		startPage();
+		dto.setReviewed(1);
+		dto.setEnabled(true);
 		return success(service.page(dto));
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@Experience(value = 20)
@@ -46,5 +48,5 @@ public class WebsiteController extends BaseController {
 		service.insert(dto);
 		return message("网站添加成功！");
 	}
-	
+
 }
