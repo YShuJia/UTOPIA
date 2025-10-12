@@ -15,7 +15,7 @@ const { item } = defineProps({
 <template>
   <a v-slide-in="systemStore.system.isOpenAnimation" class="flex p-3" target="_blank">
     <el-container class="card_box relative use-box-large" direction="vertical">
-      <image-box :src="item.cover" class="h-36 img-box" />
+      <image-box :src="item.cover" class="h-40 img-box" />
       <el-container class="p-3 gap-1 justify-start" direction="vertical">
         <el-container class="gap-2 pl-3 justify-between items-center">
           <image-box

@@ -47,11 +47,11 @@ const toDetail = () => {
 <template>
   <a
     v-slide-in="systemStore.system.isOpenAnimation"
-    class="flex flex-col use-box-large h-72 overflow-hidden"
+    class="flex flex-col use-box-large h-[300px] overflow-hidden"
     href="javascript:"
     @click="toDetail"
   >
-    <div class="h-36 flex relative justify-center items-center overflow-hidden w-full">
+    <div class="h-40 flex relative justify-center items-center overflow-hidden w-full">
       <svg-icon
         v-if="item.hasVideo"
         class="absolute rounded-lg z-10 bg-gray-100/70 py-2 px-6"
