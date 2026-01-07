@@ -43,7 +43,7 @@ public class AdminDiaryController extends BaseController {
 
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
-	@Operation(summary = "admin分页查询日记")
+	@Operation(summary = "Admin 分页查询日记")
 	@PreAuthorize("@sys.hasOnePermission('diary:admin', 'diary:select')")
 	public ApiVO<PageVO<AdminDiaryVO>> page(DiaryDTO dto) {
 		startPage();
@@ -56,7 +56,7 @@ public class AdminDiaryController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
-	@Operation(summary = "admin新增日记")
+	@Operation(summary = "Admin 新增日记")
 	@PreAuthorize("@sys.hasOnePermission('diary:admin', 'diary:insert')")
 	public ApiVO<Boolean> insert(@RequestPart(value = "files") MultipartFile[] files,
 	                             @Validated(InsertGroup.class) DiaryDTO dto) {
@@ -70,7 +70,7 @@ public class AdminDiaryController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
-	@Operation(summary = "admin更新日记")
+	@Operation(summary = "Admin 更新日记")
 	@PreAuthorize("@sys.hasOnePermission('diary:admin', 'diary:update')")
 	public ApiVO<Boolean> update(@RequestPart(value = "files", required = false) MultipartFile[] files,
 	                             @Validated(UpdateGroup.class) DiaryDTO dto) {
@@ -82,7 +82,7 @@ public class AdminDiaryController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
-	@Operation(summary = "admin更新日记审核状态（分离方便鉴权）")
+	@Operation(summary = "Admin 更新日记审核状态（分离方便鉴权）")
 	@PreAuthorize("@sys.hasOnePermission('diary:admin')")
 	public ApiVO<Boolean> updateReviewed(@Validated(UpdateGroup.class) @RequestBody DiaryDTO dto) {
 		service.update(dto);
@@ -92,7 +92,7 @@ public class AdminDiaryController extends BaseController {
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
-	@Operation(summary = "admin删除日记")
+	@Operation(summary = "Admin 删除日记")
 	@PreAuthorize("@sys.hasOnePermission('diary:admin', 'diary:delete')")
 	public ApiVO<Boolean> delete(@NotNull(groups = DeleteGroup.class, message = "[日记ID] 不能为空！")
 	                             @RequestBody List<Long> ids) {

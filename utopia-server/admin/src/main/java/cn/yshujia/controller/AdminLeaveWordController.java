@@ -31,24 +31,24 @@ import java.util.List;
 @Tag(name = "LeaveWord", description = "管理端树洞Api")
 @RequestMapping("/admin/leave_word")
 public class AdminLeaveWordController extends BaseController {
-	
+
 	@Resource
 	private AdminLeaveWordServiceImpl service;
-	
+
 	@Logger
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
-	@Operation(summary = "admin获取留言分页")
+	@Operation(summary = "Admin 获取留言分页")
 	@PreAuthorize("@sys.hasOnePermission('leave_word:admin', 'leave_word:select')")
 	public ApiVO<PageVO<LeaveWord>> page(LeaveWordDTO dto) {
 		startPage();
 		return success(service.pageAdmin(dto));
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
-	@Operation(summary = "admin新增留言")
+	@Operation(summary = "Admin 新增留言")
 	@Experience(value = 10)
 	@PreAuthorize("@sys.hasOnePermission('leave_word:admin', 'leave_word:insert')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody LeaveWordDTO dto,
@@ -57,16 +57,16 @@ public class AdminLeaveWordController extends BaseController {
 		service.insert(dto);
 		return message("留言新增成功");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
-	@Operation(summary = "admin删除留言")
+	@Operation(summary = "Admin 删除留言")
 	@PreAuthorize("@sys.hasOnePermission('leave_word:admin')")
 	public ApiVO<Boolean> delete(@RequestBody List<Long> ids) {
 		service.remove(ids);
 		return message("留言删除成功！");
 	}
-	
+
 }
 

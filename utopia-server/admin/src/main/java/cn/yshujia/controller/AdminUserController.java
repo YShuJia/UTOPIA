@@ -27,37 +27,37 @@ import java.util.Map;
 
 @Validated
 @RestController
-@Tag(name = "User", description = "管理端用户Api")
+@Tag(name = "User", description = "管理端用户 Api")
 @RequestMapping("/admin/user")
 public class AdminUserController extends BaseController {
-	
+
 	@Resource
 	private AdminUserServiceImpl service;
-	
+
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
-	@Operation(summary = "admin分页查询用户")
+	@Operation(summary = "Admin 分页查询用户")
 	@PreAuthorize("@sys.hasOnePermission('user:admin')")
 	public ApiVO<PageVO<AdminUserVO>> page(UserDTO dto) {
 		startPage();
 		return success(service.pageAdmin(dto));
 	}
-	
+
 	@RateLimiter
 	@GetMapping("/distribution")
-	@Operation(summary = "admin获取用户分布柱状图数据")
+	@Operation(summary = "Admin 获取用户分布柱状图数据")
 	public ApiVO<Map<String, List<String>>> selectCountGroupByRoleId() {
 		return success(service.selectCountGroupByRoleId());
 	}
-	
+
 	@RateLimiter
 	@DecryptFields(value = {"email", "password"})
 	@PostMapping("/insert")
-	@Operation(summary = "admin添加用户")
+	@Operation(summary = "Admin 添加用户")
 	@PreAuthorize("@sys.hasOnePermission('user:admin')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody UserDTO dto) throws ServiceException {
 		service.insert(dto);
 		return message("用户添加成功！");
 	}
-	
+
 }

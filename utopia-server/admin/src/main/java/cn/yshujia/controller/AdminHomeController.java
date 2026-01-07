@@ -21,45 +21,45 @@ import java.util.Map;
 @RequestMapping("/admin/home")
 @Tag(name = "System", description = "系统模块Api")
 public class AdminHomeController extends BaseController {
-	
+
 	@Resource
 	private AdminUserServiceImpl userService;
-	
+
 	@Resource
 	private AdminRoleServiceImpl roleService;
-	
+
 	@Resource
 	private AdminClassifyServiceImpl classifyService;
-	
+
 	@Resource
 	private AdminLabelServiceImpl labelService;
-	
+
 	@Resource
 	private AdminFileServiceImpl fileService;
-	
+
 	@Resource
 	private AdminRouterServiceImpl routerService;
-	
+
 	@Resource
 	private AdminAlbumServiceImpl albumService;
-	
+
 	@Resource
 	private AdminArticleServiceImpl articleService;
-	
+
 	@Resource
 	private AdminCommentServiceImpl commentService;
-	
+
 	@Resource
 	private AdminLeaveWordServiceImpl leaveWordService;
-	
+
 	@Resource
 	private AdminWebsiteServiceImpl websiteService;
-	
+
 	@Resource
 	private AdminLikeServiceImpl likeService;
-	
+
 	@GetMapping("/count")
-	@Operation(summary = "获取系统模块数据统计")
+	@Operation(summary = "Admin 获取系统模块数据统计")
 	public ApiVO<Map<String, Long>> count() {
 		Map<String, Long> map = new HashMap<>();
 		map.put("user", userService.count());
@@ -76,5 +76,5 @@ public class AdminHomeController extends BaseController {
 		map.put("like", likeService.count());
 		return success(map);
 	}
-	
+
 }

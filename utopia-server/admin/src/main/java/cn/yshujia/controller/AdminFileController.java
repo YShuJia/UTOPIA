@@ -41,7 +41,7 @@ public class AdminFileController extends BaseController {
 
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
-	@Operation(summary = "admin根据查询条件获取资源分页")
+	@Operation(summary = "Admin 根据查询条件获取资源分页")
 	@PreAuthorize("@sys.hasOnePermission('file:admin', 'file:select')")
 	public ApiVO<PageVO<AdminFileVO>> page(FileDTO dto) {
 		startPage();
@@ -53,7 +53,7 @@ public class AdminFileController extends BaseController {
 
 	@RateLimiter(count = 5)
 	@GetMapping("/page/select")
-	@Operation(summary = "admin获取资源做选择数据")
+	@Operation(summary = "Admin 获取资源做选择数据")
 	public ApiVO<PageVO<FileVO>> pageSelect(FileDTO dto) {
 		startPage();
 		if (!SecurityUtils.isAdmin()) {
@@ -65,7 +65,7 @@ public class AdminFileController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
-	@Operation(summary = "admin添加资源，批量时以 file 传递的信息为基础")
+	@Operation(summary = "Admin 添加资源，批量时以 file 传递的信息为基础")
 	@PreAuthorize("@sys.hasOnePermission('file:admin', 'file:insert')")
 	public ApiVO<Boolean> insert(@RequestParam("files") MultipartFile[] files,
 	                             @Validated(InsertGroup.class) FileDTO dto) {
@@ -79,7 +79,7 @@ public class AdminFileController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
-	@Operation(summary = "admin更新资源")
+	@Operation(summary = "Admin 更新资源")
 	@PreAuthorize("@sys.hasOnePermission('file:admin', 'file:update')")
 	public ApiVO<Boolean> update(@RequestParam(value = "files", required = false) MultipartFile files,
 	                             @Validated(UpdateGroup.class) FileDTO dto) {
@@ -91,7 +91,7 @@ public class AdminFileController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
-	@Operation(summary = "admin更新资源审核状态（分离方便鉴权）")
+	@Operation(summary = "Admin 更新资源审核状态（分离方便鉴权）")
 	@PreAuthorize("@sys.hasOnePermission('file:admin')")
 	public ApiVO<Boolean> updateReviewed(@Validated(UpdateGroup.class) @RequestBody FileDTO dto) {
 		service.update(null, dto);
@@ -101,7 +101,7 @@ public class AdminFileController extends BaseController {
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
-	@Operation(summary = "admin删除资源")
+	@Operation(summary = "Admin 删除资源")
 	@PreAuthorize("@sys.hasOnePermission('file:admin', 'file:delete')")
 	public ApiVO<Boolean> remove(@RequestBody List<Long> ids) {
 		service.remove(ids);

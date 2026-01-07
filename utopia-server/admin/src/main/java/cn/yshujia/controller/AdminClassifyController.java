@@ -37,14 +37,14 @@ public class AdminClassifyController extends BaseController {
 
 	@RateLimiter(count = 5)
 	@GetMapping("/tree/{key}")
-	@Operation(summary = "通过分类 type 获取分类、标签树信息")
+	@Operation(summary = "Admin 通过分类 type 获取分类、标签树信息")
 	public ApiVO<List<AdminTreeVO>> treeList(@PathVariable String key) {
 		return success(service.treeList(key));
 	}
 
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
-	@Operation(summary = "admin获取类别分页")
+	@Operation(summary = "Admin 获取类别分页")
 	@PreAuthorize("@sys.hasOnePermission('classify:admin', 'classify:select')")
 	public ApiVO<PageVO<AdminClassifyVO>> page(ClassifyDTO dto) {
 		startPage();
@@ -57,7 +57,7 @@ public class AdminClassifyController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
-	@Operation(summary = "admin添加分类")
+	@Operation(summary = "Admin 添加分类")
 	@PreAuthorize("@sys.hasOnePermission('classify:admin', 'classify:insert')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody ClassifyDTO dto) {
 		if (isAdmin()) {
@@ -70,7 +70,7 @@ public class AdminClassifyController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
-	@Operation(summary = "admin更新分类")
+	@Operation(summary = "Admin 更新分类")
 	@PreAuthorize("@sys.hasOnePermission('classify:admin', 'classify:update')")
 	public ApiVO<Boolean> update(@Validated(UpdateGroup.class) @RequestBody ClassifyDTO dto) {
 		dto.setReviewed(null);
@@ -81,7 +81,7 @@ public class AdminClassifyController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
-	@Operation(summary = "admin更新类别审核状态（分离方便鉴权）")
+	@Operation(summary = "Admin 更新类别审核状态（分离方便鉴权）")
 	@PreAuthorize("@sys.hasOnePermission('classify:admin')")
 	public ApiVO<Boolean> updateReviewed(@Validated(UpdateGroup.class) @RequestBody ClassifyDTO dto) {
 		service.update(dto);
@@ -91,7 +91,7 @@ public class AdminClassifyController extends BaseController {
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
-	@Operation(summary = "admin删除分类")
+	@Operation(summary = "Admin 删除分类")
 	@PreAuthorize("@sys.hasOnePermission('classify:admin', 'classify:delete')")
 	public ApiVO<Boolean> remove(@RequestBody List<Long> ids) {
 		service.remove(ids);

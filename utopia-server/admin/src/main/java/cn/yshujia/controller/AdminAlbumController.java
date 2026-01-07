@@ -37,7 +37,7 @@ public class AdminAlbumController extends BaseController {
 
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
-	@Operation(summary = "admin获取相册分页")
+	@Operation(summary = "Admin 获取相册分页")
 	@PreAuthorize("@sys.hasOnePermission('album:admin', 'album:select')")
 	public ApiVO<PageVO<AdminAlbumVO>> page(AlbumDTO dto) {
 		startPage();
@@ -50,7 +50,7 @@ public class AdminAlbumController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
-	@Operation(summary = "admin新增相册")
+	@Operation(summary = "Admin 新增相册")
 	@PreAuthorize("@sys.hasOnePermission('album:admin', 'album:insert')")
 	public ApiVO<Boolean> insert(@RequestPart("files") MultipartFile[] files,
 	                             @Validated(InsertGroup.class) AlbumDTO dto) {
@@ -64,7 +64,7 @@ public class AdminAlbumController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
-	@Operation(summary = "admin更新相册，可传入图片")
+	@Operation(summary = "Admin 更新相册，可传入图片")
 	@PreAuthorize("@sys.hasOnePermission('album:admin', 'album:update')")
 	public ApiVO<Boolean> update(@RequestPart(value = "files", required = false) MultipartFile[] files,
 	                             @Validated(UpdateGroup.class) AlbumDTO dto) {
@@ -76,7 +76,7 @@ public class AdminAlbumController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
-	@Operation(summary = "admin更新相册审核状态（分离方便鉴权）")
+	@Operation(summary = "Admin 更新相册审核状态（分离方便鉴权）")
 	@PreAuthorize("@sys.hasOnePermission('album:admin')")
 	public ApiVO<Boolean> updateReviewed(@Validated(UpdateGroup.class) @RequestBody AlbumDTO dto) {
 		service.update(dto);
@@ -86,7 +86,7 @@ public class AdminAlbumController extends BaseController {
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
-	@Operation(summary = "admin删除相册")
+	@Operation(summary = "Admin 删除相册")
 	@PreAuthorize("@sys.hasOnePermission('album:admin', 'album:delete')")
 	public ApiVO<Boolean> delete(@RequestBody List<Long> ids) {
 		service.remove(ids);

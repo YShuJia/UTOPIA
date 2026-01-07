@@ -36,7 +36,7 @@ public class AdminLabelController extends BaseController {
 
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
-	@Operation(summary = "admin获取标签分页")
+	@Operation(summary = "Admin 获取标签分页")
 	@PreAuthorize("@sys.hasOnePermission('label:admin', 'label:select')")
 	public ApiVO<PageVO<AdminLabelVO>> page(LabelDTO dto) {
 		startPage();
@@ -49,7 +49,7 @@ public class AdminLabelController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
-	@Operation(summary = "admin添加标签")
+	@Operation(summary = "Admin 添加标签")
 	@PreAuthorize("@sys.hasOnePermission('label:admin', 'label:insert')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody LabelDTO dto) {
 		if (isAdmin()) {
@@ -62,7 +62,7 @@ public class AdminLabelController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
-	@Operation(summary = "admin更新标签")
+	@Operation(summary = "Admin 更新标签")
 	@PreAuthorize("@sys.hasOnePermission('label:admin', 'label:update')")
 	public ApiVO<Boolean> update(@Validated(UpdateGroup.class) @RequestBody LabelDTO dto) {
 		dto.setReviewed(null);
@@ -73,7 +73,7 @@ public class AdminLabelController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
-	@Operation(summary = "admin更新标签审核状态（分离方便鉴权）")
+	@Operation(summary = "Admin 更新标签审核状态（分离方便鉴权）")
 	@PreAuthorize("@sys.hasOnePermission('label:admin')")
 	public ApiVO<Boolean> updateReviewed(@Validated(UpdateGroup.class) @RequestBody LabelDTO dto) {
 		service.update(dto);
@@ -83,7 +83,7 @@ public class AdminLabelController extends BaseController {
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
-	@Operation(summary = "admin删除标签")
+	@Operation(summary = "Admin 删除标签")
 	@PreAuthorize("@sys.hasOnePermission('label:admin', 'label:delete')")
 	public ApiVO<Boolean> remove(@RequestBody List<Long> ids) {
 		service.remove(ids);
