@@ -39,7 +39,7 @@ public class AdminWebsiteController extends BaseController {
 
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
-	@Operation(summary = "admin获取网站分页")
+	@Operation(summary = "Admin 获取网站分页")
 	@PreAuthorize("@sys.hasOnePermission('website:admin', 'website:select')")
 	public ApiVO<PageVO<AdminWebsiteVO>> page(WebsiteDTO dto) {
 		startPage();
@@ -52,7 +52,7 @@ public class AdminWebsiteController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
-	@Operation(summary = "添加网站")
+	@Operation(summary = "Admin 添加网站")
 	@Experience(value = 20)
 	@PreAuthorize("@sys.hasOnePermission('website:admin', 'website:insert')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody WebsiteDTO dto) {
@@ -66,7 +66,7 @@ public class AdminWebsiteController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
-	@Operation(summary = "更新网站")
+	@Operation(summary = "Admin 更新网站")
 	@PreAuthorize("@sys.hasOnePermission('website:admin', 'website:update')")
 	public ApiVO<Boolean> update(@Validated(UpdateGroup.class) @RequestBody WebsiteDTO dto) {
 		dto.setReviewed(null);
@@ -77,7 +77,7 @@ public class AdminWebsiteController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
-	@Operation(summary = "admin更新网站审核状态（分离方便鉴权）")
+	@Operation(summary = "Admin 更新网站审核状态（分离方便鉴权）")
 	@PreAuthorize("@sys.hasOnePermission('website:admin')")
 	public ApiVO<Boolean> updateReviewed(@Validated(UpdateGroup.class) @RequestBody WebsiteDTO dto) {
 		service.update(dto);
@@ -87,7 +87,7 @@ public class AdminWebsiteController extends BaseController {
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
-	@Operation(summary = "admin删除网站")
+	@Operation(summary = "Admin 删除网站")
 	@PreAuthorize("@sys.hasOnePermission('website:admin', 'website:delete')")
 	public ApiVO<Boolean> delete(@RequestBody List<Long> ids) {
 		service.remove(ids);

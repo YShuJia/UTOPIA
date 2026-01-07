@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import {useGlobalDialog} from '@/hooks'
-import {initPageVO, type PageVO, type ResultType} from '@/request/config'
-import {ClassifyEnum, RouteNameEnum, TableEnum} from '@/enum'
-import {useStyleStore} from '@/stores/style'
-import {useSystemStore} from '@/stores/system'
+import { useGlobalDialog } from '@/hooks'
+import { initPageVO, type PageVO, type ResultType } from '@/request/config'
+import { ClassifyEnum, RouteNameEnum, TableEnum } from '@/enum'
+import { useStyleStore } from '@/stores/style'
+import { useSystemStore } from '@/stores/system'
 
 const router = useRouter()
 const styleStore = useStyleStore()
@@ -130,7 +130,7 @@ const handleSelectionChange = (selection: any[]) => {
 }
 
 // 查询参数改变、分页改变等刷新数据
-const select = async () => {
+const select = () => {
   selectApi(dto.value)
     .then((res: ResultType<PageVO<any>>) => {
       vo.value = res.data

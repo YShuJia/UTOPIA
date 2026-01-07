@@ -31,23 +31,23 @@ import java.util.List;
 @Tag(name = "Comment", description = "管理端评论Api")
 @RequestMapping("/admin/comment")
 public class AdminCommentController extends BaseController {
-	
+
 	@Resource
 	private AdminCommentServiceImpl service;
-	
+
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
-	@Operation(summary = "admin根据查询条件获取评论分页")
+	@Operation(summary = "Admin 根据查询条件获取评论分页")
 	@PreAuthorize("@sys.hasOnePermission('comment:admin')")
 	public ApiVO<PageVO<CommentVO>> page(CommentDTO dto) {
 		startPage();
 		return success(service.pageAdmin(dto));
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
-	@Operation(summary = "admin添加评论")
+	@Operation(summary = "Admin 添加评论")
 	@Experience(value = 10)
 	@PreAuthorize("@sys.hasOnePermission('comment:admin')")
 	public ApiVO<Boolean> insert(@RequestParam(value = "files", required = false) MultipartFile files,
@@ -55,15 +55,15 @@ public class AdminCommentController extends BaseController {
 		service.insert(files, dto);
 		return message("评论添加成功！");
 	}
-	
+
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
-	@Operation(summary = "admin删除评论，将评论内容更新为 该评论已删除")
+	@Operation(summary = "Admin 删除评论，将评论内容更新为 该评论已删除")
 	@PreAuthorize("@sys.hasOnePermission('comment:admin')")
 	public ApiVO<Boolean> delete(@RequestBody List<Long> ids) {
 		service.remove(ids);
 		return message("评论删除成功！");
 	}
-	
+
 }

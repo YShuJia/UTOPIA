@@ -36,7 +36,7 @@ public class AdminSysConfigController extends BaseController {
 
 	@RateLimiter(count = 5)
 	@GetMapping("/list/table")
-	@Operation(summary = "admin获取配置分页")
+	@Operation(summary = "Admin 获取配置分页")
 	@PreAuthorize("@sys.hasOnePermission('sys_config:admin')")
 	public ApiVO<List<String>> listTable() {
 		startPage();
@@ -46,7 +46,7 @@ public class AdminSysConfigController extends BaseController {
 
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
-	@Operation(summary = "admin获取配置分页")
+	@Operation(summary = "Admin 获取配置分页")
 	@PreAuthorize("@sys.hasOnePermission('sys_config:admin')")
 	public ApiVO<PageVO<SysConfig>> page(SysConfigDTO dto) {
 		startPage();
@@ -56,7 +56,7 @@ public class AdminSysConfigController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
-	@Operation(summary = "admin新增配置")
+	@Operation(summary = "Admin 新增配置")
 	@PreAuthorize("@sys.hasOnePermission('sys_config:admin')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody SysConfigDTO dto) {
 		dto.setEnabled(false);
@@ -67,7 +67,7 @@ public class AdminSysConfigController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
-	@Operation(summary = "admin更新配置")
+	@Operation(summary = "Admin 更新配置")
 	@PreAuthorize("@sys.hasOnePermission('sys_config:admin')")
 	public ApiVO<Boolean> update(@Validated(UpdateGroup.class) @RequestBody SysConfigDTO dto) {
 		service.update(dto);
@@ -77,7 +77,7 @@ public class AdminSysConfigController extends BaseController {
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
-	@Operation(summary = "admin删除配置")
+	@Operation(summary = "Admin 删除配置")
 	@PreAuthorize("@sys.hasOnePermission('sys_config:admin')")
 	public ApiVO<Boolean> delete(@RequestBody List<Long> ids) {
 		service.remove(ids);
