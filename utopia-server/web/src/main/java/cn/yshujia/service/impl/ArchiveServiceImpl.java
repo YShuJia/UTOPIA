@@ -24,18 +24,19 @@ import java.util.List;
 
 @Service
 public class ArchiveServiceImpl extends ServiceImpl<ArticleMapper, Article> {
-	
+
 	@Resource
 	RedisServiceImpl<ArchiveVO> redis;
-	
+
 	@Resource
 	private ClassifyServiceImpl classifyService;
-	
+
 	@Resource
 	private FileServiceImpl fileService;
-	
+
 	@Resource
 	private ArticleMapper mapper;
+
 	public List<ArchiveVO> selectArchiveList() {
 		List<ArchiveVO> voList = redis.range(RedisKeys.ARTICLE_ARCHIVE, 0L, -1L);
 		if (!CollectionUtils.isEmpty(voList)) {
@@ -51,17 +52,11 @@ public class ArchiveServiceImpl extends ServiceImpl<ArticleMapper, Article> {
 			archiveVO.setClassifyId(classifyVO.getId());
 			archiveVO.setClassifyName(classifyVO.getName());
 			List<ArticleLabelVO> labelList = mapper.listArticleLabelVO(classifyVO.getId());
-			// 随机图片
-			if (!CollectionUtils.isEmpty(labelList)) {
-				for (ArticleLabelVO articleLabelVO : labelList) {
-					articleLabelVO.setLabelCover(fileService.selectRandomWall());
-				}
-			}
 			archiveVO.setLabelList(labelList);
 			voList.add(archiveVO);
 		}
 		redis.rightPushAll(RedisKeys.ARTICLE_ARCHIVE, voList, RedisKeys.ONE_DAYS);
 		return voList;
 	}
-	
+
 }

@@ -83,7 +83,7 @@ export const useScrollStore = defineStore('scroll', () => {
         // 线性插值强度（介于 0 和 1 之间）默认 0.1
         lerp: 0.1,
         // 用于鼠标滚轮事件的乘数 默认 1
-        wheelMultiplier: 0.5
+        wheelMultiplier: 0.8
       })
       scroll.value.lenis.on('scroll', (e: any) => {
         ScrollTrigger.update()

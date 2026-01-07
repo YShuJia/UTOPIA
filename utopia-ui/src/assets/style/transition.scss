@@ -67,21 +67,25 @@
 }
 
 .use-box-default {
+  will-change: transform;
   @apply radius-sm shadow;
   @include use-transition($radius: .3s, $shadow: .3s);
 }
 
 .use-box-large {
+  will-change: transform;
   @apply radius-lg shadow;
   @include use-transition($radius: .3s, $shadow: .3s, $bg-color: .3s);
 }
 
 .use-box-filter {
+  will-change: transform;
   @apply radius-lg drop-shadow;
   @include use-transition($radius: .3s, $shadow: .3s);
 }
 
 .use-hover-box-large {
+  will-change: transform;
   @apply radius-lg shadow;
   @include use-transition($radius: .3s, $shadow: .3s, $bg-color: .3s, $transform: .3s);
 
@@ -97,6 +101,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  will-change: background-color;
   @apply hover-bg radius-sm;
   @include use-transition($radius: .3s, $bg-color: .3s);
 }
@@ -107,11 +112,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  will-change: background-color;
   @apply hover-bg radius-lg;
   @include use-transition($radius: .3s, $bg-color: .3s);
 }
 
 .use-link-default {
+  will-change: color;
   @apply hover-color;
   @include use-transition($radius: .3s, $color: .3s, $transform: .3s);
 }
@@ -119,6 +126,7 @@
 
 .use-hover-big {
   transition: transform 0.5s ease-in-out;
+  will-change: transform;
 
   &:hover {
     transform: scale(1.15);
@@ -127,6 +135,7 @@
 
 .use-hover-small {
   transition: transform 0.5s ease-in-out;
+  will-change: transform;
 
   &:hover {
     transform: scale(0.95);
