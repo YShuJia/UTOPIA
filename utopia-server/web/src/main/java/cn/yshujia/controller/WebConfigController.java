@@ -27,7 +27,7 @@ public class WebConfigController extends BaseController {
 
 	@RateLimiter(count = 3)
 	@GetMapping("/default")
-	@Operation(summary = "admin获取配置分页")
+	@Operation(summary = "获取配置分页")
 	public ApiVO<WebConfig> defaultConfig() {
 		return success(service.defaultConfig());
 	}

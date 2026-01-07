@@ -40,7 +40,7 @@ public class AdminWebConfigController extends BaseController {
 	@Logger
 	@RateLimiter(count = 10)
 	@PostMapping("/upload/files")
-	@Operation(summary = "上传文件，返回上传地址")
+	@Operation(summary = "Admin 上传文件，返回上传地址")
 	@PreAuthorize("@sys.hasOnePermission('article:admin', 'article:select')")
 	public ApiVO<List<String>> upload(@RequestParam("files") MultipartFile[] files) {
 		List<String> urls = MinioUtils.upload(files, MinioFolder.CONFIG);
@@ -50,7 +50,7 @@ public class AdminWebConfigController extends BaseController {
 
 	@RateLimiter(count = 3)
 	@GetMapping("/{id}")
-	@Operation(summary = "admin获取配置分页")
+	@Operation(summary = "Admin 获取配置分页")
 	@PreAuthorize("@sys.hasOnePermission('sys_config:admin')")
 	public ApiVO<WebConfig> one(@PathVariable Long id) {
 		return success(service.oneById(id));
@@ -58,7 +58,7 @@ public class AdminWebConfigController extends BaseController {
 
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
-	@Operation(summary = "admin获取配置分页")
+	@Operation(summary = "Admin 获取配置分页")
 	@PreAuthorize("@sys.hasOnePermission('sys_config:admin')")
 	public ApiVO<PageVO<WebConfig>> page(WebConfigDTO dto) {
 		startPage();
@@ -68,7 +68,7 @@ public class AdminWebConfigController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
-	@Operation(summary = "admin新增配置")
+	@Operation(summary = "Admin 新增配置")
 	@PreAuthorize("@sys.hasOnePermission('sys_config:admin')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody WebConfigDTO dto) {
 		dto.setEnabled(false);
@@ -79,7 +79,7 @@ public class AdminWebConfigController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
-	@Operation(summary = "admin更新配置")
+	@Operation(summary = "Admin 更新配置")
 	@PreAuthorize("@sys.hasOnePermission('sys_config:admin')")
 	public ApiVO<Boolean> update(@Validated(UpdateGroup.class) @RequestBody WebConfigDTO dto) {
 		service.update(dto);
@@ -89,7 +89,7 @@ public class AdminWebConfigController extends BaseController {
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
-	@Operation(summary = "admin删除配置")
+	@Operation(summary = "Admin 删除配置")
 	@PreAuthorize("@sys.hasOnePermission('sys_config:admin')")
 	public ApiVO<Boolean> delete(@RequestBody List<Long> ids) {
 		service.remove(ids);

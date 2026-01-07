@@ -41,7 +41,7 @@ public class AdminArticleController extends BaseController {
 	@Logger
 	@RateLimiter(count = 10)
 	@PostMapping("/upload/files")
-	@Operation(summary = "上传文章文件，返回上传地址")
+	@Operation(summary = "Admin 上传文章文件，返回上传地址")
 	@PreAuthorize("@sys.hasOnePermission('article:admin', 'article:select')")
 	public ApiVO<List<String>> upload(@RequestParam("files") MultipartFile[] files) {
 		List<String> urls = MinioUtils.upload(files, MinioFolder.ARTICLE);
@@ -53,7 +53,7 @@ public class AdminArticleController extends BaseController {
 	@RateLimiter
 	@Experience
 	@GetMapping("/{id}")
-	@Operation(summary = "Admin根据文章ID获取文章")
+	@Operation(summary = "Admin 根据文章ID获取文章")
 	@PreAuthorize("@sys.hasOnePermission('article:admin', 'article:select')")
 	public ApiVO<AdminArticleVO> article(@PathVariable Long id) {
 		return success(service.oneById(id, getUserId()));
@@ -61,7 +61,7 @@ public class AdminArticleController extends BaseController {
 
 	@RateLimiter(count = 3)
 	@GetMapping("/page")
-	@Operation(summary = "admin通过分页数据获取文章集合")
+	@Operation(summary = "Admin 通过分页数据获取文章集合")
 	@PreAuthorize("@sys.hasOnePermission('article:admin', 'article:select')")
 	public ApiVO<PageVO<AdminArticleVO>> page(ArticleDTO dto) {
 		startPage();
@@ -74,7 +74,7 @@ public class AdminArticleController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PostMapping("/insert")
-	@Operation(summary = "admin插入文章")
+	@Operation(summary = "Admin 插入文章")
 	@PreAuthorize("@sys.hasOnePermission('article:admin', 'article:insert')")
 	public ApiVO<Boolean> insert(@Validated(InsertGroup.class) @RequestBody ArticleDTO dto) {
 		if (isAdmin()) {
@@ -87,7 +87,7 @@ public class AdminArticleController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update")
-	@Operation(summary = "admin更新文章，urls 中存放新上传的所有文件的地址")
+	@Operation(summary = "Admin 更新文章，urls 中存放新上传的所有文件的地址")
 	@PreAuthorize("@sys.hasOnePermission('article:admin', 'article:update')")
 	public ApiVO<Boolean> update(@Validated(UpdateGroup.class) @RequestBody ArticleDTO dto) {
 		dto.setReviewed(null);
@@ -98,7 +98,7 @@ public class AdminArticleController extends BaseController {
 	@Logger
 	@RateLimiter
 	@PutMapping("/update/reviewed")
-	@Operation(summary = "admin更新文章审核状态（分离方便鉴权）")
+	@Operation(summary = "Admin 更新文章审核状态（分离方便鉴权）")
 	@PreAuthorize("@sys.hasOnePermission('article:admin')")
 	public ApiVO<Boolean> updateReviewed(@Validated(UpdateGroup.class) @RequestBody ArticleDTO dto) {
 		service.update(dto);
@@ -108,7 +108,7 @@ public class AdminArticleController extends BaseController {
 	@Logger
 	@RateLimiter
 	@DeleteMapping("/delete")
-	@Operation(summary = "admin删除文章")
+	@Operation(summary = "Admin 删除文章")
 	@PreAuthorize("@sys.hasOnePermission('article:admin', 'article:delete')")
 	public ApiVO<Boolean> delete(@RequestBody List<Long> ids) {
 		service.remove(ids);
