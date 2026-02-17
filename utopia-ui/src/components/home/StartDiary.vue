@@ -28,20 +28,19 @@ const getList = () => {
   })
 }
 
-watchEffect(() => {
-  page.value.createTime = formatDate(date.value)
-  getList()
-})
-
 onMounted(() => {
   getList()
+  watch(date, () => {
+    page.value.createTime = formatDate(date.value)
+    getList()
+  })
 })
 </script>
 
 <template>
   <el-container class="gap-14" direction="vertical">
-    <el-container class="max-xl:flex-col">
-      <el-container class="p-5 gap-10 use-theme" direction="vertical">
+    <el-container class="max-xl:flex-col!">
+      <el-container class="p-5 gap-10 min-w-80! use-theme xl:flex-1!" direction="vertical">
         <el-calendar ref="calendar" v-model="date" class="use-box-large bg-transparent">
           <template #date-cell="{ data }">
             <p
@@ -75,7 +74,7 @@ onMounted(() => {
           <span class="text-3xl hollow-text">空悲切!</span>
         </el-container>
       </el-container>
-      <el-container class="min-w-[70%] px-5 py-2">
+      <el-container class="min-w-[70%] px-5 py-2 xl:flex-3!">
         <diary-box :item="vo.list[0]" />
       </el-container>
     </el-container>

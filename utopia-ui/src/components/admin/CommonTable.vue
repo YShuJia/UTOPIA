@@ -213,13 +213,13 @@ onMounted(() => {
   <el-container class="gap-5 size-full overflow-visible" direction="vertical">
     <el-container v-if="showAdd || showDel">
       <slot name="button" />
-      <el-button v-if="showAdd" class="!px-2" plain type="primary" @click="openDialog(true)">
+      <el-button v-if="showAdd" class="px-2!" plain type="primary" @click="openDialog(true)">
         <svg-icon message="新增" name="add" />
       </el-button>
       <el-button
         v-if="showDel"
         :disabled="ids.length === 0"
-        class="!px-2"
+        class="px-2!"
         plain
         type="danger"
         @click="del(ids)"
@@ -278,7 +278,7 @@ onMounted(() => {
               <image-box
                 v-else
                 :src="scope.row[item.prop]"
-                class="rounded-full !size-12"
+                class="rounded-full size-12!"
                 @click="systemStore.preview.open(scope.row[item.prop])"
               />
             </template>
@@ -320,7 +320,7 @@ onMounted(() => {
             <template v-if="item.dataType?.component === 'operation'">
               <el-container class="items-center flex-wrap justify-center gap-1">
                 <el-button
-                  class="!px-1 !py-1.5"
+                  class="px-1! py-1.5!"
                   size="small"
                   type="primary"
                   @click="

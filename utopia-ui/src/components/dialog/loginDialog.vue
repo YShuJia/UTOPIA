@@ -110,12 +110,12 @@ const sendForm = () => {
   <el-dialog
     v-model="systemStore.dialog.login"
     :show-close="false"
-    class="overflow-hidden p-0 use-box-large mt-32 min-w-80 !max-w-[520px] max-sm:w-[96%]"
+    class="overflow-hidden p-0! use-box-large mt-32 min-w-80 max-w-130! max-sm:w-[96%]"
     top="10vh"
     @close="systemStore.dialog.login = false"
     @open="open"
   >
-    <el-container class="z-50 h-[400px] overflow-hidden relative">
+    <el-container class="z-50 h-100 overflow-hidden relative">
       <el-container
         :class="isLogin ? leftClass : leftClass + ' translate-x-[150%] max-sm:translate-x-[200%]'"
         direction="vertical"
@@ -181,7 +181,7 @@ const sendForm = () => {
                 <template #suffix>
                   <el-button
                     :disabled="userStore.code.isCountdown"
-                    class="absolute right-0.5 !px-1 text-xs"
+                    class="absolute right-0.5 px-1! text-xs"
                     text
                     @click="getCode"
                   >
@@ -193,7 +193,7 @@ const sendForm = () => {
               </el-input>
             </el-form-item>
           </transition>
-          <el-form-item class="w-full !mt-auto">
+          <el-form-item class="w-full mt-auto!">
             <a class="mt-5 border p-1 w-full use-btn-default" href="javascript:" @click="sendForm">
               {{ isLogin ? '登 录' : '注 册' }}
             </a>

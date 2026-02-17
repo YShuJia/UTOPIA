@@ -17,7 +17,7 @@ const { item } = defineProps({
 </script>
 
 <template>
-  <a class="flex relative w-full h-full" href="javascript:">
+  <div class="flex relative size-full">
     <el-main class="note-box size-full use-theme absolute left-0 top-6 shadow" />
     <el-main class="note-box size-full use-theme absolute left-3 top-3 shadow" />
     <el-container v-if="item.title" class="pl-8 pr-5 py-6 z-10" direction="vertical">
@@ -40,19 +40,19 @@ const { item } = defineProps({
         <div class="flex gap-2">
           <svg-icon
             :message="'点赞' + item.likeCount"
-            class="!gap-0.5 text-color-gray"
+            class="gap-0.5! text-color-gray"
             name="praise"
             size="sm"
           />
           <svg-icon
             :message="'浏览' + item.viewCount"
-            class="!gap-0.5 text-color-gray"
+            class="gap-0.5! text-color-gray"
             name="footprint"
             size="sm"
           />
           <svg-icon
             :message="'评论' + item.commentCount"
-            class="!gap-0.5 text-color-gray"
+            class="gap-0.5! text-color-gray"
             name="message"
             size="sm"
           />
@@ -68,7 +68,7 @@ const { item } = defineProps({
       </el-container>
     </el-container>
     <el-empty v-else class="pl-8 pr-5 py-6 z-10 size-96" />
-  </a>
+  </div>
 </template>
 
 <style lang="scss" scoped>

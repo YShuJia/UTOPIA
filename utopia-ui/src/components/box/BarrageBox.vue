@@ -47,17 +47,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <a
+  <div
     ref="barrageRef"
-    class="leave_word min-w-[152px] p-1.5 -right-full w-fit absolute text-gray-50 bg-gray-950/80 flex flex-nowrap items-center rounded-full"
-    href="javascript:"
+    class="leave_word min-w-38 p-1.5 cursor-pointer -right-full w-fit absolute text-gray-50 bg-gray-950/80 flex flex-nowrap items-center rounded-full"
   >
-    <image-box :src="item.avatar" class="!size-9 rounded-full mr-1.5" />
+    <image-box :src="item.avatar" class="size-9! rounded-full mr-1.5" />
     <span class="message duration-500 whitespace-nowrap">{{ item.content }}</span>
     <span class="time absolute duration-500 left-12 opacity-0 text-sm leading-4 flex flex-col">
       <span>{{ item.createTime }}</span>
     </span>
-  </a>
+  </div>
 </template>
 
 <style lang="scss" scoped>

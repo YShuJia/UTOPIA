@@ -189,10 +189,10 @@ const reset = () => {
     </el-form-item>
 
     <el-form-item>
-      <el-button class="!px-2" plain type="primary" @click="searchClick">
+      <el-button class="px-2!" plain type="primary" @click="searchClick">
         <svg-icon message="搜索" name="search" />
       </el-button>
-      <el-button class="!px-2" plain type="info" @click="reset">
+      <el-button class="px-2!" plain type="info" @click="reset">
         <svg-icon message="重置" name="refresh" />
       </el-button>
     </el-form-item>

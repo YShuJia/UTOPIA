@@ -26,7 +26,7 @@ onMounted(() => {
     </el-main>
 
     <el-container v-for="items in archiveList" :key="items.classifyName" direction="vertical">
-      <el-main class="!pb-0">
+      <el-main class="pb-0!">
         <svg-icon
           :message="items.classifyName"
           class="w-fit pb-1 border-b-4"

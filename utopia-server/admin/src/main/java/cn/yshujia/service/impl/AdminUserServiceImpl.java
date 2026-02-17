@@ -33,18 +33,17 @@ import java.util.Map;
  */
 
 @Service
-@Transactional(rollbackFor = {Exception.class})
 public class AdminUserServiceImpl extends ServiceImpl<UserMapper, User> {
-	
+
 	@Resource
 	public UserMapper mapper;
-	
+
 	@Resource
 	RedisServiceImpl<UserVO> redis;
-	
+
 	@Resource
 	BCryptPasswordEncoder passwordEncoder;
-	
+
 	public UserVO oneById(Long userId) {
 		UserVO userVO = redis.get(RedisKeys.USER + userId);
 		if (null != userVO) {
@@ -54,13 +53,13 @@ public class AdminUserServiceImpl extends ServiceImpl<UserMapper, User> {
 		redis.set(RedisKeys.USER + userId, userVO, RedisKeys.ONE_DAYS);
 		return userVO;
 	}
-	
+
 	public PageVO<AdminUserVO> pageAdmin(UserDTO dto) {
 		User user = UserTransform.dtoToEntity(dto);
 		List<AdminUserVO> list = mapper.listByAdmin(user);
 		return PageUtils.page(list);
 	}
-	
+
 	public Map<String, List<String>> selectCountGroupByRoleId() {
 		List<UserVO> list = mapper.selectCountGroupByRoleId();
 		List<String> keys = new ArrayList<>();
@@ -74,13 +73,13 @@ public class AdminUserServiceImpl extends ServiceImpl<UserMapper, User> {
 		map.put("values", values);
 		return map;
 	}
-	
+
 	@Transactional(rollbackFor = {Exception.class})
 	public void insert(UserDTO dto) throws ServiceException {
 		User user = UserTransform.dtoToEntity(dto);
 		// 判断邮箱是否重复
 		User old = mapper.selectOne(new LambdaQueryWrapper<User>()
-				                            .eq(User::getEmail, AESEncrypt.encrypt(user.getEmail())));
+				.eq(User::getEmail, AESEncrypt.encrypt(user.getEmail())));
 		if (old != null) {
 			throw new ServiceException("该账号已被注册！");
 		}
@@ -97,7 +96,7 @@ public class AdminUserServiceImpl extends ServiceImpl<UserMapper, User> {
 			throw new CustomException(e.getMessage());
 		}
 	}
-	
+
 	@Transactional(rollbackFor = {Exception.class})
 	public void update(User user) {
 		if (user.getPassword() != null) {
@@ -113,5 +112,5 @@ public class AdminUserServiceImpl extends ServiceImpl<UserMapper, User> {
 			throw new CustomException(e.getMessage());
 		}
 	}
-	
+
 }

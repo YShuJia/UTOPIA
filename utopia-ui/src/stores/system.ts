@@ -82,9 +82,13 @@ export const useSystemStore = defineStore(
     })
 
     const preview = {
-      open: (urls: string | string[], index: number = 0) => {
+      open: (urls: string | string[] | undefined, index: number = 0) => {
         dialog.value.preview = true
-        preview.urls.value = typeof urls === 'string' ? [urls] : urls
+        if (urls === undefined) {
+          preview.init()
+        } else {
+          preview.urls.value = typeof urls === 'string' ? [urls] : urls
+        }
         preview.index.value = index
       },
       init: () => {
@@ -104,11 +108,11 @@ export const useSystemStore = defineStore(
     // 随机媒体列表
     const file = ref<FileVO[]>([])
     const getRandomImg = () => {
-      if (file.value.length === 0) {
-        return default_img
+      if (file.value !== null && file.value.length > 0) {
+        const random = Math.floor(Math.random() * file.value.length)
+        return file.value![random]!.url
       }
-      const random = Math.floor(Math.random() * file.value.length)
-      return file.value[random].url
+      return default_img
     }
 
     const webConfig = ref<WebConfigVO>(initWebConfigVO())
@@ -127,7 +131,7 @@ export const useSystemStore = defineStore(
   },
   {
     persist: {
-      paths: [
+      pick: [
         'system.isOpenLenis',
         'system.isOpenClick',
         'system.isOpenAnimation',
@@ -135,7 +139,7 @@ export const useSystemStore = defineStore(
         'admin.isShowAside',
         'admin.isAbsoluteAside'
       ],
-      afterRestore: ({ store }) => {
+      afterHydrate: ({ store }) => {
         exchangeSm2Api().then((res: ResultType<string>) => {
           store.backendSm2.publicKey = res.data
         })

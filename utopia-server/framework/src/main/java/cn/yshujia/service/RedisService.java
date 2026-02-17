@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +54,11 @@ public interface RedisService<T> {
 	default T getHash(Object key, Object hashKey) {
 		HashOperations<Object, Object, T> ops = redisTemplate().opsForHash();
 		return ops.get(key.toString(), hashKey.toString());
+	}
+
+	default Map<Object, T> hGetAll(Object hashKey) {
+		HashOperations<Object, Object, T> ops = redisTemplate().opsForHash();
+		return ops.entries(hashKey);
 	}
 
 

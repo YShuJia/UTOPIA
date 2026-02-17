@@ -57,7 +57,7 @@ onMounted(() => {
     <el-container>
       <el-button
         :disabled="ids.length === 0"
-        class="!px-2"
+        class="px-2!"
         plain
         type="danger"
         @click="handleDelete"

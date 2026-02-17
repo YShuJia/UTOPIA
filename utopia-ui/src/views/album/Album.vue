@@ -14,7 +14,7 @@ const getLabelList = () => {
     key: ClassifyEnum.ALBUM
   }).then((res: ResultType<LabelVO[]>) => {
     labelList.value = res.data
-    getAlbum(res.data[0].id)
+    getAlbum(res!.data[0]!.id)
   })
 }
 
@@ -51,7 +51,7 @@ onMounted(() => {
           v-for="(p, i) in labelList"
           :key="i"
           :class="
-            'border-2 min-w-20 use-btn-large !rounded-full h-fit text-center py-2 px-4 ' +
+            'border-2 min-w-20 use-btn-large rounded-full! h-fit text-center py-2 px-4 ' +
             (p.id === page.labelId ? 'animate-pulse' : '')
           "
           href="javascript:"

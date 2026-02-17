@@ -110,7 +110,6 @@ body {
 * {
   font-family: sans-serif, '微软雅黑', Dubai !important;
   font-weight: 520;
-  font-size: 1rem;
   text-decoration: none;
   letter-spacing: 1px;
   scroll-behavior: auto;
@@ -124,6 +123,8 @@ img {
   -khtml-user-select: none;
   -o-user-select: none;
   user-select: none;
+  overflow-clip-margin: content-box;
+  overflow: clip;
 }
 
 /* 图片预览 */

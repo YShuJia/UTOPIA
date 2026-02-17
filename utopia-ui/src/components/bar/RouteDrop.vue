@@ -33,7 +33,7 @@ const { routerData } = defineProps({
               :key="i"
               :class="
                 'min-w-48 use-link-default hover:translate-x-5 duration-300 ' +
-                (route.name === child.name ? ' !text-amber-500' : '')
+                (route.name === child.name ? ' text-amber-500!' : '')
               "
               :href="child.meta.frame ? child.path : 'javascript:'"
               target="_blank"

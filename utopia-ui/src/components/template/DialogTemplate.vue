@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { useSystemStore } from '@/stores/system'
 import { type DialogEnum, TableEnum } from '@/enum'
-import { useSlots } from "vue";
+import { useSlots } from 'vue'
 const slots = useSlots()
-
 
 const systemStore = useSystemStore()
 
@@ -17,7 +16,7 @@ const { attribute, title, open } = defineProps({
     default: ''
   },
   open: {
-    type: Function,
+    type: Function as PropType<() => any>,
     default: () => {}
   }
 })
@@ -27,10 +26,10 @@ const { attribute, title, open } = defineProps({
   <el-dialog
     v-model="systemStore.dialog[attribute]"
     :show-close="false"
-    class="overflow-hidden p-0 !min-w-72 w-full max-w-[1024px] use-box-large"
+    class="overflow-hidden p-0 min-w-72! w-full max-w-[1024px] use-box-large"
     top="5vh"
-    @open="open"
     @close="systemStore.dialog[attribute] = false"
+    @open="open"
   >
     <el-scrollbar class="flex flex-col max-h-[80vh] p-5">
       <span v-if="title != ''" class="flex text-xl justify-center pb-8">{{ title }}</span>

@@ -22,7 +22,7 @@ const { item } = defineProps({
     href="javascript:"
     @click="router.push({ name: RouteNameEnum.LEAVE_WORD })"
   >
-    <image-box :src="item.avatar" class="!size-12 radius-sm" />
+    <image-box :src="item.avatar" class="size-12! radius-sm" />
     <span class="line-clamp-1">{{ item.content }}</span>
     <svg-icon :message="item.createTime" class="text-color-gray" name="edit" size="sm" />
     <div class="card__arrow absolute bottom-0 right-0 py-1.5 px-2 duration-300">

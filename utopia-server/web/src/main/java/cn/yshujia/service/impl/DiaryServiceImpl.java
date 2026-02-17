@@ -7,6 +7,7 @@ import cn.yshujia.domain.vo.PageVO;
 import cn.yshujia.mapper.DiaryMapper;
 import cn.yshujia.transform.DiaryTransform;
 import cn.yshujia.ui.vo.DiaryVO;
+import cn.yshujia.utils.CollectionUtils;
 import cn.yshujia.utils.PageUtils;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -38,15 +39,6 @@ public class DiaryServiceImpl extends ServiceImpl<DiaryMapper, Diary> {
 	@Resource
 	RedisServiceImpl<DiaryVO> redis;
 
-	public DiaryVO now() {
-		DiaryVO vo = redis.get(RedisKeys.DIARY_NOW);
-		if (vo == null) {
-			vo = mapper.now();
-			redis.set(RedisKeys.DIARY_NOW, vo, RedisKeys.ONE_DAYS);
-		}
-		return vo;
-	}
-
 	public DiaryVO selectById(Long id) {
 		DiaryVO vo = redis.get(RedisKeys.DIARY + id);
 		if (null == vo) {
@@ -64,11 +56,13 @@ public class DiaryServiceImpl extends ServiceImpl<DiaryMapper, Diary> {
 	public PageVO<DiaryVO> page(DiaryDTO dto) {
 		List<DiaryVO> list;
 		if (dto.getCreateTime() != null) {
-			dto.setEnabled(true);
-			dto.setReviewed(1);
 			list = mapper.list(DiaryTransform.dto2Entity(dto));
 		} else {
 			list = redis.range(RedisKeys.DIARY_LIST, dto.getPageNum(), dto.getPageSize());
+			if (CollectionUtils.isEmpty(list)) {
+				list = mapper.list(DiaryTransform.dto2Entity(dto));
+				redis.leftPushAll(RedisKeys.DIARY_LIST, list, RedisKeys.THREE_DAYS);
+			}
 		}
 		return PageUtils.page(dto, list);
 	}

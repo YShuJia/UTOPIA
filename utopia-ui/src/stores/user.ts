@@ -44,10 +44,10 @@ export const useUserStore = defineStore(
   },
   {
     persist: {
-      paths: ['code'],
-      afterRestore: async (state) => {
+      pick: ['code'],
+      afterHydrate: async (state) => {
         const token = getToken()
-        if (token !== null) {
+        if (token) {
           await getUserApi().then((res: ResultType<UserVO>) => {
             state.store.user = res.data
           })

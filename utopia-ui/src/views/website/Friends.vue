@@ -61,20 +61,20 @@ onMounted(() => {
     </el-container>
     <template v-if="recommendVO.list.length">
       <el-container direction="vertical">
-        <el-main class="!pb-0">
+        <el-main class="pb-0!">
           <svg-icon class="w-fit pb-1.5 border-b-4" message="推荐" name="heat" size="xl" />
         </el-main>
-        <el-container class="p-2.5 auto-column !gap-3">
+        <el-container class="p-2.5 auto-column gap-3!">
           <friend-box v-for="item in recommendVO.list" :item="item" />
         </el-container>
         <loading-more :action="getRecommendList" :empty="recommendVO.isEmpty" />
       </el-container>
     </template>
     <el-container direction="vertical">
-      <el-main class="!pb-0">
+      <el-main class="pb-0!">
         <svg-icon class="w-fit pb-1.5 border-b-4" message="友情链接" name="friend-link" size="xl" />
       </el-main>
-      <el-container class="p-2.5 auto-column !gap-3">
+      <el-container class="p-2.5 auto-column gap-3!">
         <friend-box v-for="item in vo.list" :item="item" />
       </el-container>
       <loading-more :action="getList" :empty="vo.isEmpty" />

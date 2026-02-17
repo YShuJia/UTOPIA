@@ -23,11 +23,11 @@ const openUrl = (item: RouterType) => {
   <template v-for="item in data">
     <el-menu-item
       v-if="item.meta.type === 'B'"
-      @click="openUrl(item)"
       :index="RouterEnum.ADMIN + '/' + item.path.toString()"
+      @click="openUrl(item)"
     >
       <svg-icon :name="item.meta.icon" class="pl-0.5" />
-      <span class="pl-5 pr-20">{{ item.meta.title }}</span>
+      <span class="pl-5 pr-20 text-base">{{ item.meta.title }}</span>
     </el-menu-item>
     <el-sub-menu
       v-if="item.meta.type === 'M'"
@@ -35,7 +35,7 @@ const openUrl = (item: RouterType) => {
     >
       <template #title>
         <svg-icon :name="item.meta.icon" class="pl-0.5" />
-        <span class="pl-5 pr-20">{{ item.meta.title }}</span>
+        <span class="pl-5 pr-20 text-base">{{ item.meta.title }}</span>
       </template>
       <template v-for="child in item.children">
         <a
@@ -43,7 +43,10 @@ const openUrl = (item: RouterType) => {
           :href="child.meta.frame ? child.path : 'javascript:'"
           @click="child.components ? routerTo(child.name) : ''"
         >
-          <el-menu-item :index="RouterEnum.ADMIN + '/' + item.path + '/' + child.path" class="bg-color-three">
+          <el-menu-item
+            :index="RouterEnum.ADMIN + '/' + item.path + '/' + child.path"
+            class="bg-color-three"
+          >
             <svg-icon
               :message="child.meta.title"
               :name="child.meta.icon"
