@@ -36,8 +36,8 @@ const tables = ref<string[]>([])
 const getPermissionList = () => {
   getRoleTablesApi().then((res: ResultType<string[]>) => {
     tables.value = res.data
-    for (let i = 0; i < res.data.length; i++) {
-      selectAllDisableOther.value[res.data[i]] = false
+    for (const datum of res.data) {
+      selectAllDisableOther.value[datum] = false
     }
   })
 }
@@ -76,13 +76,17 @@ const initPermission = () => {
   }
   tableForm.value = {}
   selectAllDisableOther.value = {}
-  for (let i = 0; i < form.value.permission.length; i++) {
-    // 获取 [表名, 权限]
-    const array = form.value.permission[i].split(':')
-    if (tableForm.value[array[0]] === undefined) {
-      tableForm.value[array[0]] = []
+  for (const permissionElement of form.value.permission) {
+    const array = permissionElement.split(':')
+    const tableKey = array[0]
+    // 确保 tableKey 是有效字符串
+    if (tableKey == null || tableKey === '') {
+      continue
     }
-    tableForm.value[array[0]].push(array[0] + ':' + array[1])
+    if (tableForm.value[tableKey] === undefined) {
+      tableForm.value[tableKey] = []
+    }
+    tableForm.value[tableKey].push(tableKey + ':' + array[1])
   }
 }
 

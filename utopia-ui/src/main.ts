@@ -5,6 +5,7 @@ import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 // 引入 tailwind.css
 import '@/assets/style/tailwind.css'
+import '@/assets/style/media.scss'
 // 引入路由
 import router from './router'
 // 引入svg-icon

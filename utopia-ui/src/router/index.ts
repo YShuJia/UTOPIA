@@ -62,16 +62,14 @@ const createRouteList = (list: RouterVO[]) => {
     const routeBarItem = createRoute(item)
     // 如果存在子路由，递归调用 setRoute 处理
     if (item.children && item.children.length > 0) {
-      for (let i = 0; i < item.children.length; i++) {
-        const child = item.children[i]
-        const children = createRoute(child)
-        // 不是外链（外链不入路由）
+      for (const child of item.children) {
+        if (!child) continue
+        const route = createRoute(child)
         if (!child.frame) {
-          routeAllItem.children.push(children)
+          routeAllItem.children.push(route)
         }
-        // 不是隐藏路由
         if (child.type !== 'H') {
-          routeBarItem.children.push(children)
+          routeBarItem.children.push(route)
         }
       }
     }

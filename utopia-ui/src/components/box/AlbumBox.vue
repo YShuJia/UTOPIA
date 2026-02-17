@@ -15,10 +15,11 @@ const { item } = defineProps({
 </script>
 
 <template>
-  <a
+  <el-container
     :key="item.id"
     v-slide-in="systemStore.system.isOpenAnimation"
-    class="flex flex-col card relative items-center"
+    class="card relative items-center"
+    direction="vertical"
   >
     <el-container class="category bg-color-three px-2 py-1 gap-1 justify-between w-11/12">
       <svg-icon :message="item.title" name="picture" />
@@ -43,7 +44,7 @@ const { item } = defineProps({
         <span class="text-sm text-color-gray">图片{{ item.urls.length }}</span>
       </el-container>
     </el-container>
-  </a>
+  </el-container>
 </template>
 
 <style lang="scss" scoped>

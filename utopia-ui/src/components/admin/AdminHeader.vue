@@ -56,7 +56,7 @@ const clickHandle = (p: string, index: number) => {
           <el-tag
             v-for="(p, i) in systemStore.admin.routeMap"
             :key="p[1]"
-            class="!h-8"
+            class="h-8!"
             closable
             @close="handleRemoveRoute(p)"
           >
@@ -73,7 +73,7 @@ const clickHandle = (p: string, index: number) => {
         </el-container>
       </div>
     </el-container>
-    <el-container class="z-40 !min-w-28 flex items-center justify-end gap-5">
+    <el-container class="z-40 min-w-28! flex items-center justify-end gap-5">
       <el-link
         :underline="false"
         class="min-w-10 h-10 border-2 use-btn-default border-amber-500"

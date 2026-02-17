@@ -71,7 +71,7 @@ onMounted(() => {
     <el-container class="gap-2 items-center">
       <image-box
         :src="item.avatar"
-        class="!size-12 radius-sm"
+        class="size-12! radius-sm"
         @click="systemStore.preview.open(item.avatar)"
       />
       <el-container class="gap-1.5" direction="vertical">
@@ -131,7 +131,7 @@ onMounted(() => {
               :lazy="false"
               :src="item.replayContent[1]"
               class="h-16 w-fit radius-sm"
-              @click="systemStore.preview.open(item.replayContent[1])"
+              @click="systemStore.preview.open(item!.replayContent![1])"
             />
           </template>
         </el-container>

@@ -15,7 +15,7 @@ const { empty, action } = defineProps({
     <loading-button
       v-if="!empty"
       :action="action"
-      custom-class="!border-4  !border-white"
+      custom-class="border-4!  border-white!"
       message="加载更多"
       shape="round"
       size="large"

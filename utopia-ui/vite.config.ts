@@ -16,6 +16,8 @@ import viteCompression from 'vite-plugin-compression'
 import { visualizer } from 'rollup-plugin-visualizer'
 import path from 'path'
 
+import tailwindcss from '@tailwindcss/vite'
+
 // https://vitejs.awaitdev/config/
 export default defineConfig((configEnv: ConfigEnv): UserConfig => {
   // 加载 .env 文件中的变量
@@ -52,6 +54,7 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
     },
     plugins: [
       vue(),
+      tailwindcss(),
       createSvgIconsPlugin({
         iconDirs: [path.resolve(process.cwd(), 'src/assets/svg')],
         symbolId: 'svg-[name]'
@@ -61,8 +64,8 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
         // 是否在控制台中输出压缩结果
         verbose: true,
         disable: false,
-        // 如果体积大于阈值，将被压缩，单位为b，体积过小时请不要压缩 10kb
-        threshold: 10240,
+        // 如果体积大于阈值，将被压缩，单位为b，体积过小时请不要压缩 5kb
+        threshold: 5120,
         // 压缩算法，可选['gzip'，' brotliccompress '，'deflate '，'deflateRaw']
         algorithm: 'gzip',
         ext: '.gz',
@@ -81,13 +84,6 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
         resolvers: [ElementPlusResolver()]
       })
     ],
-    css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: `@use "@/assets/style/media.scss" as *;`
-        }
-      }
-    },
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url))
@@ -95,10 +91,10 @@ export default defineConfig((configEnv: ConfigEnv): UserConfig => {
     },
     server: {
       proxy: {
-        [env.VITE_API_PREFIX]: {
+        [env.VITE_API_PREFIX as string]: {
           target: env.VITE_PROXY_URL,
           changeOrigin: true,
-          rewrite: (path: string) => path.replace(env.VITE_API_PREFIX, '')
+          rewrite: (path: string) => path.replace(env.VITE_API_PREFIX as string, '')
         }
       },
       warmup: {

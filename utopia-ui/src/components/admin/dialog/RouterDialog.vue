@@ -34,11 +34,11 @@ const adminParents = ref<AdminSelectRouterVO[]>([])
 
 const listSelectData = () => {
   listSelectDataRouterApi().then((res: ResultType<AdminSelectRouterVO[]>) => {
-    for (let i = 0; i < res.data.length; i++) {
-      if (res.data[i].admin) {
-        adminParents.value.push(res.data[i])
+    for (const datum of res.data) {
+      if (datum.admin) {
+        adminParents.value.push(datum)
       } else {
-        uiParents.value.push(res.data[i])
+        uiParents.value.push(datum)
       }
     }
   })
@@ -61,9 +61,9 @@ const rules = {
 const valueChange = () => {
   if (form.value.type === 'B') {
     if (form.value.admin) {
-      form.value.parentId = adminParents.value[0].id
+      form.value.parentId = adminParents.value![0]!.id
     } else {
-      form.value.parentId = uiParents.value[0].id
+      form.value.parentId = uiParents.value![0]!.id
     }
   } else {
     form.value.parentId = 0
@@ -147,7 +147,7 @@ onMounted(() => {
             </template>
           </el-form-item>
           <el-form-item label="排序" prop="sort">
-            <el-input-number v-model="form.sort" :max="100" :min="0" class="!w-32" />
+            <el-input-number v-model="form.sort" :max="100" :min="0" class="w-32!" />
           </el-form-item>
           <el-form-item label="外链?" prop="frame">
             <el-radio-group v-model="form.frame">

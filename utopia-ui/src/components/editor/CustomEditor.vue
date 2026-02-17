@@ -70,8 +70,8 @@ const urls = defineModel<string[]>('urls', {
 
 const onUploadImg = async (files: File[]) => {
   const formData = new FormData()
-  for (let i = 0; i < files.length; i++) {
-    formData.append('files', files[i])
+  for (const file of files) {
+    formData.append('files', file)
   }
   const { data } = await upload(formData)
   if (!isEmpty(data)) {
@@ -227,10 +227,10 @@ const videoUrlHandler = () => {
                 class="size-full hover:bg-gray-100 dark:hover:bg-zinc-900"
                 multiple
               >
-                <a class="text-xs flex !h-6 px-1 items-center justify-center">上传视频</a>
+                <a class="text-xs flex h-6! px-1 items-center justify-center">上传视频</a>
               </el-upload>
               <a
-                class="text-xs w-full flex items-center !h-6 justify-center hover:bg-gray-100 dark:hover:bg-zinc-900"
+                class="text-xs w-full flex items-center h-6! justify-center hover:bg-gray-100 dark:hover:bg-zinc-900"
                 @click="mVisible = true"
                 >插入视频
               </a>

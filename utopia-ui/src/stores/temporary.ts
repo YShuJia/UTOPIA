@@ -20,7 +20,7 @@ export const useTemporaryStore = defineStore(
   {
     persist: {
       key: 'temporary',
-      paths: ['article', 'webConfig']
+      pick: ['article', 'webConfig']
     }
   }
 )

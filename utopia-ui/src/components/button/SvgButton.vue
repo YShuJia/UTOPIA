@@ -23,7 +23,7 @@ const { message, size, name, rotate } = defineProps({
 </script>
 
 <template>
-  <a class="p-1.5 w-fit">
+  <el-container class="p-1.5 max-h-fit max-w-fit">
     <a
       class="a-box py-1 radius-sm px-1.5 flex items-center justify-center mimicry-button overflow-hidden relative"
     >
@@ -33,7 +33,7 @@ const { message, size, name, rotate } = defineProps({
       <div :style="{ width: sizeMap.get(size) }"></div>
       <span :style="{ fontSize: sizeMap.get(size) }" class="pl-2 w-full">{{ message }}</span>
     </a>
-  </a>
+  </el-container>
 </template>
 
 <style lang="scss" scoped>

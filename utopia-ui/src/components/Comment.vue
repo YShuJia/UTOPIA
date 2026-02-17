@@ -61,9 +61,8 @@ onMounted(() => {
     // 处理子评论
     const parentIndex = vo.list.findIndex((item) => item.id === res.floorId)
     if (parentIndex > -1) {
-      //可选链 + 空值合并赋值
-      vo.list[parentIndex].children ??= []
-      vo.list[parentIndex].children.unshift(res)
+      vo.list[parentIndex]!.children ??= []
+      vo.list[parentIndex]!.children.unshift(res)
     }
   })
 })

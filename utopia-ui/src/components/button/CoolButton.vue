@@ -8,7 +8,7 @@ const { message } = defineProps({
 </script>
 
 <template>
-  <div class="container-button">
+  <div class="container-button cursor-pointer">
     <div class="hover bt-1"></div>
     <div class="hover bt-2"></div>
     <div class="hover bt-3"></div>
@@ -41,7 +41,6 @@ const { message } = defineProps({
   height: 100%;
   position: absolute;
   z-index: 200;
-
   &:hover ~ button::after {
     content: attr(data-before);
     position: absolute;

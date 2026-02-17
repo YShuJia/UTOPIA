@@ -44,9 +44,9 @@ onMounted(() => {
       <el-container class="items-center gap-2" direction="vertical">
         <span class="text-3xl line-clamp-1 flowing-text">{{ article.title }}</span>
         <span class="flex items-center gap-2">
-          <svg-icon :message="article.likeCount" class="!gap-0.5" name="praise" />
-          <svg-icon :message="article.viewCount" class="!gap-0.5" name="footprint" />
-          <svg-icon :message="article.commentCount" class="!gap-0.5" name="message" />
+          <svg-icon :message="article.likeCount" class="gap-0.5!" name="praise" />
+          <svg-icon :message="article.viewCount" class="gap-0.5!" name="footprint" />
+          <svg-icon :message="article.commentCount" class="gap-0.5!" name="message" />
         </span>
         <span class="text-amber-500">{{ article.updateTime }}</span>
       </el-container>
@@ -58,19 +58,19 @@ onMounted(() => {
         :autoFoldThreshold="120"
         :preview-theme="preview"
         :theme="styleStore.background.bgType"
-        class="pb-5 !border-2 use-theme"
+        class="pb-5 border-2! use-theme"
         editorId="my-preview"
         readonly="true"
       />
       <el-affix :offset="40" class="mx-auto" position="bottom">
         <el-container
-          class="items-center bg-color-secondary use-box-large gap-5 py-2 px-4 !rounded-full"
+          class="items-center bg-color-secondary use-box-large gap-5 py-2 px-4 rounded-full!"
         >
           <a href="javascript:">
             <el-dropdown>
               <svg-icon name="palette" size="3xl" />
               <template #dropdown>
-                <span class="!text-base flex py-1 flex-col">
+                <span class="text-base! flex py-1 flex-col">
                   <a
                     v-for="(p, i) in previewTheme"
                     :key="i"

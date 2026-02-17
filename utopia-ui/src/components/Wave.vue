@@ -43,6 +43,8 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+@use 'sass:math';
+
 .waves {
   position: relative;
   width: 100%;
@@ -54,7 +56,7 @@ onMounted(() => {
 
 @for $i from 1 through 3 {
   .parallax > use:nth-child(#{$i}) {
-    $duration: (random(12) + 4) + s;
+    $duration: (math.random(12) + 4) + s;
     animation-name: move;
     animation-iteration-count: infinite;
     animation-timing-function: ease-out;

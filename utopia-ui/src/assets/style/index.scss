@@ -81,7 +81,6 @@
   border-radius: var(--radius-lg) !important;
 }
 
-
 .radius-sm {
   border-radius: var(--radius-sm) !important;
 }
@@ -170,11 +169,6 @@
 }
 
 html.dark {
-  img,
-  .dark-img-bg {
-    filter: brightness(0.6) saturate(1.25)
-  }
-
   .mimicry-button {
     background-color: var(--bg-color-three);
     box-shadow: 2px 2px 3px var(--shadow-color),
@@ -186,4 +180,10 @@ html.dark {
       -1px -1px 1px #c2c2c2;
     }
   }
+}
+
+svg {
+  font-size: unset;
+  outline: none;
+  border: none;
 }

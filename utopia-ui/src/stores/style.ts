@@ -95,8 +95,7 @@ export const useStyleStore = defineStore(
   {
     persist: {
       key: 'style',
-      storage: localStorage,
-      afterRestore: ({ store }) => {
+      afterHydrate: ({ store }) => {
         /* 监听主题色变化 */
         watch(
           () => store.background,

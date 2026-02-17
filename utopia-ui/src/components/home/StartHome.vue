@@ -55,7 +55,7 @@ onMounted(() => {
   <top-image-template :img-height="600" class="lookMore">
     <template #title>
       <el-container class="items-center relative justify-around size-full" direction="vertical">
-        <el-container class="!max-h-14 pr-3 gap-1 bg-gray-900/50 rounded-2xl border-2 items-center">
+        <el-container class="max-h-14! pr-3 gap-1 bg-gray-900/50 rounded-2xl border-2 items-center">
           <span class="text-white ml-2 text-xl">{{ message }}</span>
           <span class="top_text h-1/2"></span>
         </el-container>

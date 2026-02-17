@@ -35,9 +35,9 @@ const checked = ref(false)
             <span class="text-3xl line-clamp-1">{{ diary.title }}</span>
             <image-box :lazy="false" :src="diary.urls[0]" class="h-32 w-fit radius-sm" />
             <span class="flex items-center gap-3">
-              <svg-icon :message="diary.likeCount" class="!gap-0.5" name="praise" />
-              <svg-icon :message="diary.viewCount" class="!gap-0.5" name="footprint" />
-              <svg-icon :message="diary.commentCount" class="!gap-0.5" name="message" />
+              <svg-icon :message="diary.likeCount" class="gap-0.5!" name="praise" />
+              <svg-icon :message="diary.viewCount" class="gap-0.5!" name="footprint" />
+              <svg-icon :message="diary.commentCount" class="gap-0.5!" name="message" />
             </span>
           </el-container>
           <el-container class="w-full max-h-fit items-center gap-2" direction="vertical">
@@ -66,19 +66,19 @@ const checked = ref(false)
             <div class="flex gap-2 pt-2">
               <svg-icon
                 :message="'点赞' + diary.likeCount"
-                class="!gap-0.5 text-color-gray"
+                class="gap-0.5! text-color-gray"
                 name="praise"
                 size="sm"
               />
               <svg-icon
                 :message="'浏览' + diary.viewCount"
-                class="!gap-0.5 text-color-gray"
+                class="gap-0.5! text-color-gray"
                 name="footprint"
                 size="sm"
               />
               <svg-icon
                 :message="'评论' + diary.commentCount"
-                class="!gap-0.5 text-color-gray"
+                class="gap-0.5! text-color-gray"
                 name="message"
                 size="sm"
               />

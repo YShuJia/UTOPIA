@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 const { src, lazy, fit } = defineProps({
   src: {
-    type: String,
+    type: String as unknown as PropType<string | undefined>,
     required: true
   },
   lazy: {
@@ -19,6 +19,12 @@ const { src, lazy, fit } = defineProps({
 
 <template>
   <a class="flex translate-x-0 size-full overflow-hidden" href="javascript:">
-    <img v-img-lazy="lazy ? src : ''" :class="`size-full ${fit}`" :src="lazy ? '' : src" alt="" />
+    <img
+      v-if="src"
+      v-img-lazy="lazy ? src : ''"
+      :class="`size-full ${fit}`"
+      :src="lazy ? '' : src"
+      alt=""
+    />
   </a>
 </template>
