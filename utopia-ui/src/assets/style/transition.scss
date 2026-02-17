@@ -68,25 +68,29 @@
 
 .use-box-default {
   will-change: transform;
-  @apply radius-sm shadow;
+  @extend .radius-sm;
+  @extend .shadow;
   @include use-transition($radius: .3s, $shadow: .3s);
 }
 
 .use-box-large {
   will-change: transform;
-  @apply radius-lg shadow;
+  @extend .radius-lg;
+  @extend .shadow;
   @include use-transition($radius: .3s, $shadow: .3s, $bg-color: .3s);
 }
 
 .use-box-filter {
   will-change: transform;
-  @apply radius-lg drop-shadow;
+  @extend .radius-lg;
+  @extend .drop-shadow;
   @include use-transition($radius: .3s, $shadow: .3s);
 }
 
 .use-hover-box-large {
   will-change: transform;
-  @apply radius-lg shadow;
+  @extend .radius-lg;
+  @extend .shadow;
   @include use-transition($radius: .3s, $shadow: .3s, $bg-color: .3s, $transform: .3s);
 
   &:hover {
@@ -102,7 +106,8 @@
   align-items: center;
   justify-content: center;
   will-change: background-color;
-  @apply hover-bg radius-sm;
+  @extend .hover-bg;
+  @extend .radius-sm;
   @include use-transition($radius: .3s, $bg-color: .3s);
 }
 
@@ -113,14 +118,16 @@
   align-items: center;
   justify-content: center;
   will-change: background-color;
-  @apply hover-bg radius-lg;
+  @extend .hover-bg;
+  @extend .radius-lg;
   @include use-transition($radius: .3s, $bg-color: .3s);
 }
 
 .use-link-default {
   will-change: color;
-  @apply hover-color;
-  @include use-transition($radius: .3s, $color: .3s, $transform: .3s);
+  @extend .hover-color;
+  --tw-duration: 300ms;
+  transition-duration: 300ms;
 }
 
 

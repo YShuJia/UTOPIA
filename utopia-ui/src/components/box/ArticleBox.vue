@@ -45,10 +45,9 @@ const toDetail = () => {
 </script>
 
 <template>
-  <a
+  <div
     v-slide-in="systemStore.system.isOpenAnimation"
-    class="flex flex-col use-box-large h-[300px] overflow-hidden"
-    href="javascript:"
+    class="flex rounded-lg flex-col use-box-large h-75 cursor-pointer overflow-hidden"
     @click="toDetail"
   >
     <div class="h-40 flex relative justify-center items-center overflow-hidden w-full">
@@ -65,19 +64,19 @@ const toDetail = () => {
       <el-container class="gap-1 justify-between">
         <svg-icon
           :message="'点赞' + item.likeCount"
-          class="!gap-0.5 text-color-gray"
+          class="gap-0.5! text-color-gray"
           name="praise"
           size="sm"
         />
         <svg-icon
           :message="'浏览' + item.viewCount"
-          class="!gap-0.5 text-color-gray"
+          class="gap-0.5! text-color-gray"
           name="footprint"
           size="sm"
         />
         <svg-icon
           :message="'评论' + item.commentCount"
-          class="!gap-0.5 text-color-gray"
+          class="gap-0.5! text-color-gray"
           name="message"
           size="sm"
         />
@@ -110,7 +109,7 @@ const toDetail = () => {
         />
       </el-container>
     </el-container>
-  </a>
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

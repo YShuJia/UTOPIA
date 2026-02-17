@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import type { CalendarDateType, CalendarInstance } from 'element-plus'
-import { initPageDTO, initPageVO, type PageVO, type ResultType } from '@/request/config'
+import { initPageVO, type PageVO, type ResultType } from '@/request/config'
 import { type DiaryDTO, type DiaryVO, pageDiaryApi } from '@/request/api/diary'
-import { formatDate, formatDatetime } from '@/utils/timeUtils'
+import { formatDate } from '@/utils/timeUtils'
 
 const route = useRoute()
 
@@ -19,7 +19,7 @@ const vo = ref<PageVO<DiaryVO>>(initPageVO())
 
 const page = ref<DiaryDTO>({
   pageSize: 10,
-  pageNum: 1,
+  pageNum: 1
 })
 
 const getList = () => {
@@ -28,9 +28,12 @@ const getList = () => {
   })
 }
 
-watchEffect(() => {
-  page.value.createTime = formatDate(date.value)
+onMounted(() => {
   getList()
+  watch(date, () => {
+    page.value.createTime = formatDate(date.value)
+    getList()
+  })
 })
 </script>
 
@@ -44,7 +47,7 @@ watchEffect(() => {
     </template>
     <el-container class="inner-box gap-10" direction="vertical">
       <el-container class="p-5 use-theme">
-        <el-calendar v-model="date" ref="calendar" class="use-box-large bg-transparent">
+        <el-calendar ref="calendar" v-model="date" class="use-box-large bg-transparent">
           <template #date-cell="{ data }">
             <p
               :class="data.isSelected ? 'is-selected relative text-center' : 'relative text-center'"
@@ -80,7 +83,7 @@ watchEffect(() => {
           :index="index"
         />
       </el-container>
-      <loading-more :action="getList" :empty="vo.isEmpty"/>
+      <loading-more :action="getList" :empty="vo.isEmpty" />
     </el-container>
   </top-image-template>
 </template>

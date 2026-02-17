@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,39 +32,35 @@ import java.util.Set;
 @Slf4j
 @Service
 public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> {
-	
+
 	@Resource
 	public LikeMapper mapper;
-	
+
 	@Resource
 	public CommentMapper commentMapper;
-	
+
 	@Resource
 	RedisServiceImpl<Boolean> redis;
-	
+
 	@Resource
 	private ArticleMapper articleMapper;
-	
+
 	public Boolean select(Long sourceId, Long userId) {
 		if (redis.hasKey(userId, sourceId)) {
 			return redis.getHash(RedisKeys.LIKE_USER_ID + userId, sourceId);
 		}
-		Like like = mapper.selectOne(new LambdaQueryWrapper<Like>()
-				                             .eq(Like::getSourceId, sourceId)
-				                             .eq(Like::getUserId, userId));
+		Like like = mapper.selectOne(new LambdaQueryWrapper<Like>().eq(Like::getSourceId, sourceId).eq(Like::getUserId, userId));
 		return Optional.ofNullable(like).map(Like::getLiked).orElse(false);
 	}
-	
-	
+
+
 	public void updateLikeCount(Long userId, Long sourceId, Boolean liked) {
 		String key = RedisKeys.LIKE_USER_ID + userId;
 		if (redis.hasKey(userId, sourceId)) {
 			redis.setHash(key, sourceId, liked, RedisKeys.THREE_DAYS);
 			return;
 		}
-		Like like = mapper.selectOne(new LambdaQueryWrapper<Like>()
-				                             .eq(Like::getSourceId, sourceId)
-				                             .eq(Like::getUserId, userId));
+		Like like = mapper.selectOne(new LambdaQueryWrapper<Like>().eq(Like::getSourceId, sourceId).eq(Like::getUserId, userId));
 		if (null == like) {
 			like = new Like(userId, sourceId);
 		}
@@ -71,7 +68,7 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> {
 		redis.setHash(RedisKeys.LIKE_USER_ID + userId, sourceId, liked, RedisKeys.THREE_DAYS);
 		saveOrUpdate(like);
 	}
-	
+
 	/**
 	 * [] * @return void
 	 *
@@ -88,22 +85,47 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> {
 		if (currentHour > 0 && currentHour < 6) {
 			return;
 		}
-		Set<Object> keys = redis.keys(RedisKeys.LIKE_USER_ID + "*");
-		if (CollectionUtils.isEmpty(keys)) {
+		Set<Object> hashKeys = redis.keys(RedisKeys.LIKE_USER_ID + "*");
+		if (CollectionUtils.isEmpty(hashKeys)) {
 			return;
 		}
-		for (Object key : keys) {
-			Set<Object> sourceIds = redis.keys(key);
-			for (Object source : sourceIds) {
-				Boolean status = redis.getHash(key, source);
-				mapper.update(new LambdaUpdateWrapper<Like>()
-						              .set(Like::getLiked, status)
-						              .eq(Like::getSourceId, Long.parseLong(source.toString()))
-						              .eq(Like::getUserId, Long.parseLong(key.toString().split(":")[2])));
+		for (Object hashKey : hashKeys) {
+			// 提取 userId
+			String[] parts = hashKey.toString().split(":");
+			if (parts.length < 3) continue;
+			Long userId;
+			try {
+				userId = Long.parseLong(parts[2]);
+			} catch (NumberFormatException e) {
+				log.warn("Invalid userId in hash key: {}", hashKey);
+				continue;
 			}
+			// 获取整个 Hash：Map<field=sourceId, value=likedStatus>
+			Map<Object, Boolean> fieldValueMap = redis.hGetAll(hashKey);
+			if (CollectionUtils.isEmpty(fieldValueMap)) {
+				continue;
+			}
+			for (Map.Entry<Object, Boolean> entry : fieldValueMap.entrySet()) {
+				Object field = entry.getKey();     // sourceId
+				Boolean liked = entry.getValue();   // true / false
+
+				long sourceId;
+				try {
+					sourceId = Long.parseLong(field.toString());
+				} catch (NumberFormatException e) {
+					log.warn("Invalid sourceId '{}' in hash key: {}", field, hashKey);
+					continue;
+				}
+				// 更新数据库
+				mapper.update(new LambdaUpdateWrapper<Like>()
+						.set(Like::getLiked, liked)
+						.eq(Like::getSourceId, sourceId)
+						.eq(Like::getUserId, userId));
+			}
+
 		}
 	}
-	
+
 	/**
 	 * [] * @return void
 	 *
@@ -115,11 +137,7 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> {
 	@Scheduled(cron = "0 0 1 * * ?")
 	protected void updateArticleCount() {
 		redis.delKeysByPrefix(RedisKeys.ARTICLE);
-		List<Article> articles = articleMapper.selectList(new LambdaQueryWrapper<Article>()
-				                                                  .select(
-						                                                  Article::getId,
-						                                                  Article::getUpdateBy, Article::getUpdateTime
-				                                                  ));
+		List<Article> articles = articleMapper.selectList(new LambdaQueryWrapper<Article>().select(Article::getId, Article::getUpdateBy, Article::getUpdateTime));
 		if (CollectionUtils.isEmpty(articles)) {
 			return;
 		}
@@ -133,7 +151,7 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> {
 		articleMapper.updateById(articles);
 		log.info("更新文章点赞数量完成！");
 	}
-	
+
 	/**
 	 * [] * @return void
 	 *
@@ -145,15 +163,12 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> {
 	@Scheduled(cron = "0 10 1 * * ?")
 	protected void updateCommentCount() {
 		redis.delKeysByPrefix(RedisKeys.COMMENT_SOURCE);
-		List<Comment> comments = commentMapper.selectList(new LambdaQueryWrapper<Comment>()
-				                                                  .select(Comment::getId));
+		List<Comment> comments = commentMapper.selectList(new LambdaQueryWrapper<Comment>().select(Comment::getId));
 		if (CollectionUtils.isEmpty(comments)) {
 			return;
 		}
 		for (Comment comment : comments) {
-			Long count = mapper.selectCount(new LambdaQueryWrapper<Like>()
-					                                .eq(Like::getSourceId, comment.getId())
-					                                .eq(Like::getLiked, true));
+			Long count = mapper.selectCount(new LambdaQueryWrapper<Like>().eq(Like::getSourceId, comment.getId()).eq(Like::getLiked, true));
 			if (null == count) {
 				count = 0L;
 			}
@@ -162,6 +177,6 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> {
 		commentMapper.updateById(comments);
 		log.info("更新评论点赞数量完成！");
 	}
-	
+
 }
 

@@ -1,19 +1,19 @@
 @use "custom" as *;
 
 @media screen and (max-width: 1280px) {
-	.inner-box, .inner-min-box {
-		width: 80%;
-	}
+  .inner-box, .inner-min-box {
+    width: 80%;
+  }
 }
 
 @media screen and (max-width: 1024px) {
-	.el-dialog {
-		max-width: calc(90vw);
-	}
+  .el-dialog {
+    max-width: calc(90vw);
+  }
 
-	.inner-box, .inner-min-box {
-		width: 90%;
-	}
+  .inner-box, .inner-min-box {
+    width: 90%;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -23,29 +23,29 @@
 @media screen and (max-width: 640px) {
 
 
-	.el-dialog {
-		max-width: calc(100vw - 40px);
-	}
+  .el-dialog {
+    max-width: calc(100vw - 40px);
+  }
 
-	.inner-max-box, .inner-box, .inner-min-box {
-		width: 100%;
-		min-width: 320px;
-	}
+  .inner-max-box, .inner-box, .inner-min-box {
+    width: 100%;
+    min-width: 320px;
+  }
 
-	.md-editor-preview > div {
-		flex-wrap: wrap !important;
+  .md-editor-preview > div {
+    flex-wrap: wrap !important;
 
-		span {
-			margin: 0 auto;
-		}
+    span {
+      margin: 0 auto;
+    }
 
-		img {
-			width: 100%;
-		}
-	}
+    img {
+      width: 100%;
+    }
+  }
 
-	.el-carousel .el-carousel__button {
-		width: .6rem;
-		height: .6rem;
-	}
+  .el-carousel .el-carousel__button {
+    width: .6rem;
+    height: .6rem;
+  }
 }

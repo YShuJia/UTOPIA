@@ -25,19 +25,19 @@ onMounted(async () => {
         <el-container class="gap-5 max-sm:gap-1">
           <svg-icon
             :message="'点赞' + album.likeCount"
-            class="!gap-0.5 text-color-gray"
+            class="gap-0.5! text-color-gray"
             name="praise"
             size="sm"
           />
           <svg-icon
             :message="'浏览' + album.viewCount"
-            class="!gap-0.5 text-color-gray"
+            class="gap-0.5! text-color-gray"
             name="footprint"
             size="sm"
           />
           <svg-icon
             :message="'评论' + album.commentCount"
-            class="!gap-0.5 text-color-gray"
+            class="gap-0.5! text-color-gray"
             name="message"
             size="sm"
           />

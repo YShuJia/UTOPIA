@@ -16,20 +16,18 @@ onMounted(() => {
 </script>
 <template>
   <div class="w-screen h-screen flex">
-    <el-aside class="w-fit">
-      <el-menu
-        :collapse="!systemStore.admin.isShowAside"
-        :default-active="route.fullPath"
-        class="h-screen hidden-scroll overflow-y-auto bg-color"
-      >
-        <a class="flex px-5 py-3 line-clamp-1" href="javascript:">
-          <span class="text-3xl line-clamp-1">UTOPIA</span>
-        </a>
-        <router-menu :data="data" />
-      </el-menu>
-    </el-aside>
+    <el-menu
+      :collapse="!systemStore.admin.isShowAside"
+      :default-active="route.fullPath"
+      class="h-screen hidden-scroll overflow-y-auto bg-color"
+    >
+      <a class="flex px-5 py-3 line-clamp-1" href="javascript:">
+        <span class="text-3xl line-clamp-1">UTOPIA</span>
+      </a>
+      <router-menu :data="data" />
+    </el-menu>
 
-    <el-container class="overflow-hidden" direction="vertical">
+    <el-container class="overflow-hidden w-full" direction="vertical">
       <el-header class="border-b">
         <admin-header />
       </el-header>

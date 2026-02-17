@@ -30,7 +30,7 @@ export function pop(e: any, type: ClickType = ClickEnum.CHAR, num: number = 20) 
     particle.className = 'particle'
     particle.style.top = e.clientY - 16 + 'px'
     particle.style.left = e.clientX - 18 + 'px'
-    particle.innerHTML = arrChar[Math.floor(Math.random() * arrChar.length)]
+    particle.innerHTML = arrChar[Math.floor(Math.random() * arrChar.length)] ?? ''
     document.body.appendChild(particle)
     // 动画结束 移除元素
     particle.onanimationend = () => {
@@ -85,7 +85,7 @@ function createParticle(x: number, y: number, type: string) {
       particle.style.background = `hsl(${Math.random() * 90 + 270}, 70%, 60%)`
       break
     case 'LOVE':
-      particle.innerHTML = ['❤', '🧡', '💛', '💚', '💙', '💜'][Math.floor(Math.random() * 6)]
+      particle.innerHTML = ['❤', '🧡', '💛', '💚', '💙', '💜'][Math.floor(Math.random() * 6)] ?? ''
       particle.style.fontSize = `${width}px`
       break
     case 'MARIO':

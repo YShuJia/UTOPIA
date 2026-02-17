@@ -121,7 +121,7 @@ const columns: ColumnsType[] = [
   >
     <template #button>
       <el-button
-        class="!px-2"
+        class="px-2!"
         plain
         type="primary"
         @click="routerTo(RouteNameEnum.ARTICLE_EDIT, { id: -1 })"

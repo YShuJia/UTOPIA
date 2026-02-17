@@ -17,7 +17,7 @@ const routerData: RouterType[] = getUiRouter()
 <template>
   <el-container class="size-full min-w-80 gap-5 justify-between">
     <el-container class="max-w-fit gap-5 max-sm:mr-0.5 items-center z-50">
-      <a class="size-10 use-btn-default !hidden max-lg:!flex border-2 border-amber-500">
+      <a class="size-10 use-btn-default hidden! max-lg:flex! border-2 border-amber-500">
         <label
           class="burger flex flex-col size-full items-center justify-center relative cursor-pointer"
           for="burger"
@@ -29,7 +29,7 @@ const routerData: RouterType[] = getUiRouter()
             type="checkbox"
           />
           <el-container
-            class="box absolute p-1 size-full !items-center justify-between"
+            class="box absolute p-1 size-full items-center! justify-between"
             direction="vertical"
           >
             <span></span>
@@ -50,7 +50,7 @@ const routerData: RouterType[] = getUiRouter()
         <span class="text-2xl font-bold">{{ systemStore.webConfig.siteTitle }}</span>
       </a>
     </el-container>
-    <el-container class="z-50 gap-6 items-center mr-auto max-lg:!hidden">
+    <el-container class="z-50 gap-6 items-center mr-auto max-lg:hidden!">
       <route-drop :routerData="routerData" />
     </el-container>
     <el-container class="z-50 gap-4 max-sm:gap-2 items-center justify-end">
@@ -86,27 +86,27 @@ const routerData: RouterType[] = getUiRouter()
                 ? userStore.user.avatar
                 : systemStore.webConfig.siteFavicon
             "
-            class="!size-10 radius-sm"
+            class="size-10! radius-sm"
           />
         </el-link>
         <template #dropdown>
-          <el-container class="min-w-40 px-5 py-2" direction="vertical">
+          <el-container class="min-w-40! px-5 py-2" direction="vertical">
             <svg-icon
               v-if="!userStore.user.username"
-              class="use-link-default justify-center p-1.5"
+              class="use-link-default cursor-pointer justify-center p-1.5"
               message="登 录"
               name="login"
               @click="systemStore.dialog.login = true"
             />
             <el-container v-else direction="vertical">
               <svg-icon
-                class="use-link-default justify-center p-1.5"
+                class="use-link-default cursor-pointer justify-center p-1.5"
                 message="退 出"
                 name="logout"
                 @click="userStore.logout()"
               />
               <svg-icon
-                class="use-link-default justify-center p-1.5"
+                class="use-link-default cursor-pointer justify-center p-1.5"
                 message="个人信息"
                 name="people"
                 @click="router.push({ name: RouteNameEnum.USER_INFO })"
@@ -120,7 +120,7 @@ const routerData: RouterType[] = getUiRouter()
   <!-- 移动端导航栏 -->
   <el-main
     :class="
-      'w-full max-lg:!block bg-gray-950/70 backdrop-blur-sm h-screen flex-col !pt-20 fixed top-0 left-0 z-40 duration-500 ' +
+      'w-full max-lg:block! bg-gray-950/70 backdrop-blur-sm h-screen flex-col pt-20! fixed top-0 left-0 z-40 duration-500 ' +
       (systemStore.system.isShowMobile ? ' translate-x-0' : ' -translate-x-full')
     "
     @click="systemStore.system.isShowMobile = !systemStore.system.isShowMobile"
@@ -149,7 +149,7 @@ const routerData: RouterType[] = getUiRouter()
               :key="index"
               :class="
                 'hover:translate-x-5 duration-300 hover-color' +
-                (route.name === child.name ? ' !text-amber-500' : '')
+                (route.name === child.name ? ' text-amber-500!' : '')
               "
               :href="child.meta.frame ? child.path : 'javascript:'"
               @click="child.components ? router.push({ name: child.name }) : ''"
@@ -161,7 +161,7 @@ const routerData: RouterType[] = getUiRouter()
       </template>
       <template v-else-if="item.meta.type === 'B'">
         <a
-          :class="'use-link-default ' + (route.name === item.name ? ' !text-amber-500' : '')"
+          :class="'use-link-default ' + (route.name === item.name ? ' text-amber-500!' : '')"
           :href="item.meta.frame ? item.path : 'javascript:'"
           @click="item.components ? router.push({ name: item.name }) : ''"
         >

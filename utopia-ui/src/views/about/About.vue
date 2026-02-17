@@ -41,7 +41,7 @@ onMounted(() => {
       direction="vertical"
     >
       <el-container class="items-center gap-2" direction="vertical">
-        <image-box :src="sys.webConfig.authorAvatar" class="!size-52 rounded-full" />
+        <image-box :src="sys.webConfig.authorAvatar" class="size-52! rounded-full" />
         <span class="text-3xl z-10">{{ sys.webConfig.authorName }}</span>
       </el-container>
       <el-container class="w-full px-5 flex-wrap justify-between gap-5 max-sm:gap-1">

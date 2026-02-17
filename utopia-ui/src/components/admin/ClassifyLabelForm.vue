@@ -22,15 +22,15 @@ const siftLabel = () => {
   if (!tree.value) {
     return
   }
-  for (let i = 0; i < tree.value.length; i++) {
-    labelMap.value.set(tree.value[i].value, tree.value[i].children)
-    if (!tree.value[i].children || !labelId.value) {
+  for (const t of tree.value) {
+    labelMap.value.set(t.value, t.children)
+    if (!t.children || !labelId.value) {
       continue
     }
     // 通过 labelId 初次赋值
-    for (let j = 0; j < tree.value[i].children?.length; j++) {
-      if (labelId.value === tree.value[i].children[j].value) {
-        classifyId.value = tree.value[i].value
+    for (const c of t.children) {
+      if (labelId.value === c.value) {
+        classifyId.value = t.value
       }
     }
   }

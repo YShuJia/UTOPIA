@@ -58,9 +58,9 @@ const labelList = ref<LabelVO[]>([])
 const getLabelList = (classifyId: number) => {
   listLabelByClassifyApi({ id: classifyId }).then((res) => {
     labelList.value = res.data
-    for (let i = 0; i < labelList.value.length; i++) {
-      if (params.labelId === labelList.value[i].id) {
-        selectLabel.value = labelList.value[i]
+    for (const label of labelList.value) {
+      if (params.labelId === label.id) {
+        selectLabel.value = label
         page.labelId = selectLabel.value.id
       }
     }

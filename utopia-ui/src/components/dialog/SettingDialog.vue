@@ -93,7 +93,7 @@ onMounted(() => {
             :max="30"
             :min="2"
             :step="2"
-            class="!w-40 mr-3"
+            class="w-40! mr-3"
             show-stops
           />
         </el-container>
@@ -108,7 +108,7 @@ onMounted(() => {
             :max="10"
             :min="2"
             :step="1"
-            class="!w-40 mr-3"
+            class="w-40! mr-3"
             show-stops
           />
         </el-container>
@@ -123,7 +123,7 @@ onMounted(() => {
             :max="8"
             :min="1"
             :step="0.5"
-            class="!w-40 mr-3"
+            class="w-40! mr-3"
             show-stops
           />
         </el-container>

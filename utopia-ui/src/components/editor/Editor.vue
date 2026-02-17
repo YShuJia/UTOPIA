@@ -42,7 +42,7 @@ const addComment = () => {
     return
   }
   // 去除首尾字符
-  commentList.value[0] = commentList.value[0].trim()
+  commentList.value[0] = commentList.value![0]!.trim()
   // 添加评论数据
   comment.value.content = commentList.value
   const formData = addToFormData(upload.value.files, comment.value)
@@ -60,10 +60,10 @@ const addComment = () => {
 <template>
   <el-container class="px-5 py-2 gap-2 bg-color" direction="vertical">
     <span class="flex items-center">
-      <svg-icon class="!text-amber-500" message="评 论" name="edit" size="lg" />
+      <svg-icon class="text-amber-500!" message="评 论" name="edit" size="lg" />
     </span>
     <el-container
-      class="relative h-[120px] border-2 border-dotted p-2 border-amber-500 overflow-hidden"
+      class="relative h-30 border-2 border-dotted p-2 border-amber-500 overflow-hidden"
       direction="vertical"
     >
       <textarea

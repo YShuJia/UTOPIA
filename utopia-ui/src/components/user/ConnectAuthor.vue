@@ -49,8 +49,8 @@ const sys = useSystemStore()
     >
       <span class="text-black">联系作者 - {{ sys.webConfig.authorName }}</span>
       <el-container class="gap-5">
-        <image-box :src="wechat" class="radius-sm !size-24" @click="sys.preview.open(wechat)" />
-        <image-box :src="QQ" class="radius-sm !size-24" @click="sys.preview.open(QQ)" />
+        <image-box :src="wechat" class="radius-sm size-24!" @click="sys.preview.open(wechat)" />
+        <image-box :src="QQ" class="radius-sm size-24!" @click="sys.preview.open(QQ)" />
       </el-container>
     </el-container>
   </el-container>
